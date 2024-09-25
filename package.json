@@ -9,5 +9,10 @@
         "axios": "^1.7.4",
         "laravel-vite-plugin": "^1.0",
         "vite": "^5.0"
+    },
+    "dependencies": {
+        "flowbite": "^2.5.1",
+        "notiflix": "^3.2.7",
+        "sweetalert2": "^11.14.1"
     }
 }
