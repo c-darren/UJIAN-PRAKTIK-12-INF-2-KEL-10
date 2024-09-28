@@ -13,6 +13,6 @@
     "dependencies": {
         "flowbite": "^2.5.1",
         "notiflix": "^3.2.7",
-        "sweetalert2": "^11.14.1"
+        "sweetalert2": "^11.6.13"
     }
 }
