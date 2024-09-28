@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Users extends Authenticatable
+class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -49,9 +49,9 @@ class Users extends Authenticatable
         ];
     }
 
-    public function roles(): BelongsTo
+    public function role(): BelongsTo
     {
         //1 User memiliki 1 Role
-        return $this->belongsTo(Roles::class);
+        return $this->belongsTo(Role::class);
     }
 }
