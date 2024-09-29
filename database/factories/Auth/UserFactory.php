@@ -1,13 +1,14 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Auth;
 
+use App\Models\Auth\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Auth\User>
  */
 class UserFactory extends Factory
 {
@@ -37,7 +38,7 @@ class UserFactory extends Factory
 
             // The user's role.
             // The role should be one of the following: 1,2,3.
-            'role' => fake()->randomElement([1,2,3]),
+            'role_id' => fake()->randomElement([1,2,3]),
 
             // The user's email address.
             'email' => fake()->unique()->safeEmail(),
