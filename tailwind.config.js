@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'media',
+  darkMode: 'class',
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
@@ -48,8 +48,16 @@ export default {
         'Segoe UI Emoji', 
         'Segoe UI Symbol', 
         'Noto Color Emoji'
-      ]
+      ],
+      'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace']
     }
+  },
+  transitionProperty: {
+    'width': 'width'
+  },
+  textDecoration: ['active'],
+  minWidth: {
+    'kanban': '28rem'
   },
   plugins: [
     require('flowbite/plugin'),
@@ -57,6 +65,34 @@ export default {
   ],
   safelist: [
     'dark:bg-gray-800',
-  ]
+    'bg-gray-50',
+    'w-64',
+    'w-1/2',
+    'rounded-l-lg',
+    'rounded-r-lg',
+    'bg-gray-200',
+    'grid-cols-4',
+    'grid-cols-7',
+    'h-6',
+    'leading-6',
+    'h-9',
+    'leading-9',
+    'shadow-lg',
+    'bg-opacity-50',
+    'dark:bg-opacity-80',
+    
+  ],
+  colors: {
+    transparent: 'transparent',
+    black: '#000',
+    white: '#fff',
+    gray: {
+      100: '#f7fafc',
+      // ...
+      900: '#1a202c',
+    },
+
+    // ...
+  }
 }
 
