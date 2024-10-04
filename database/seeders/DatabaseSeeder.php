@@ -14,7 +14,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+<<<<<<< Updated upstream
             UsersSeeder::class,
+=======
+            RoleSeeder::class,
+            UserSeeder::class,
+            UserLogCategorySeeder::class,
+>>>>>>> Stashed changes
         ]);
     }
 }
