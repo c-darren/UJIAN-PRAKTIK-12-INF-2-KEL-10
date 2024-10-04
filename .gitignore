@@ -19,4 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+storage/debugbar/*
 Catatan.docx
