@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_logs', function (Blueprint $table) {
+        Schema::create('user_log_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
-            $table->foreignId('user_log_category_id')->constrained('user_log_categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('user_log_categories')->onDelete('cascade');
+            $table->string('route_name')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_logs');
+        Schema::dropIfExists('user_log_lists');
     }
 };

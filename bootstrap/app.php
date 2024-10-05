@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        return [
+            'web' => [
+                'log' => \App\Http\Middleware\LogUserAccess::class,
+            ]
+        ];
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -4,14 +4,14 @@ namespace App\Models\User_log;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class UserLogCategory extends Model
+class UserLogList extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'category_id',
+        'route_name',
         'description',
     ];
 
@@ -19,9 +19,5 @@ class UserLogCategory extends Model
     {
         return $this->hasMany(UserLog::class);
     }
-
-    public function logCategories(): HasMany
-    {
-        return $this->hasMany(UserLogCategory::class);
-    }
+    
 }

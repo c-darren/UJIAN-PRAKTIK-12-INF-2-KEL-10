@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             UserLogCategorySeeder::class,
+            UserLogListSeeder::class,
         ]);
     }
 }
