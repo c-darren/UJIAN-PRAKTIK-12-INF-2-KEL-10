@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_log_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('category_id')->unique();
+            $table->string('category')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
         });

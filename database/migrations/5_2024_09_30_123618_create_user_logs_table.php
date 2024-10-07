@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->ipAddress('ip_address');
             $table->string('route_name');
+            $table->string('method');
             // $table->foreignId('category_id')->constrained('user_log_categories')->onDelete('cascade');
             // $table->foreignId('list_id')->constrained('user_log_lists')->onDelete('cascade');
             $table->text('description')->nullable();

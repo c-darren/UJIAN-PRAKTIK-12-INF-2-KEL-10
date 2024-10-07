@@ -11,7 +11,7 @@ class UserLogCategory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category_id',
+        'category',
         'description',
     ];
 

@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('user_log_lists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('user_log_categories')->onDelete('cascade');
-            $table->string('route_name')->unique();
+            $table->string('method');
+            $table->string('route_name');
             $table->text('description')->nullable();
             $table->timestamps();
+            
+            //Untuk memastikan kombinasi method dan route_name unik
+            $table->unique(['method', 'route_name']);
         });
     }
 

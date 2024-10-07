@@ -15,7 +15,7 @@ class UserLogCategorySeeder extends Seeder
     {
         $categories = [
             [
-                'category-id' => 'Authentication',
+                'category' => 'Authentication',
                 'description' => 'User Login, Logout, etc',
             ],
         ];

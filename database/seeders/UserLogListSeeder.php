@@ -16,18 +16,33 @@ class UserLogListSeeder extends Seeder
         $lists = [
             [
                 'category_id' => '1',
-                'route_name' => '/login',
+                'route_name' => 'login',
+                'method' => 'POST',
                 'description' => 'User Login',
             ],
             [
                 'category_id' => '1',
-                'route_name' => '/logout',
+                'route_name' => 'login',
+                'method' => 'GET',
+                'description' => 'User Login',
+            ],
+            [
+                'category_id' => '1',
+                'route_name' => 'logout',
+                'method' => 'POST',
                 'description' => 'User Logout',
             ],
             [
                 'category_id' => '1',
                 'route_name' => '/',
+                'method' => 'GET',
                 'description' => 'User Submit the Task',
+            ],
+            [
+                'category_id' => '1',
+                'route_name' => 'dashboard',
+                'method' => 'GET',
+                'description' => 'User View Dashboard',
             ],
         ];
 

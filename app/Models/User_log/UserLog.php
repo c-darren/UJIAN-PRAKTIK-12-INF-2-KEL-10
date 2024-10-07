@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserLog extends Model
 {
+    // protected $table = 'user_logs';
     use HasFactory;
 
     protected $fillable = [
         'user_id',
         'role_id',
-        'user_log_category_id',
+        'ip_address',
+        'category_id',
+        'list_id',
+        'description'
     ];
 
     public function user(): BelongsTo
