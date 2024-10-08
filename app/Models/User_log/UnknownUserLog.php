@@ -16,6 +16,7 @@ class UnknownUserLog extends Model
         'user_id',
         'role_id',
         'ip_address',
+        'method',
         'route_name',
         'description',
     ];
