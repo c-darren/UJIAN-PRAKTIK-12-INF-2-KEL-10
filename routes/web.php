@@ -20,10 +20,11 @@ Route::middleware(['auth', 'verified', LogUserAccess::class])->group(function ()
 
     Route::post('/logout', [LogoutController::class, 'logout'])
     ->name('logout');
+    
+    //Original Template
+    Route::middleware(['auth', 'verified'])->get('/original', function () {
+        return view('dashboard.original');
+    })->name('original');
 });
 
 
-//Original Template
-Route::middleware(['auth', 'verified'])->get('/original', function () {
-    return view('dashboard.original');
-})->name('original');

@@ -24,32 +24,58 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Cek apakah input merupakan email atau username
         $loginType = filter_var($validated['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        // Temukan pengguna berdasarkan input (username/email)
         $user = User::where($loginType, $validated['login'])->first();
 
-        // Jika pengguna ditemukan dan password cocok
-        if ($user && Hash::check($validated['password'], $user->password)) {
-            // Pastikan email sudah terverifikasi
+        if ($user) {
+            if (!Hash::check($validated['password'], $user->password)) {
+                // Jika request AJAX, kembalikan JSON response
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Password salah'
+                    ]);
+                }
+                
+                // Jika bukan AJAX, kembali ke halaman sebelumnya
+                session()->flash('error', 'Password salah');
+                return back();}
+    
             if ($user->email_verified_at === null) {
-                session()->flash('error', 'Email Anda belum terverifikasi.');
-                return back(); // Kembalikan ke form login dengan pesan error
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Email belum terverifikasi'
+                    ]);
+                }
+                
+                session()->flash('error', 'Email belum terverifikasi');
+                return back();
             }
-
-            // Login pengguna
+    
             Auth::login($user);
-
-            // Set session berhasil login
+    
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect_url' => url('/dashboard')
+                ]);
+            }
+    
             session()->flash('success', 'Login berhasil!');
-
-            // Redirect setelah login sukses
-            return redirect()->intended('/dashboard');
+            return back();
+            // return redirect()->intended('/dashboard');
         }
-
-        // Jika gagal login, kembalikan pesan error
-        session()->flash('error', 'Kredensial tidak cocok dengan data kami.');
+    
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun pengguna tidak ditemukan'
+            ]);
+        }
+    
+        session()->flash('error', 'Akun pengguna tidak ditemukan');
         return back();
     }
 }

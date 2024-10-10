@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css',
     'resources/js/app.js', ])
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/notiflix@3.2.7/src/notiflix.min.css" rel="stylesheet">
     <title>{{ config('app.name') }}</title>
     
 </head>

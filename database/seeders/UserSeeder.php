@@ -16,13 +16,13 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Darren',
-            'username' => 'cdarren',
+            'name' => 'Test User',
+            'username' => 'user',
             'avatar' => 'https://i.pravatar.cc/150?img=68',
             'role_id' => 1,
             'email' => 'darren@darren-project.kencang.id',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('123'),
             'remember_token' => Str::random(10),
         ]);
         User::factory(10)->create();
