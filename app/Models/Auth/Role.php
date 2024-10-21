@@ -11,6 +11,9 @@ class Role extends Model
 {
     use HasFactory;
 
+    protected $dates = ['deleted_at'];
+
+
     public function users(): HasMany{
         //1 Role memiliki banyak User
         return $this->hasMany(User::class);

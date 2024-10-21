@@ -2,8 +2,8 @@ import './bootstrap';
 import 'flowbite';
 import 'flowbite-typography';
 import './default/app.bundle.js';
-import 'notiflix/build/notiflix-aio';
-import Notiflix from 'notiflix';
+// import 'notiflix/build/notiflix-aio';
+// import Notiflix from 'notiflix';
 // // Notify
 // Notiflix.Notify.init({});
 
@@ -19,6 +19,6 @@ import Notiflix from 'notiflix';
 // // Block
 // Notiflix.Block.init({});
 import Alpine from 'alpinejs';
-// window.Alpine = Alpine
+window.Alpine = Alpine
  
-// Alpine.start();
+Alpine.start();

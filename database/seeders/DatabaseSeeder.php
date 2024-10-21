@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UserLogCategorySeeder::class,
             UserLogListSeeder::class,
+            GroupListSeeder::class,
+            GroupInvitationSeeder::class,
+            GroupMemberSeeder::class,
         ]);
     }
 }
