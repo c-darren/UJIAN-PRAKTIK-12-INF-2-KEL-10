@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Models\Classroom;
+namespace App\Models\Student;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ClassList extends Model
+class PPDB extends Model
 {
-    protected $dates = ['deleted_at'];
     use HasFactory;
 }

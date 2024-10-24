@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_documents', function (Blueprint $table) {
+        Schema::create('academic_years', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->foreignId('document_type_id')->constrained('student_document_types')->onDelete('cascade');
-            $table->string('document_name');
-            $table->string('document_url');
+            $table->string('academic_year');
+            $table->enum('status',['Active', 'Inactive']);
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_documents');
+        Schema::dropIfExists('academic_years');
     }
 };
