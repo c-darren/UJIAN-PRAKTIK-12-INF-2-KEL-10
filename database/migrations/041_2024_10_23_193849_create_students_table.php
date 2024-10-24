@@ -22,12 +22,11 @@ return new class extends Migration
             $table->enum('religion', ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu']);
             $table->string('student_address');
             $table->smallInteger('student_postal_code');
-            $table->string('student_phone');
             $table->string('parents_address');
             $table->smallInteger('parents_postal_code');
             $table->string('parents_phone');
-            $table->string('father_name');
-            $table->string('mother_name');
+            $table->string('father_full_name');
+            $table->string('mother_full_name');
             $table->smallInteger('number_of_siblings');
             $table->string('disability')->nullable();
             $table->boolean('is_verified')->default(false);
