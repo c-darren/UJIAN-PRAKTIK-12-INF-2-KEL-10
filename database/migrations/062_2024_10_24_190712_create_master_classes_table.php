@@ -25,7 +25,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('master_class_id')->constrained('master_classes')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->enum('status', ['Active', 'Inactive'])->default('active');
         });
     }
 
