@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ppdbs', function (Blueprint $table) {
+        Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->string('student_name');
-            $table->string('student_nisn')->unique();
-            $table->string('email');
-            $table->string('phone');
-            $table->enum('status',['Unverified', 'Verified']);
-            $table->timestamps();
+            $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
+            $table->foreignId('topic_id')->constrained('topics')->onDelete('cascade');
+            $table->string('assignment_name');
+            $table->string('attachment_url')->nullable();
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ppdbs');
+        //
     }
 };

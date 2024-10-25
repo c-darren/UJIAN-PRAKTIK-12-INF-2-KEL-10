@@ -30,7 +30,7 @@ return new class extends Migration
             $table->smallInteger('number_of_siblings');
             $table->string('disability')->nullable();
             $table->boolean('is_verified')->default(false);
-            $table->enum('status', ['Pelajar', 'Sudah Lulus', 'Dikeluarkan', 'Pindah Sekolah'])->default('active');
+            $table->enum('status', ['Pelajar', 'Sudah Lulus', 'Dikeluarkan', 'Pindah Sekolah'])->default('Pelajar');
             $table->softDeletes();
             $table->timestamps();
         });

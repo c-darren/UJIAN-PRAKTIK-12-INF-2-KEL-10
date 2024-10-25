@@ -13,7 +13,7 @@ return new class extends Migration
     {
         //Kelas 10, 11, 12
         Schema::create('master_classes', function (Blueprint $table) {
-            $table->id();
+            $table->string('id', 255)->primary();
             $table->string('master_class_name');
             $table->string('master_class_code')->unique();
             $table->foreignId('academic_year_id')->constrained('academic_years')->onDelete('cascade');
@@ -23,7 +23,8 @@ return new class extends Migration
 
         Schema::create('master_class_students', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('master_class_id')->constrained('master_classes')->onDelete('cascade');
+            $table->string('master_class_id', 255);
+            $table->foreign('master_class_id')->references('id')->on('master_classes')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
         });
     }

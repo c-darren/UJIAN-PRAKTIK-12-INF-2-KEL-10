@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student_document_tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('document_id')->constrained('documents')->onDelete('cascade');
+            $table->foreignId('document_id')->constrained('student_documents')->onDelete('cascade');
             $table->string('token')->unique();
             $table->boolean('is_used')->default(false); // Status token
             $table->dateTime('created_at')->nullable();

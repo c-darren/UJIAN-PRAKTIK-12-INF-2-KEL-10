@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Classroom;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class MasterClass extends Controller
+class MateriallController extends Controller
 {
     /**
      * Display a listing of the resource.
