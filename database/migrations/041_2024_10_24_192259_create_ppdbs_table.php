@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('ppdbs', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
-            $table->text('description');
-            $table->softDeletes();
+            $table->string('student_name');
+            $table->string('student_nisn')->unique();
+            $table->string('email');
+            $table->string('phone');
+            $table->enum('status',['Unverified', 'Verified']);
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('ppdbs');
     }
 };

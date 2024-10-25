@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    //This table only contain a topic for class_lists, subject already placed in class_lists table
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
-            $table->text('description');
-            $table->softDeletes();
+            $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
+            $table->string('topic_name');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('topics');
     }
 };
