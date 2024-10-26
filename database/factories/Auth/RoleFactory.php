@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RoleFactory extends Factory
 {
-    protected static $roles = ['user', 'admin', 'guest'];
+    protected static $roles = ['staff', 'developer', 'admin', 'guest', 'student', 'teacher', 'parent', 'parent_guardian'];
     /**
      * Define the model's default state.
      *
@@ -19,7 +19,7 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         if(empty(static::$roles)){
-            $role = fake()->words(fake()->numberBetween(1, 3), true);
+            $role = fake()->words(fake()->numberBetween(1, 8), true);
         } else {
             $roleIndex = array_rand(static::$roles);
             $role = static::$roles[$roleIndex];

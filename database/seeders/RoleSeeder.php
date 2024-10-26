@@ -11,8 +11,15 @@ class RoleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    protected static $roles = ['staff', 'developer', 'admin', 'guest', 'student', 'teacher', 'parent', 'parent_guardian'];
+
+    public function run()
     {
-        Role::factory(5)->create();
+        foreach (self::$roles as $roleName) {
+            Role::create([
+                'role' => $roleName,
+                'description' => ucfirst($roleName) . ' role',
+            ]);
+        }
     }
 }

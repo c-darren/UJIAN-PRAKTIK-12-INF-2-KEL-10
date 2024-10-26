@@ -20,9 +20,9 @@ class GroupListFactory extends Factory
     public function definition(): array
     {
         return [
-            'group_name' => 'Test Group 1',
+            'group_name' => 'Test Group' . $this->faker->randomNumber(3),
             'author_id' => 1,
-            'status' => 'Open',
+            'status' => $this->faker->randomElement(['Open', 'Close']),
             'code' => $this->generateRandomCode(),
             'valid_until' => now()->addDays(30),
             'description' => $this->faker->sentence(2),
