@@ -14,7 +14,3 @@
       </div>
   </div>
 @endsection
-
-@section('scripts')
-    <script src="{{ asset('js/route/dashboard/effects/fade.js') }}"></script>
-@endsection

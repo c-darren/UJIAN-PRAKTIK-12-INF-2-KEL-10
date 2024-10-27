@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const redirectUrl = '{{ $redirectUrl }}';
+
     const addRoutePrefixForm = document.getElementById('addRoutePrefixForm');
     isSubmitting = false;
 
@@ -40,6 +42,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Okay',
                     initNotiflixTheme() // Menggunakan tema yang sudah diatur
                 );
+
+                window.setTimeout(function() {
+                    if (window.redirectUrl) {
+                        window.location.replace(window.redirectUrl);
+                    }
+                }, 2000);
 
             } else {
                 Notiflix.Report.failure(

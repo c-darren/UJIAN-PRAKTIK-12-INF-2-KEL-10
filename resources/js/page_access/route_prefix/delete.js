@@ -17,6 +17,7 @@ function confirmDelete(button) {
     const modal = document.getElementById('deleteModal');
     const csrfToken = button.getAttribute('data-csrf');
     const deleteUrl = modal.getAttribute('data-delete_url');
+    const closeDeleteModal = document.getElementById('close_delete_modal');
 
     const deletePrefixUrl = modal.getAttribute('data-delete_prefix_url');
     var confirm_route_prefix_url = document.getElementById('confirm_route_prefix_url').value;
@@ -61,6 +62,7 @@ function confirmDelete(button) {
                 'Successfully deleted route prefix',
                 'Okay',
             )
+            closeDeleteModal.click();
         } else {
             Notiflix.Notify.failure(
                 'Failed to delete route prefix',

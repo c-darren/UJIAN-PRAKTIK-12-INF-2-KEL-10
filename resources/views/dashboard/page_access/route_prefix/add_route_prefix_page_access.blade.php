@@ -46,7 +46,7 @@
                     <div>
                         <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start Date</label>
                         <input type="datetime-local" name="start_date" id="start_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ now() }}" readonly required>
-                        <small class="text-gray-500">Starts now. Cannot set a past date.</small>
+                        <small class="text-gray-500"></small>
                     </div>
             
                     <!-- Valid Until -->
@@ -134,5 +134,8 @@
 @endsection
 
 @section('scripts')
+    <script>
+        window.redirectUrl = '{{ $redirectUrl }}';
+    </script>
     <script src="{{ asset('js/page_access/route_prefix/create.js') }}"></script>
 @endsection

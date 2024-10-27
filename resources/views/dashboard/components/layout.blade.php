@@ -7,6 +7,10 @@
     @vite(['resources/css/app.css',
     'resources/js/app.js', ])
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+    {{-- <link rel="stylesheet" src="https://cdn.datatables.net/2.1.8/css/dataTables.tailwindcss.css">
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.7/dist/notiflix-aio-3.2.7.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/notiflix@3.2.7/src/notiflix.min.css" rel="stylesheet">
     <title>{{ config('app.name') }}</title>

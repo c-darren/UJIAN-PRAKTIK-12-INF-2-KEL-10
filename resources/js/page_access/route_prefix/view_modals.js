@@ -13,43 +13,43 @@ function showViewModal(prefixData) {
     document.getElementById("ip_address_type").textContent = prefixData.ip_address_type || '-';
     document.getElementById("ip_address").textContent = prefixData.ip_address || '-';
     document.getElementById("prefix_status").textContent = prefixData.prefix_status || '-';
-    
+
     const classGroupType = document.getElementById("group_type").classList;
-    if(classGroupType.contains('text-red-500')){
+    if (classGroupType.contains('text-red-500')) {
         document.getElementById("group_type").classList.remove('text-red-500');
     }
-    if(classGroupType.contains('text-green-500')){
+    if (classGroupType.contains('text-green-500')) {
         document.getElementById("group_type").classList.remove('text-green-500');
     }
-    if(prefixData.group_type == 'Blacklist'){
+    if (prefixData.group_type == 'Blacklist') {
         document.getElementById("group_type").classList.add('text-red-500');
-    }else{
+    } else {
         document.getElementById("group_type").classList.add('text-green-500');
     }
 
     const classIpAddressType = document.getElementById("ip_address_type").classList;
-    if(classIpAddressType.contains('text-red-500')){
+    if (classIpAddressType.contains('text-red-500')) {
         document.getElementById("ip_address_type").classList.remove('text-red-500');
     }
-    if(classIpAddressType.contains('text-green-500')){
+    if (classIpAddressType.contains('text-green-500')) {
         document.getElementById("ip_address_type").classList.remove('text-green-500');
     }
-    if(prefixData.ip_address_type == 'Blacklist'){
+    if (prefixData.ip_address_type == 'Blacklist') {
         document.getElementById("ip_address_type").classList.add('text-red-500');
-    }else{
+    } else {
         document.getElementById("ip_address_type").classList.add('text-green-500');
     }
 
     const classPrefixStatus = document.getElementById("prefix_status").classList;
-    if(classPrefixStatus.contains('bg-red-600')){
+    if (classPrefixStatus.contains('bg-red-600')) {
         document.getElementById("prefix_status").classList.remove('bg-red-600');
     }
-    if(classPrefixStatus.contains('bg-green-600')){
+    if (classPrefixStatus.contains('bg-green-600')) {
         document.getElementById("prefix_status").classList.remove('bg-green-600');
     }
-    if(prefixData.prefix_status == 'Disabled'){
+    if (prefixData.prefix_status == 'Disabled') {
         document.getElementById("prefix_status").classList.add('bg-red-600');
-    }else{
+    } else {
         document.getElementById("prefix_status").classList.add('bg-green-600');
     }
 
@@ -92,34 +92,33 @@ function ViewModalButtons(prefixData) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('button[data-access_role_ids]').forEach(button => {
-        button.addEventListener('click', function () {
+    document.getElementById('route_prefix_table').addEventListener('click', function (event) {
+        const button = event.target.closest('button[data-access_role_ids]');
             let prefixData = {
-                id: this.getAttribute('data-prefix-id'),
-                name: this.getAttribute('data-prefix-name'),
-                creator_name: this.getAttribute('data-creator-name'),
-                editor_name: this.getAttribute('data-editor-name'),
-                full_url: this.getAttribute('data-full_prefix_url'),
-                description: this.getAttribute('data-description'),
+                id: button.getAttribute('data-prefix-id'),
+                name: button.getAttribute('data-prefix-name'),
+                creator_name: button.getAttribute('data-creator-name'),
+                editor_name: button.getAttribute('data-editor-name'),
+                full_url: button.getAttribute('data-full_prefix_url'),
+                description: button.getAttribute('data-description'),
 
-                access_role_ids: this.getAttribute('data-access_role_ids'),
-                group_type: this.getAttribute('data-group_type'),
-                group_ids: this.getAttribute('data-group_ids'),
+                access_role_ids: button.getAttribute('data-access_role_ids'),
+                group_type: button.getAttribute('data-group_type'),
+                group_ids: button.getAttribute('data-group_ids'),
 
-                ip_address_type: this.getAttribute('data-ip_address_type'),
-                ip_address: this.getAttribute('data-ip_address'),
-                prefix_status: this.getAttribute('data-prefix_status'),
-                start_date: this.getAttribute('data-start_date'),
-                valid_until: this.getAttribute('data-valid_until'),
-                create_time: this.getAttribute('data-create_time'),
-                edit_time: this.getAttribute('data-edit_time'),
+                ip_address_type: button.getAttribute('data-ip_address_type'),
+                ip_address: button.getAttribute('data-ip_address'),
+                prefix_status: button.getAttribute('data-prefix_status'),
+                start_date: button.getAttribute('data-start_date'),
+                valid_until: button.getAttribute('data-valid_until'),
+                create_time: button.getAttribute('data-create_time'),
+                edit_time: button.getAttribute('data-edit_time'),
 
-                edit_url: this.getAttribute('data-edit_url'),
-                delete_url: this.getAttribute('data-delete_url'),
+                edit_url: button.getAttribute('data-edit_url'),
+                delete_url: button.getAttribute('data-delete_url'),
             };
 
             ViewModalButtons(prefixData);
             showViewModal(prefixData);
-        });
     });
 });

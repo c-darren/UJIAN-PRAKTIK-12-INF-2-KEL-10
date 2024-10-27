@@ -1,5 +1,5 @@
 @section('tabs')
-<div class="border-b border-gray-200 dark:border-gray-700">
+<div class="border-b border-gray-200 dark:border-gray-700 dark:bg-gray-800">
     <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
         <li class="me-2">
             <a href="{{ route('admin.page_access.route_prefix.view') }}" class="inline-flex items-center justify-center p-4 group

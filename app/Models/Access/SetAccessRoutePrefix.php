@@ -14,7 +14,6 @@ class SetAccessRoutePrefix extends Model
     protected $dates = ['start_date', 'valid_until'];
     use HasFactory;
 
-
     protected $fillable = [
         'name',
         'prefix',
