@@ -1,10 +1,12 @@
 @section('page_access_content')
 <section class="bg-white dark:bg-gray-900">
-    <div class="py-1 px-1 mx-auto max-w-5xl min-w-full sm:min-w-[640px] md:min-w-[768px] lg:min-w-[1024px] lg:py-12 lg:px-1">
-    {{-- <div class="py-1 px-1 mx-auto max-w-5xl lg:py-12 lg:px-1"> --}}
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add A New Route Prefix</h2>
+    <div class="py-1 px-1 mx-auto max-w-5xl lg:py-12 lg:px-1">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-800 dark:text-white">Edit Route Prefix ID: {{ $prefix->id }}, Name: {{ $prefix->name }}</h2>
+            <a href="{{ route('admin.page_access.route_prefix.view') }}" class="text-black bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-4 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900 ms-auto">Back</a>
+        </div>
         <div id="addRouteFormView">
-            <form action="{{ route('admin.page_access.route.store') }}" method="POST" id="addRouteForm">
+            <form action="{{ route('admin.page_access.route_prefix.edit', $prefix->id) }}" method="POST" id="addRouteForm">
                 @csrf
 
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -132,7 +134,8 @@
                 </div>
                 <div class="flex justify-between mt-4 sm:mt-6">
                     <button type="submit" id="submit_form" class="rounded-full inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                        Add Access Route
+                        Update&nbsp;
+                        <b>{{ $prefix->id }}&nbsp;-&nbsp;{{ $prefix->name }}</b>
                     </button>
                     <button type="reset" class="rounded-full inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800">
                         Reset
@@ -145,8 +148,5 @@
 @endsection
 
 @section('scripts')
-    <script>
-        window.redirectUrl = '{{ $redirectUrl }}';
-    </script>
-    <script src="{{ asset('js/page_access/route/create.js') }}"></script>
+    <script src="{{ asset('js/page_access/route/edit.js') }}"></script>
 @endsection

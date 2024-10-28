@@ -1,0 +1,1 @@
+Notiflix.Report.failure({{ session('message') }});

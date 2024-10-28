@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Models\Auth\Role;
 use App\Models\Auth\User;
 
 class LoginController extends Controller
@@ -55,6 +56,16 @@ class LoginController extends Controller
             }
     
             Auth::login($user);
+            $role_name = Role::where('id', session('role_id'))->value('role');
+
+            session([
+                'roleID' => $user->role_id,
+                'role' => $role_name,
+                'username' => $user->username,
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $user->password,
+            ]);
     
             if ($request->expectsJson()) {
                 return response()->json([

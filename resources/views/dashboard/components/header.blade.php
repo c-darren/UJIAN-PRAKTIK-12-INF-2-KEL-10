@@ -24,7 +24,7 @@
             <div class="flex items-center">
                 <div class="hidden mr-3 -mb-1 sm:block">
                     <span class="bg-blue-400 bg-opacity-50 text-black text-xs font-medium me-3 px-2 py-1.5 rounded-full dark:bg-blue-900 dark:text-white">
-                        {{ Str::upper(Auth::user()->role->role) }}
+                        {{ Str::upper(session('role')) }}
                     </span>
                     <a class="github-button" href="https://github.com/c-darren" data-color-scheme="no-preference: dark; light: light; dark: light;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star c-darren/">Star</a>
                 </div>
@@ -183,10 +183,10 @@
                         <div class="z-50 opacity-0 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 transition-opacity duration-500 ease-in-out" id="dropdown-2">
                             <div class="px-4 py-3" role="none">
                                 <p class="text-sm text-gray-900 dark:text-white" role="none">
-                                    {{ Auth::user()->name }}
+                                    {{ session('name') }}
                                 </p>
                                 <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                    {{ Auth::user()->email }}
+                                    {{ session('email') }}
                                 </p>
                             </div>
                             <ul class="py-1" role="none">
