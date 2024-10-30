@@ -3,6 +3,7 @@
 namespace App\Models\Access;
 
 use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use App\Models\Group\GroupList;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,6 @@ class SetAccessRoute extends Model
     protected $fillable = [
         'page_title',
         'page_url',
-        'type',
         'method',
         'creator_id',
         'editor_id',
@@ -29,6 +29,17 @@ class SetAccessRoute extends Model
         'description',
     ];
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    public function editor()
+    {
+        return $this->belongsTo(User::class, 'editor_id');
+    }
+
+    
     /**
      * Many-to-Many relationship with Role model.
      * 

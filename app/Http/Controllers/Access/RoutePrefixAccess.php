@@ -31,7 +31,9 @@ class RoutePrefixAccess extends Controller
     public function create(){
         $roles = $this->getAllRoles();
         $groups = $this->getAllGroups();
-        return $this->view('add_route_prefix_page_access', compact('roles', 'groups'));
+        $redirectUrl = route('admin.page_access.route_prefix.view');
+
+        return $this->view('add_route_prefix_page_access', compact('roles', 'groups', 'redirectUrl'));;
     }
 
     /**
@@ -92,7 +94,7 @@ class RoutePrefixAccess extends Controller
             $routePrefix->valid_until = $request->input('valid_until');
             $routePrefix->type_group_list = $request->input('type_group_list');
             $routePrefix->description = $request->input('description');
-            $routePrefix->save();
+            $routePrefix->saveQuietly();
 
             $routePrefix->roles()->sync($request->input('roles'));
 
@@ -102,8 +104,8 @@ class RoutePrefixAccess extends Controller
 
             return response()->json([
                 'success' => true,
+                'message' => 'You will be redirected to Route Prefix Lists in 2 seconds.',
                 'redirect_url' => route('admin.page_access.route_prefix.view'),
-                'message' => 'Route prefix created successfully',
             ]);
 
         } catch (\Exception $e) {
@@ -117,13 +119,14 @@ class RoutePrefixAccess extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SetAccessRoutePrefix $setAccessRoutePrefix, $message = null, $messageError = null)
+    public function show(SetAccessRoutePrefix $setAccessRoutePrefix = null, Request $request, $message = null, $messageError = null)
     {
         $allRoles = Role::select('id', 'role')->get();
         $allGroups = GroupList::select('id', 'group_name')->get();
-        $prefixes = SetAccessRoutePrefix::with(['roles', 'groups', 'creator', 'editor'])->get();
-        
-        if ($setAccessRoutePrefix == null) {
+    
+        $prefixes = SetAccessRoutePrefix::with(['roles:id,role', 'groups:id,group_name', 'creator:id,name', 'editor:id,name'])->get();
+    
+        if ($setAccessRoutePrefix == null && $prefixes->isEmpty()) {
             $prefixes = 'Data not found';
         }
     
@@ -139,6 +142,8 @@ class RoutePrefixAccess extends Controller
     
         return $view;
     }
+    
+    
     
     /**
      * Show the form for editing the specified resource.

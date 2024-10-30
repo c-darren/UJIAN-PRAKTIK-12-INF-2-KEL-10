@@ -1,27 +1,29 @@
 @section('page_access_content')
 <section class="bg-white dark:bg-gray-900">
-    <div class="py-1 px-1 mx-auto max-w-5xl min-w-full sm:min-w-[640px] md:min-w-[768px] lg:min-w-[1024px] lg:py-12 lg:px-1">
-    {{-- <div class="py-1 px-1 mx-auto max-w-5xl lg:py-12 lg:px-1"> --}}
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add A New Route Prefix</h2>
-        <div id="addRoutePrefixFormView">
-            <form action="{{ route('admin.page_access.route_prefix.store') }}" method="POST" id="addRoutePrefixForm">
+    <div class="py-1 px-1 mx-auto max-w-5xl lg:py-12 lg:px-1">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-800 dark:text-white">Edit Route Prefix ID: {{ $prefix->id }}, Name: {{ $prefix->name }}</h2>
+            <a href="{{ route('admin.page_access.route_prefix.view') }}" class="text-black bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-4 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900 ms-auto">Back</a>
+        </div>
+        <div id="addRouteFormView">
+            <form action="{{ route('admin.page_access.route_prefix.edit', $prefix->id) }}" method="POST" id="addRouteForm">
                 @csrf
 
                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                    <!-- Prefix Name -->
+                    <!-- Page Title  -->
                     <div class="sm:col-span-2">
-                        <label for="prefix_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prefix Name</label>
-                        <input type="text" name="prefix_name" id="prefix_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter prefix name" required>
-                        <small class="text-gray-500">Prefix names don't have to be unique.</small>
+                        <label for="page_title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Title</label>
+                        <input type="text" name="page_title" id="page_title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter prefix name" required>
+                        <small class="text-gray-500">Page Title don't have to be unique.</small>
                     </div>
             
-                    <!-- Prefix URL -->
+                    <!-- Page URL -->
                     <div class="sm:col-span-2">
-                        <label for="prefix_url" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prefix URL</label>
-                        <input type="text" name="prefix_url" id="prefix_url" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Example: /admin/dashboard/" required>
+                        <label for="page_url" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page URL</label>
+                        <input type="text" name="page_url" id="page_url" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Example: /admin/dashboard/new" required>
                         <small class="text-gray-500">
-                            Enter Full Prefix URL, 
-                            <span class="text-red-500">last segment will be used as a prefix</span>.
+                            Enter Full Page URL, 
+                            <span class="text-red-500">last segment will be used as a route</span>.
                         </small>
                     </div>
             
@@ -111,17 +113,29 @@
                     </div>
 
                     <!-- Status -->
-                    <div class="sm:col-span-2">
-                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prefix Status</label>
+                    <div class="sm:col-span-1">
+                        <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Route Status</label>
                         <select id="status" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="Enabled">Enable</option>
                             <option value="Disabled">Disable</option>
                         </select>
                     </div>
+                    <!-- Method -->
+                    <div class="sm:col-span-1">
+                        <label for="method" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">HTTP Method</label>
+                        <select id="method" name="method" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="flex justify-between mt-4 sm:mt-6">
                     <button type="submit" id="submit_form" class="rounded-full inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                        Add Access Route
+                        Update&nbsp;
+                        <b>{{ $prefix->id }}&nbsp;-&nbsp;{{ $prefix->name }}</b>
                     </button>
                     <button type="reset" class="rounded-full inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-red-700 focus:ring-4 focus:ring-red-200 dark:focus:ring-red-900 hover:bg-red-800">
                         Reset
@@ -134,8 +148,5 @@
 @endsection
 
 @section('scripts')
-    <script>
-        window.redirectUrl = '{{ $redirectUrl }}';
-    </script>
-    <script src="{{ asset('js/page_access/route_prefix/create.js') }}"></script>
+    <script src="{{ asset('js/page_access/route/edit.js') }}"></script>
 @endsection

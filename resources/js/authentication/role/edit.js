@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const redirectUrl = '{{ $redirectUrl }}';
-
-    const addRoutePrefixForm = document.getElementById('addRoutePrefixForm');
+    const editRoleForm = document.getElementById('editRoleForm');
     isSubmitting = false;
 
-    addRoutePrefixForm.addEventListener('submit', function(e) {
+    editRoleForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         if(isSubmitting) return;
@@ -22,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('submit_form').disabled = true;
 
-        const formData = new FormData(addRoutePrefixForm);
+        const formData = new FormData(editRoleForm);
         const csrfToken = document.querySelector('input[name="_token"]').value;
 
-        fetch(addRoutePrefixForm.getAttribute('action'), {
+        fetch(editRoleForm.getAttribute('action'), {
             method: 'POST',
             body: formData,
             headers: {
@@ -37,28 +35,29 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 Notiflix.Report.success(
-                    'Successfully created route prefix',
+                    'Successfully updated the role',
                     data.message,
                     'Okay',
-                    initNotiflixTheme() // Menggunakan tema yang sudah diatur
+                    initNotiflixTheme()
                 );
 
                 window.setTimeout(function() {
-                    if (window.redirectUrl) {
-                        window.location.replace(window.redirectUrl);
+                    if(data.redirectUrl !== null) {
+                        window.location.replace(data.redirectUrl);
                     }
                 }, 2000);
 
+
             } else {
                 Notiflix.Report.failure(
-                    'Failed to create route prefix',
+                    'Failed to update role',
                     data.message,
                     'Okay'
                 );
             }
         })
         .catch(error => {
-            Notiflix.Notify.failure('Error when processing create route prefix.');
+            Notiflix.Notify.failure('Error when processing update role.');
         })
         .finally(() => {
             isSubmitting = false;

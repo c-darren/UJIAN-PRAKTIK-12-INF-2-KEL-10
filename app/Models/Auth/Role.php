@@ -13,6 +13,10 @@ class Role extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $fillable = [
+        'role',
+        'description'
+    ];
 
     public function users(): HasMany{
         //1 Role memiliki banyak User

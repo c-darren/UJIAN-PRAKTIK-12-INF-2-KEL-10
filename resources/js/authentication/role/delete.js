@@ -1,43 +1,44 @@
 
 function showDeleteModal(button) {
     const deleteUrl = button.getAttribute('data-delete_url');
-    const deletePrefixUrl = button.getAttribute('data-delete_prefix_url');
+    const deleteRoleName = button.getAttribute('data-delete_role_name');
     const modal = document.getElementById('deleteModal');
-    const displayRoutePrefixUrl = document.getElementById('display_prefix_url_delete');
-    displayRoutePrefixUrl.textContent = deletePrefixUrl;
+    const displayRole = document.getElementById('display_delete_role_name');
+    displayRole.textContent = deleteRoleName;
     
-    modal.removeAttribute('data-delete_url');
-    modal.setAttribute('data-delete_url', deleteUrl);
-    modal.removeAttribute('data-delete_prefix_url');
-    modal.setAttribute('data-delete_prefix_url', deletePrefixUrl);
-    displayRoutePrefixUrl.classList.add('font-bold');
+    submitButton = document.getElementById('submit_delete_button');
+    submitButton.removeAttribute('data-delete_url');
+    submitButton.setAttribute('data-delete_url', deleteUrl);
+    submitButton.removeAttribute('data-delete_role_name');
+    submitButton.setAttribute('data-delete_role_name', deleteRoleName);
+    displayRole.classList.add('font-bold');
 
 };
 function confirmDelete(button) {
     const modal = document.getElementById('deleteModal');
     const csrfToken = button.getAttribute('data-csrf');
-    const deleteUrl = modal.getAttribute('data-delete_url');
+    const deleteUrl = button.getAttribute('data-delete_url');
     const closeDeleteModal = document.getElementById('close_delete_modal');
 
-    const deletePrefixUrl = modal.getAttribute('data-delete_prefix_url');
-    var confirm_route_prefix_url = document.getElementById('confirm_route_prefix_url').value;
+    const deleteRoleName = button.getAttribute('data-delete_role_name');
+    var delete_role_name = document.getElementById('confirm_role').value;
 
     if(button.disabled) {
         return;
     }
     button.disabled = true;
-    if (!confirm_route_prefix_url) {
+    if (!delete_role_name) {
         Notiflix.Notify.failure(
-            'Please enter the Route Prefix URL to confirm.',
+            'Please enter the role to confirm.',
         )
         window.setTimeout(function() {
             button.disabled = false;
             button.removeAttribute('disabled');
         }, 2500);
         return;
-    } else if (confirm_route_prefix_url != deletePrefixUrl) {
+    } else if (delete_role_name != deleteRoleName) {
         Notiflix.Notify.failure(
-            'Route Prefix URL does not match.',
+            'Role does not match.',
         )
         window.setTimeout(function() {
             button.disabled = false;
@@ -59,13 +60,16 @@ function confirmDelete(button) {
     .then(data => {
         if (data.success) {
             Notiflix.Notify.success(
-                'Successfully deleted route prefix',
+                'Successfully deleted role',
                 'Okay',
             )
             closeDeleteModal.click();
+            window.setTimeout(function() {
+                window.location.reload();
+            }, 1000);
         } else {
             Notiflix.Notify.failure(
-                'Failed to delete route prefix',
+                'Failed to delete role',
                 'Okay'
             )
         }

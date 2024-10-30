@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const redirectUrl = '{{ $redirectUrl }}';
 
-    const addRoutePrefixForm = document.getElementById('addRoutePrefixForm');
+    const addRolesForm = document.getElementById('addRolesForm');
     isSubmitting = false;
 
-    addRoutePrefixForm.addEventListener('submit', function(e) {
+    addRolesForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         if(isSubmitting) return;
@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('submit_form').disabled = true;
 
-        const formData = new FormData(addRoutePrefixForm);
+        const formData = new FormData(addRolesForm);
         const csrfToken = document.querySelector('input[name="_token"]').value;
 
-        fetch(addRoutePrefixForm.getAttribute('action'), {
+        fetch(addRolesForm.getAttribute('action'), {
             method: 'POST',
             body: formData,
             headers: {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 Notiflix.Report.success(
-                    'Successfully created route prefix',
+                    'Successfully created role',
                     data.message,
                     'Okay',
                     initNotiflixTheme() // Menggunakan tema yang sudah diatur
@@ -51,14 +51,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             } else {
                 Notiflix.Report.failure(
-                    'Failed to create route prefix',
+                    'Failed to create role',
                     data.message,
                     'Okay'
                 );
             }
         })
         .catch(error => {
-            Notiflix.Notify.failure('Error when processing create route prefix.');
+            Notiflix.Notify.failure('Error when processing create role.');
         })
         .finally(() => {
             isSubmitting = false;

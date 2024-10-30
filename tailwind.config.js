@@ -60,7 +60,9 @@ export default {
     'kanban': '28rem'
   },
   plugins: [
-    require('flowbite/plugin'),
+    require('flowbite/plugin')({
+        datatables: true,
+    }),
     require('flowbite-typography'),
   ],
   safelist: [
