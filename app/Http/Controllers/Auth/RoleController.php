@@ -5,29 +5,24 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\Role;
 use Illuminate\Http\Request;
-
+use App\Http\Middleware\CheckUserRole;
 class RoleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function($request, $next){
-            $response = $this->checkRole();
-            return $response ?: $next($request);
-        });
-    }
+    protected $allowedRoleID;
+
     public function checkRole()
     {
-        $allowedRoleId = 1; // Adjust this to the allowed role ID as needed
+        $allowedRoleId = 1;
         $sessionRoleId = session()->get('role_id');
     
         if ($sessionRoleId !== $allowedRoleId) {
-            return redirect()->route('dashboard'); // Redirect if role IDs don't match
+            return redirect()->route('dashboard');
         };
         return null;
     }
     public function show()
     {
-        $roles = Role::select()->get();
+        $roles = Role::select('id', 'role', 'description')->get();
         return $this->view('view_roles', compact('roles'));
     }
 
@@ -39,7 +34,7 @@ class RoleController extends Controller
 
     public function create()
     {
-        $redirectUrl = route('admin.authentication.role.view');
+        $redirectUrl = route('admin.authentication.roles.view');
         return $this->view('add_roles', compact('redirectUrl'));
     }
 
@@ -59,7 +54,7 @@ class RoleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Role successfully saved.',
-                'redirectUrl' => route('admin.authentication.role.view')
+                'redirectUrl' => route('admin.authentication.roles.view')
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -72,20 +67,20 @@ class RoleController extends Controller
     public function edit($id)
     {
         if (!is_numeric($id) || $id == null) {
-            return redirect()->route('admin.authentication.role.view')->with('messageError', [
+            return redirect()->route('admin.authentication.roles.view')->with('messageError', [
                 'title' => 'ID Not Found',
                 'message' => 'Make sure you have a valid id!'
             ]);
         }
         $role = Role::select('id')->find($id);
         if ($role == null) {
-            return redirect()->route('admin.authentication.role.view')->with('messageError', [
+            return redirect()->route('admin.authentication.roles.view')->with('messageError', [
                 'title' => 'ID: ' . $id . ' Not Found',
                 'message' => 'Make sure you have a valid id!',
             ]);
         };
-        $role = Role::findOrFail($id);
-        $redirectUrl = route('admin.authentication.role.view');
+        $role = Role::select('id', 'role', 'description')->find($id);
+        $redirectUrl = route('admin.authentication.roles.view');
         return $this->view('edit_roles', compact('role', 'redirectUrl'));
     }
 
@@ -106,7 +101,7 @@ class RoleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'You will be redirected to Role List in 2 seconds',
-                'redirectUrl' => route('admin.authentication.role.view')
+                'redirectUrl' => route('admin.authentication.roles.view')
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -125,7 +120,7 @@ class RoleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Role successfully deleted',
-                'redirectUrl' => route('admin.authentication.role.view')
+                'redirectUrl' => route('admin.authentication.roles.view')
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -155,7 +150,7 @@ class RoleController extends Controller
 
     protected function view($page_content = 'view_roles', $data = [])
     {
-        return view("dashboard.page_access.role.main_view", array_merge([
+        return view("dashboard.authentication.roles.main_view", array_merge([
             'page_content' => $page_content,
         ], $data));
     }

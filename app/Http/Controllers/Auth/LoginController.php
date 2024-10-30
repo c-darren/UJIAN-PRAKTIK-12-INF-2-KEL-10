@@ -56,15 +56,14 @@ class LoginController extends Controller
             }
     
             Auth::login($user);
-            $role_name = Role::where('id', session('role_id'))->value('role');
+            $role_name = Role::where('id', $user->role_id)->value('role');
 
-            session([
+            session()->put([
                 'roleID' => $user->role_id,
                 'role' => $role_name,
                 'username' => $user->username,
                 'name' => $user->name,
                 'email' => $user->email,
-                'password' => $user->password,
             ]);
     
             if ($request->expectsJson()) {
@@ -73,8 +72,8 @@ class LoginController extends Controller
                     'redirect_url' => url('/dashboard')
                 ]);
             }
-    
-            session()->flash('success', 'Login berhasil!');
+            session()->flash('success', json_encode(session()->all()));    
+            // session()->flash('success', 'Login berhasil!');
             return back();
             // return redirect()->intended('/dashboard');
         }

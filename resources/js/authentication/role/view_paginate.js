@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const dataTable = new simpleDatatables.DataTable("#routes_table", {
+    const dataTable = new simpleDatatables.DataTable("#roles_table", {
         searchable: true,
         sortable : true,
         paging: true,
