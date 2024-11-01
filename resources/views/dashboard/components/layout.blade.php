@@ -35,7 +35,8 @@
                 @yield('footer')
             </div>
         </div>
+        {{-- Default Scripts --}}
         <script src="{{ asset('js/route/dashboard/effects/fade.js') }}"></script>
-        @yield('scripts')
+
     </body>
 </html>

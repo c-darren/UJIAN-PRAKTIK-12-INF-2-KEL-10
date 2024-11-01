@@ -212,10 +212,6 @@
                 </div>
             </div>
         </div>
-    </div><!--If there's a problem, remove this div-->
+    </div>{{-- If there's a problem, remove this div --}}
 </nav>
-@endsection
-
-@section('scripts')
-    <script src="{{ asset('js/route/dashboard/effects/fade.js') }}"></script>
 @endsection
