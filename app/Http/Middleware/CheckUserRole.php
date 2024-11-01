@@ -32,7 +32,6 @@ class CheckUserRole
             return redirect()->route('dashboard'); // Redirect ke dashboard jika sudah login
         }
         
-
         // Memeriksa apakah roleID valid
         if (!in_array($sessionRoleId, $allowedRoleID)) {
             if($request->segment(1) === 'dashboard') {
@@ -40,8 +39,6 @@ class CheckUserRole
             }else{
                 return redirect()->route('dashboard');
             }
-            dd("SESSION TIDAK COCOK");
-            dd($request->all());
         }
     
         return $next($request);

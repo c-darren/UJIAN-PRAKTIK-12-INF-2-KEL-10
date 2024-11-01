@@ -14,11 +14,17 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        if(Auth::check()) {
+            return redirect()->route('dashboard');
+        }
         return view('auth.login', ['title' => 'Login']);
     }
 
     public function login(Request $request)
     {
+        if(Auth::check()) {
+            return redirect()->route('dashboard');
+        }
         // Validasi input
         $validated = $request->validate([
             'login' => 'required|string',
