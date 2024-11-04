@@ -110,7 +110,7 @@
     </div>
 </div>
 
-@section('scripts')
+@section('required_scripts')
 <script type="text/javascript" src="{{ asset('js/authentication/role/view_paginate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/role/delete.js') }}"></script>
 @endsection

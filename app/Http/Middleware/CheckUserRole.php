@@ -17,7 +17,7 @@ class CheckUserRole
     public function handle(Request $request, Closure $next, ...$allowedRoleID): Response
     {
         $sessionRoleId = Session::get('roleID');
-    
+        
         // Jika roleID tidak ada
         if (empty($sessionRoleId)) {
             if ($request->segment(1) === 'login') {
@@ -40,7 +40,6 @@ class CheckUserRole
                 return redirect()->route('dashboard');
             }
         }
-    
         return $next($request);
     }
 }

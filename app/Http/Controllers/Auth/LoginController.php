@@ -70,6 +70,7 @@ class LoginController extends Controller
                 'username' => $user->username,
                 'name' => $user->name,
                 'email' => $user->email,
+                'avatar' => $user->avatar
             ]);
     
             if ($request->expectsJson()) {

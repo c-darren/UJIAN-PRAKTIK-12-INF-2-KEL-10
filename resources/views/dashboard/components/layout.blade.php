@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,9 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.7/dist/notiflix-aio-3.2.7.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/notiflix@3.2.7/src/notiflix.min.css" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        </style>
     <title>{{ config('app.name') }}</title>
     
 </head>
@@ -37,6 +40,6 @@
         </div>
         {{-- Default Scripts --}}
         <script src="{{ asset('js/route/dashboard/effects/fade.js') }}"></script>
-
+        @yield('required_scripts')
     </body>
 </html>
