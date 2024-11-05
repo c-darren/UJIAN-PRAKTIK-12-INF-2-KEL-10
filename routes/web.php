@@ -31,8 +31,7 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
             Route::get('/view', [RoleController::class, 'show'])->name('admin.authentication.roles.view');
             Route::get('/create', [RoleController::class, 'create'])->name('admin.authentication.roles.create');
             Route::post('/store', [RoleController::class, 'store'])->name('admin.authentication.roles.store');
-            Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('admin.authentication.roles.edit');
-            Route::post('/edit/{id}', [RoleController::class, 'update'])->name('admin.authentication.roles.update');
+            Route::put('/edit/{id}', [RoleController::class, 'update'])->name('admin.authentication.roles.update');
             Route::delete('/delete/{id}', [RoleController::class, 'destroy'])->name('admin.authentication.roles.destroy');
         });
         Route::prefix('user')->middleware(CheckUserRole::class . ':2,3')->group(function () {

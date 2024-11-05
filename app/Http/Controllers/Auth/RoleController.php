@@ -8,18 +8,6 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\CheckUserRole;
 class RoleController extends Controller
 {
-    protected $allowedRoleID;
-
-    public function checkRole()
-    {
-        $allowedRoleId = 1;
-        $sessionRoleId = session()->get('role_id');
-    
-        if ($sessionRoleId !== $allowedRoleId) {
-            return redirect()->route('dashboard');
-        };
-        return null;
-    }
     public function show()
     {
         $roles = Role::select('id', 'role', 'description')->get();
@@ -46,10 +34,11 @@ class RoleController extends Controller
         ]);
 
         try {
-            Role::create([
-                'role' => $request->input('role'),
-                'description' => $request->input('description'),
-            ]);
+            $role = new Role();
+            $role->role = $request->input('role');
+            $role->description = $request->input('description');
+            $role->updated_at = null;
+            $role->save();
         
             return response()->json([
                 'success' => true,
@@ -89,14 +78,14 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
 
         $request->validate([
-            'role' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'roleName' => 'required|string|max:255',
+            'roleDesc' => 'required|string',
         ]);
 
         try {
             $role->update([
-                'role' => $request->input('role'),
-                'description' => $request->input('description'),
+                'role' => $request->input('roleName'),
+                'description' => $request->input('roleDesc'),
             ]);
             return response()->json([
                 'success' => true,
