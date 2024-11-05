@@ -84,10 +84,15 @@ class="relative">
                             <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ $role->id }}</td>
                                 <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ $role->role }}</td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">{{ $role->description }}</td>
+                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ Str::limit($role->description, 30, '...') ?? $role->description }}</td>
                                 <td class="p-4 space-x-2 whitespace-nowrap">
-                                    {{-- <a href="{{ route('admin.authentication.roles.edit', $role->id) }}" class="text-black bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-4 py-2 text-center me-2 mb-2 dark:focus:ring-yellow-900">Edit</a>
-                                     --}}
+                                    <button
+                                        class="read-more-role-btn text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
+                                        data-id="{{ $role->id }}"
+                                        data-role_name="{{ $role->role }}"
+                                        data-desc="{{ $role->description }}">
+                                    Read More
+                                    </button>
                                     <button
                                         class="edit-role-btn text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
                                         data-id="{{ $role->id }}"
@@ -106,8 +111,107 @@ class="relative">
                             @endforeach
                         </tbody>
                     </table>
-                    
                 </div>
+            </div>
+        </div>
+    </div>
+    {{-- Create Modal Button --}}
+    <button @click="$store.createModal.show()" id="showCreateModal" class="hidden"></button>
+
+    {{-- Create Modal --}}
+    <div x-show="$store.createModal.open"
+        x-data="createModalData()"
+        x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 overflow-y-auto"
+        @keydown.escape.window="$store.createModal.close()"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform scale-90"
+        x-transition:enter-end="opacity-100 transform scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 transform scale-100"
+        x-transition:leave-end="opacity-0 transform scale-90">
+
+        <div @click.away="$store.createModal.close()"
+            class="bg-white dark:bg-gray-800 w-full max-w-3xl p-6 space-y-6 rounded-lg shadow-lg relative overflow-y-auto">
+            
+            <div class="sticky top-0 bg-white dark:bg-gray-800 z-30 p-4 border-b border-gray-200 dark:border-gray-700 shadow-md">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">New Role</h3>
+                    <button @click="$store.createModal.close()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 max-h-[70vh] overflow-y-auto" id="createRoleForm" x-ref="createRoleForm">
+                    @csrf
+                    <!-- Role -->
+                    <div class="sm:col-span-2">
+                        <label for="roleName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role Name</label>
+                        <input type="text" name="roleName" id="roleName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter prefix name" required>
+                        <small class="text-red-500">Role must be unique.</small>
+                    </div> 
+                    
+                    <!-- Description -->
+                    <div class="sm:col-span-2">
+                        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                        <textarea id="desc" name="desc" rows="2" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter description"></textarea>
+                    </div>
+                </form>
+
+            <div class="flex items-center justify-end space-x-2 border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 pt-4 sticky bottom-0">
+                <button @click="$store.createModal.close()" class="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded">Cancel</button>
+                <button @click="resetCreateForm()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Reset</button>
+                <button @click="submitCreateForm" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Add Roles</button>
+            </div>
+        </div>
+    </div>
+    
+    {{-- Read More Modal --}}
+    <div x-show="$store.readmoreModal.open"
+        x-data="readmoreModalData()"
+        x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 overflow-y-auto"
+        @keydown.escape.window="$store.readmoreModal.close()"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform scale-90"
+        x-transition:enter-end="opacity-100 transform scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 transform scale-100"
+        x-transition:leave-end="opacity-0 transform scale-90">
+    
+        <div @click.away="$store.readmoreModal.close()"
+            class="bg-white dark:bg-gray-800 w-full max-w-2xl p-6 space-y-6 rounded-lg shadow-lg relative overflow-y-auto">
+            
+            <div class="sticky top-0 bg-white dark:bg-gray-800 z-30 p-4 border-b border-gray-200 dark:border-gray-700 shadow-md">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Role Details</h3>
+                    <button @click="$store.readmoreModal.close()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div class="mb-4">
+                    <p class="text-sm text-gray-400 dark:text-white">ID:</p>
+                    <p x-text="$store.readmoreModal.role.id" class="dark:text-white"></p>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-sm text-gray-400 dark:text-white">Role Name:</p>
+                    <p x-text="$store.readmoreModal.role.role_name" class="dark:text-white"></p>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-sm text-gray-400 dark:text-white">Description:</p>
+                    <p x-text="$store.readmoreModal.role.desc" class="dark:text-white"></p>
+                </div>
+            </div>
+            <div class="flex items-center justify-end space-x-2 border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 pt-4 sticky bottom-0">
+                <button @click="$store.readmoreModal.close()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Close</button>
             </div>
         </div>
     </div>
@@ -221,6 +325,8 @@ class="relative">
 
 @section('required_scripts')
 <script type="text/javascript" src="{{ asset('js/authentication/role/view_paginate.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/authentication/role/read_more.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/authentication/role/create.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/role/edit.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/role/delete.js') }}"></script>
 @endsection

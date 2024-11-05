@@ -29,14 +29,14 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'role' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'roleName' => 'required|string|max:255',
+            'desc' => 'required|string',
         ]);
 
         try {
             $role = new Role();
-            $role->role = $request->input('role');
-            $role->description = $request->input('description');
+            $role->role = $request->input('roleName');
+            $role->description = $request->input('desc');
             $role->updated_at = null;
             $role->save();
         
