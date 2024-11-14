@@ -65,6 +65,7 @@ class LoginController extends Controller
             $role_name = Role::where('id', $user->role_id)->value('role');
 
             session()->put([
+                'userID' => $user->id,
                 'roleID' => $user->role_id,
                 'role' => $role_name,
                 'username' => $user->username,

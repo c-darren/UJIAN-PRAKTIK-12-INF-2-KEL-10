@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\Auth\Role;
 use Illuminate\Http\Request;
-use App\Http\Middleware\CheckUserRole;
+use App\Http\Controllers\Controller;
+use App\Events\Authentication\RolesUpdated;
+
 class RoleController extends Controller
 {
     public function show()
     {
-        $roles = Role::select('id', 'role', 'description')->get();
-        return $this->view('view_roles', compact('roles'));
+        // $roles = Role::select('id', 'role', 'description')->get();
+        // RolesUpdated::dispatch($roles);
+        return $this->view('view_roles');
     }
 
     public function show_deleted()
     {
         $deletedRoles = Role::onlyTrashed()->get();
         return $this->view('view_roles', compact('deletedRoles'));
-    }
-
-    public function create()
-    {
-        $redirectUrl = route('admin.authentication.roles.view');
-        return $this->view('add_roles', compact('redirectUrl'));
     }
 
     public function store(Request $request)
@@ -42,8 +38,6 @@ class RoleController extends Controller
         
             return response()->json([
                 'success' => true,
-                'message' => 'Role successfully saved.',
-                'redirectUrl' => route('admin.authentication.roles.view')
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
@@ -51,26 +45,6 @@ class RoleController extends Controller
                 'message' => 'Error while saving roles: ' . $e->getMessage(),
             ], 500);
         }
-    }
-
-    public function edit($id)
-    {
-        if (!is_numeric($id) || $id == null) {
-            return redirect()->route('admin.authentication.roles.view')->with('messageError', [
-                'title' => 'ID Not Found',
-                'message' => 'Make sure you have a valid id!'
-            ]);
-        }
-        $role = Role::select('id')->find($id);
-        if ($role == null) {
-            return redirect()->route('admin.authentication.roles.view')->with('messageError', [
-                'title' => 'ID: ' . $id . ' Not Found',
-                'message' => 'Make sure you have a valid id!',
-            ]);
-        };
-        $role = Role::select('id', 'role', 'description')->find($id);
-        $redirectUrl = route('admin.authentication.roles.view');
-        return $this->view('edit_roles', compact('role', 'redirectUrl'));
     }
 
     public function update(Request $request, $id)
@@ -87,11 +61,12 @@ class RoleController extends Controller
                 'role' => $request->input('roleName'),
                 'description' => $request->input('roleDesc'),
             ]);
+            $roles = Role::select('id', 'role', 'description')->get();
+            event(new RolesUpdated($roles));
             return response()->json([
                 'success' => true,
-                'message' => 'You will be redirected to Role List in 2 seconds',
-                'redirectUrl' => route('admin.authentication.roles.view')
             ], 201);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -108,8 +83,6 @@ class RoleController extends Controller
     
             return response()->json([
                 'success' => true,
-                'message' => 'Role successfully deleted',
-                'redirectUrl' => route('admin.authentication.roles.view')
             ]);
         } catch (\Exception $e) {
             return response()->json([

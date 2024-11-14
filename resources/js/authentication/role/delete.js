@@ -17,6 +17,8 @@ document.addEventListener('alpine:init', () => {
         show(roleData) {
             this.role = roleData;
             this.open = true;
+
+            document.getElementsByClassName('roleName-value')[0].value = '';
         },
         close() {
             this.open = false;
@@ -77,11 +79,12 @@ function deleteModalData() {
             })
             .then(data => {
                 if (data.success) {
-                    Notiflix.Report.success('Success', data.message, 'OK');
+                    deleteRoleForm.reset();
+                    Notiflix.Notify.success('Role has been successfully deleted.', {
+                        timeout: 2000, // Waktu dalam milidetik sebelum notifikasi hilang
+                        clickToClose: true, // Notifikasi akan ditutup saat diklik
+                    });
                     Alpine.store('deleteModal').close();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
                 } else {
                     Notiflix.Report.failure('Failed', data.message, 'OK');
                 }

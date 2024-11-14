@@ -89,11 +89,11 @@ function editModalData() {
             })
             .then(data => {
                 if (data.success) {
-                    Notiflix.Report.success('Success', data.message, 'OK');
+                    Notiflix.Notify.success('Role has been successfully updated.', {
+                        timeout: 2000,
+                        clickToClose: true,
+                    });
                     Alpine.store('editModal').close();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
                 } else {
                     Notiflix.Report.failure('Failed', data.message, 'OK');
                 }

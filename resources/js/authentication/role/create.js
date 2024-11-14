@@ -89,11 +89,12 @@ function createModalData() {
             })
             .then(data => {
                 if (data.success) {
-                    Notiflix.Report.success('Success', data.message, 'OK');
+                    Notiflix.Notify.success('Role has been successfully created.', {
+                        timeout: 2000,
+                        clickToClose: true,
+                    });
                     Alpine.store('createModal').close();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    this.resetCreateForm();
                 } else {
                     Notiflix.Report.failure('Failed', data.message, 'OK');
                 }

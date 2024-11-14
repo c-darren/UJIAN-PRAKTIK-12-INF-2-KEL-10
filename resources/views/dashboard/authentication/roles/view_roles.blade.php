@@ -17,8 +17,7 @@
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                     </svg>
                     <div class="ms-3 text-sm font-medium">
-                        <span class="font-semibold">N/A:</span>
-                        No data is available. This may be caused by the absence of related roles or because this data hasn't been edited yet.
+                        Table data will be updated every 10 seconds.
                     </div>
                     <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-blue-50 text-blue-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-blue-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700" data-dismiss-target="#info_creator_id_NA" aria-label="Close">
                         <span class="sr-only">Dismiss</span>
@@ -31,7 +30,13 @@
         </div>
     </div>
 </div>
-<div x-data="{ 
+<div x-data="{
+    $store: { 
+        readmoreModal: { open: false, role: {} },
+        createModal: { open: false },
+        editModal: { open: false },
+        deleteModal: { open: false }
+    },
     open: false, 
     role: {}, 
     showModal(roleData) { 
@@ -39,79 +44,13 @@
         this.role = roleData; 
         this.open = true; 
     } 
-}" 
-@keydown.escape.window="open = false"
-class="relative">
+    }"
+    @keydown.escape.window="open = false"
+    class="relative">
     <div class="flex flex-col py-1">
         <div class="overflow-x-auto">
             <div class="inline-block min-w-full align-middle">
-                <div class="overflow-hidden shadow">
-                    <table class="table-auto min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="roles_table">
-                        <thead class="bg-gray-100 dark:bg-gray-700">
-                            <tr>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">ID
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Role
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Description
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Actions
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                            @foreach ($roles as $role)
-                            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ $role->id }}</td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ $role->role }}</td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ Str::limit($role->description, 30, '...') ?? $role->description }}</td>
-                                <td class="p-4 space-x-2 whitespace-nowrap">
-                                    <button
-                                        class="read-more-role-btn text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
-                                        data-id="{{ $role->id }}"
-                                        data-role_name="{{ $role->role }}"
-                                        data-desc="{{ $role->description }}">
-                                    Read More
-                                    </button>
-                                    <button
-                                        class="edit-role-btn text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
-                                        data-id="{{ $role->id }}"
-                                        data-role_name="{{ $role->role }}"
-                                        data-desc="{{ $role->description }}">
-                                    Edit
-                                    </button>
-                                    <button
-                                        class="delete-role-btn text-white bg-red-600 hover:bg-red-650 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
-                                        data-id="{{ $role->id }}"
-                                        data-role_name="{{ $role->role }}">
-                                    Delete
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                @livewire('authentication.roles-table')
             </div>
         </div>
     </div>
@@ -170,7 +109,7 @@ class="relative">
     
     {{-- Read More Modal --}}
     <div x-show="$store.readmoreModal.open"
-        x-data="readmoreModalData()"
+        x-data="{}"
         x-cloak
         class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 overflow-y-auto"
         @keydown.escape.window="$store.readmoreModal.close()"
@@ -310,7 +249,7 @@ class="relative">
                     <label class="block font-medium text-gray-900 dark:text-white mb-3 text-lg">
                         Are you sure you want to delete role <span class="bold" x-text="$store.deleteModal.role.role_name"></span>?<br>Please enter the role name to confirm.
                     </label>
-                    <input type="text" id="roleName" name="roleName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    <input type="text" id="roleName" name="roleName" class="roleName-value bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 </div>
             </form>
 
@@ -324,7 +263,6 @@ class="relative">
 </div>
 
 @section('required_scripts')
-<script type="text/javascript" src="{{ asset('js/authentication/role/view_paginate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/role/read_more.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/role/create.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/role/edit.js') }}"></script>
