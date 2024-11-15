@@ -107,11 +107,11 @@ function editModalData() {
             .then(data => {
                 console.log('Response Data:', data);
                 if (data.success) {
-                    Notiflix.Report.success('Berhasil Memperbarui Pengguna', data.message, 'Oke');
+                    Notiflix.Notify.success('User has been successfully updated.', {
+                        timeout: 2000,
+                        clickToClose: true,
+                    });
                     Alpine.store('editModal').close();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
                 } else {
                     Notiflix.Report.failure('Gagal Memperbarui Pengguna', data.message, 'Oke');
                 }

@@ -47,113 +47,7 @@ class="relative">
     <div class="flex flex-col py-1">
         <div class="overflow-x-auto">
             <div class="inline-block min-w-full align-middle">
-                <div class="overflow-hidden shadow">
-                    
-                    <table class="table-auto min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="users_table">
-                        <thead class="bg-gray-100 dark:bg-gray-700">
-                            <tr>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">ID
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Name
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Username
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Email
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Role
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                    </span>
-                                </th>
-                                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                    <span class="flex items-center">Actions
-                                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                    </svg>
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                            @foreach ($users as $user)
-                            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">{{ $user->id }}</td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 break-all">{{ $user->name }}</td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">{{ $user->username }}</td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
-                                    <span class="flex items-center">
-                                        <span class="mr-1.5">{{ $user->email }}</span>
-                                        @if($user->email_verified_at)
-                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z" />
-                                        </svg>
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400">{{ $user->role->role }}</td>
-                                <td class="p-4 space-x-2 whitespace-nowrap">
-                                    <button
-                                        class="read-more-btn text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
-                                        data-id="{{ $user->id }}"
-                                        data-name="{{ $user->name }}"
-                                        data-username="{{ $user->username }}"
-                                        data-email="{{ $user->email }}"
-                                        data-email-verified-at="{{ $user->email_verified_at ?? 'N/A' }}"
-                                        data-role="{{ $user->role->role ?? 'N/A' }}"
-                                        data-created-at="{{ $user->created_at }}"
-                                        data-updated-at="{{ $user->updated_at }}"
-                                        data-avatar="{{ env('APP_URL') . 'public/storage/' . ($user->avatar ?? 'no_image.png') }}">
-                                        Read More
-                                    </button>
-                                    <button
-                                        class="edit-user-btn text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
-                                        data-id="{{ $user->id }}"
-                                        data-name="{{ $user->name }}"
-                                        data-username="{{ $user->username }}"
-                                        data-email="{{ $user->email }}"
-                                        data-role_id="{{ $user->role->id ?? 'N/A' }}"
-                                        data-avatar="{{ env('APP_URL') . 'public/storage/' . ($user->avatar ?? 'no_image.png') }}">
-                                        Edit
-                                    </button>
-                                    <button
-                                        class="delete-user-btn text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 me-2 mb-2 dark:focus:ring-blue-900"
-                                        data-id="{{ $user->id }}"
-                                        data-name="{{ $user->name }}"
-                                        data-username="{{ $user->username }}"
-                                        data-email="{{ $user->email }}"
-                                        data-role_name="{{ $user->role->role ?? 'N/A' }}"
-                                        data-avatar="{{ env('APP_URL') . 'public/storage/' . ($user->avatar ?? 'no_image.png') }}">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                @livewire('authentication.users-table')
             </div>
         </div>
     </div>
@@ -431,7 +325,6 @@ class="relative">
 </div>
 
 @section('required_scripts')
-<script type="text/javascript" src="{{ asset('js/authentication/user/view_paginate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/user/view_modal.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/user/edit.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/authentication/user/delete.js') }}"></script>

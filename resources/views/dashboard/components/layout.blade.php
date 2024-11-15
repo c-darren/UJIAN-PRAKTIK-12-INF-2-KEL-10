@@ -44,6 +44,7 @@
         {{-- <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script> --}}
         {{-- <script type="text/javascript" src="{{ asset('js/websocket/websocket.js') }}"></script> --}}
         @yield('required_scripts')
+        {{-- @livewireScriptConfig --}}
         @livewireScripts
     </body>
 </html>

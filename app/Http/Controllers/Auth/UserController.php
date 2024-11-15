@@ -92,8 +92,7 @@ class UserController extends Controller
         ->select('id', 'name', 'username', 'email', 'email_verified_at', 'role_id', 'avatar', 'created_at', 'updated_at')
         ->get();
         $roles = Role::select('id', 'role')->get();
-        $redirectUrl = route('admin.authentication.users.view');
-        return $this->view('view_users', compact('users', 'roles', 'redirectUrl'));
+        return $this->view('view_users', compact('users', 'roles'));
     }
     
     /**
@@ -125,8 +124,13 @@ class UserController extends Controller
     
         $user->name = $validatedData['fullName'];
         $user->username = $validatedData['username'];
+        if ($user->email !== $validatedData['email']) {
+            $user->email_verified_at = null; // Set email_verified_at to null if email is changed
+        }        
         $user->email = $validatedData['email'];
         $user->role_id = $validatedData['roleId'];
+
+        // Check if email has changed, and if so, remove email verification timestamp
     
         if ($request->input('resetPassword')) {
             $user->password = Hash::make('password');

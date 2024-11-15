@@ -86,11 +86,11 @@ function deleteModalData() {
             .then(data => {
                 console.log('Response Data:', data);
                 if (data.success) {
-                    Notiflix.Report.success('User Deleted Successfully', data.message, 'OK');
+                    Notiflix.Notify.success('User has been successfully deleted.', {
+                        timeout: 2000,
+                        clickToClose: true,
+                    });
                     Alpine.store('deleteModal').close();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
                 } else {
                     Notiflix.Report.failure('Failed to Delete User', data.message, 'OK');
                 }
