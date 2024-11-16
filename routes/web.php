@@ -5,28 +5,13 @@ use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\LogUserAccess;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\VerifyEmailController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
-
-// Rute untuk verifikasi email
-Route::middleware(['auth'])->group(function () {
-    Route::get('/email/verify', [DashboardController::class, 'index'])
-    ->name('verification.notice');
-    Route::post('/email/resend', [VerifyEmailController::class, 'resend'])
-    ->name('verification.resend');
-});
-
-// Rute untuk memproses verifikasi email
-Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
-    ->middleware(['auth', 'signed'])
-    ->name('verification.verify');
 
 // Rute untuk memproses verifikasi email baru
 Route::get('/email/change/verify/{id}/{hash}', [ChangeEmailController::class, 'verify'])
@@ -36,15 +21,15 @@ Route::get('/email/change/verify/{id}/{hash}', [ChangeEmailController::class, 'v
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
-Route::middleware(['web', 'auth', LogUserAccess::class])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard.dashboard');
+    })
     ->name('dashboard');
 
     Route::post('/logout', [LogoutController::class, 'logout'])
     ->name('logout');
-});
-
-Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(function () {
+    
     Route::prefix('admin')->group(function(){
         Route::prefix('role')->middleware(CheckUserRole::class . ':2,3')->group(function () {
             Route::get('/view', [RoleController::class, 'show'])->name('admin.authentication.roles.view');
