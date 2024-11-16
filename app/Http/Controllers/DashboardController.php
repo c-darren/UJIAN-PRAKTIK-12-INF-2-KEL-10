@@ -10,11 +10,11 @@ class DashboardController extends Controller
     public function index(){
         return $this->emailVerifyNotification();
     }
-
+    
     public function emailVerifyNotification()
     {
         $user = Auth::user();
-
+        
         $showVerificationAlert = is_null($user->email_verified_at);
         
         return $this->view([
@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
     public function view(array $data = [])
     {
-        return view('dashboard.dashboard', array_merge($data));
+        return view('dashboard.dashboard.dashboard', array_merge($data));
     }
 
 }
