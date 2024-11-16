@@ -42,6 +42,11 @@ return [
         ],
     ],
 
+    //Expires generated url in minutes
+    'verification' => [
+        'expire' => 5,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | User Providers

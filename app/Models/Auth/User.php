@@ -2,14 +2,16 @@
 
 namespace App\Models\Auth;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\CustomVerifyEmailNotification;
+use App\Notifications\SuccessVerifyEmailNotification;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, SoftDeletes;
 
@@ -54,5 +56,14 @@ class User extends Authenticatable
     {
         //1 User memiliki 1 Role
         return $this->belongsTo(Role::class);
+    }
+
+    public function sendEmailVerificationNotificationCustom(){
+        $this->notify(new CustomVerifyEmailNotification($this->username));
+    }
+
+    public function successVerifyEmailNotification()
+    {
+        $this->notify(new SuccessVerifyEmailNotification($this->username));
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\AdminSendEmailVerificationNotificationCustom;
 
 class UserController extends Controller
 {
@@ -64,8 +65,15 @@ class UserController extends Controller
         ]);
         $user->updated_at = null;
         $user->saveQuietly();
+        $creatorInfo = session()->get('userID') . ' - ' . session()->get('username');
 
         if ($user) {
+            $user->notify(new AdminSendEmailVerificationNotificationCustom(
+                $user->username, 
+                $user->email,
+                $creatorInfo
+
+            ));
             return response()->json([
                 'success'   => true,
                 'message'   => 'User created successfully.',
@@ -126,7 +134,7 @@ class UserController extends Controller
         $user->username = $validatedData['username'];
         if ($user->email !== $validatedData['email']) {
             $user->email_verified_at = null; // Set email_verified_at to null if email is changed
-        }        
+        }
         $user->email = $validatedData['email'];
         $user->role_id = $validatedData['roleId'];
 

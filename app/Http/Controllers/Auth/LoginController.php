@@ -49,18 +49,6 @@ class LoginController extends Controller
                 session()->flash('error', 'Password salah');
                 return back();}
     
-            if ($user->email_verified_at === null) {
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Email belum terverifikasi'
-                    ]);
-                }
-                
-                session()->flash('error', 'Email belum terverifikasi');
-                return back();
-            }
-    
             Auth::login($user);
             $role_name = Role::where('id', $user->role_id)->value('role');
 
