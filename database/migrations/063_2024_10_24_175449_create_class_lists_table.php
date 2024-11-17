@@ -37,20 +37,6 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->primary(['class_id', 'student_id']);
         });
-
-        Schema::create('class_attendances', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
-            $table->foreignId('topic_id')->constrained('topics')->onDelete('cascade');
-            $table->datetime('attendance_date');
-        });
-    
-        Schema::create('class_presences', function (Blueprint $table) {
-            $table->foreignId('attendance_id')->constrained('class_attendances')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa'])->default('Hadir');
-            $table->primary(['attendance_id', 'student_id']);            
-        });
     }
 
     /**

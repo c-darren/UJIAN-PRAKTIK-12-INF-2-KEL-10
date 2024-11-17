@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('page_title');
             $table->foreignId('prefix_id')->nullable()->constrained('access_routes_prefixes')->onDelete('set null'); // Mengaitkan dengan prefix
-            $table->string('page_url');
+            $table->string('page_url')->unique();
             $table->string('method');
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('editor_id')->nullable()->constrained('users')->onDelete('set null');
@@ -31,7 +31,6 @@ return new class extends Migration
             $table->string('type_group_list');
             $table->string('description')->nullable();
             $table->timestamps();
-            $table->unique(['page_url', 'type']);
         });
 
         Schema::create('routes_access_role', function (Blueprint $table) {
