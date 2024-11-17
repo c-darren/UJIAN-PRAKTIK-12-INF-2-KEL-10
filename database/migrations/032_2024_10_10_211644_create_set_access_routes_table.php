@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('page_title');
             $table->foreignId('prefix_id')->nullable()->constrained('access_routes_prefixes')->onDelete('set null'); // Mengaitkan dengan prefix
             $table->string('page_url');
-            //Menandakan prefix atau tidak
-            $table->string('type');
             $table->string('method');
             $table->foreignId('creator_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('editor_id')->nullable()->constrained('users')->onDelete('set null');
