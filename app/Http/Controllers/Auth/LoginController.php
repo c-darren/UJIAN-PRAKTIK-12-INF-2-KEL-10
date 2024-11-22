@@ -41,12 +41,12 @@ class LoginController extends Controller
                 if ($request->expectsJson()) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Password salah'
+                        'message' => 'Wrong Password'
                     ]);
                 }
                 
                 // Jika bukan AJAX, kembali ke halaman sebelumnya
-                session()->flash('error', 'Password salah');
+                session()->flash('error', 'Wrong Password');
                 return back();}
     
             Auth::login($user);
@@ -77,11 +77,11 @@ class LoginController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Akun pengguna tidak ditemukan'
+                'message' => 'User account not found'
             ]);
         }
     
-        session()->flash('error', 'Akun pengguna tidak ditemukan');
+        session()->flash('error', 'User account not found');
         return back();
     }
 }

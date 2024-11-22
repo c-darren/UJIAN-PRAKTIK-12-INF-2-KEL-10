@@ -44,6 +44,7 @@ class AdminSendEmailVerificationNotificationCustom extends Notification implemen
         $creatorInfo = $this->creatorInfo; // UserID dan username pembuat
 
         return (new MailMessage)
+                    ->subject('Welcome to Our Application!')
                     ->greeting('Welcome to Our Application!')
                     ->line('Your account has been successfully created by an administrator.')
                     ->line('Here are your account details:')

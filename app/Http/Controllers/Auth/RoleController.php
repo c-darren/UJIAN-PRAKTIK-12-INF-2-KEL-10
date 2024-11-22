@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Models\Auth\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Events\Authentication\RolesUpdated;
 
 class RoleController extends Controller
 {
@@ -61,8 +60,6 @@ class RoleController extends Controller
                 'role' => $request->input('roleName'),
                 'description' => $request->input('roleDesc'),
             ]);
-            $roles = Role::select('id', 'role', 'description')->get();
-            event(new RolesUpdated($roles));
             return response()->json([
                 'success' => true,
             ], 201);

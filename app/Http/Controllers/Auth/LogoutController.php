@@ -2,25 +2,31 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Auth\Logout;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class LogoutController extends Controller
 {
     public function logout(Request $request)
     {
-        // Log out the user
         Auth::logout();
-
-        // Invalidate the session
+    
         $request->session()->invalidate();
-
-        // Regenerate the session token to prevent session fixation
+    
         $request->session()->regenerateToken();
+    
+        // Delete all cookies by setting their expiration time to the past
+        foreach ($request->cookies->all() as $cookieName => $cookieValue) {
+            Cookie::queue(Cookie::forget($cookieName));
+        }
 
-        // Redirect to the login page or any other page you prefer
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Logged out successfully.']);
+        }
+    
         return redirect('/login')->with('status', 'You have been logged out successfully.');
     }
 }

@@ -6,21 +6,31 @@ use Carbon\Carbon;
 use App\Models\Auth\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class VerifyEmailController extends Controller
 {
-    public function verify(EmailVerificationRequest $request)
+    public function verify(Request $request, $id, $hash)
     {
-        $userID = session('userID');
-        $request->fulfill();
+        $user = User::findOrFail($id);
 
-        $user = User::findOrFail($userID);
-        $user->successVerifyEmailNotification();
+        // Verifikasi hash
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return redirect('/login')->with('error', 'Invalid verification link.');
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect('/login')->with('message', 'Email already verified.');
+        }
+
+        $user->markEmailAsVerified();
+
+        event(new Verified($user));
 
         return redirect()->route('dashboard')->with('verified', true);
     }
+
 
     public function resend(Request $request)
     {

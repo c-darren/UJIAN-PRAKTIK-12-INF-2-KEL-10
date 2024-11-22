@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -28,10 +30,17 @@ return Application::configure(basePath: dirname(__DIR__))
             'web' => [
                 'log' => \App\Http\Middleware\LogUserAccess::class,
                 'checkUserRole' => \App\Http\Middleware\CheckUserRole::class,
+                'ClearCookiesOnCSRFError' => \App\Http\Middleware\ClearCookiesOnCSRFError::class,
             ]
         ];
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // $exceptions->respond(function (Response $response) {
+        //     if ($response->getStatusCode() === 403) {
+        //         return redirect()->route('login')->with('error', 'The token is invalid or expired');
+        //     }
+     
+        //     return $response;
+        // });
     })
     ->create();
