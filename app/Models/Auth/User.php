@@ -2,16 +2,20 @@
 
 namespace App\Models\Auth;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-// use App\Models\Role;
+use App\Notifications\SendEmailCreateAccount;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use App\Notifications\CustomVerifyEmailNotification;
+use App\Notifications\SuccessVerifyEmailNotification;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -26,8 +30,6 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
-    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,17 +46,29 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at', 'email_verified_at'];
 
     public function role(): BelongsTo
     {
         //1 User memiliki 1 Role
         return $this->belongsTo(Role::class);
+    }
+
+    public function sendEmailVerificationNotificationCustom(){
+        $this->notify(new CustomVerifyEmailNotification($this->username));
+    }
+
+    public function successVerifyEmailNotification()
+    {
+        $this->notify(new SuccessVerifyEmailNotification($this->username));
+    }
+
+    public function sendEmailCreateAccount(){
+        $this->notify(new SendEmailCreateAccount($this->username));
     }
 }

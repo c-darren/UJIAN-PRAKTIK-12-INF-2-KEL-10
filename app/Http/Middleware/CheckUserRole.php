@@ -17,7 +17,7 @@ class CheckUserRole
     public function handle(Request $request, Closure $next, ...$allowedRoleID): Response
     {
         $sessionRoleId = Session::get('roleID');
-    
+        
         // Jika roleID tidak ada
         if (empty($sessionRoleId)) {
             if ($request->segment(1) === 'login') {
@@ -32,7 +32,6 @@ class CheckUserRole
             return redirect()->route('dashboard'); // Redirect ke dashboard jika sudah login
         }
         
-
         // Memeriksa apakah roleID valid
         if (!in_array($sessionRoleId, $allowedRoleID)) {
             if($request->segment(1) === 'dashboard') {
@@ -40,10 +39,7 @@ class CheckUserRole
             }else{
                 return redirect()->route('dashboard');
             }
-            dd("SESSION TIDAK COCOK");
-            dd($request->all());
         }
-    
         return $next($request);
     }
 }

@@ -14,11 +14,17 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        if(Auth::check()) {
+            return redirect()->route('dashboard');
+        }
         return view('auth.login', ['title' => 'Login']);
     }
 
     public function login(Request $request)
     {
+        if(Auth::check()) {
+            return redirect()->route('dashboard');
+        }
         // Validasi input
         $validated = $request->validate([
             'login' => 'required|string',
@@ -35,35 +41,25 @@ class LoginController extends Controller
                 if ($request->expectsJson()) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Password salah'
+                        'message' => 'Wrong Password'
                     ]);
                 }
                 
                 // Jika bukan AJAX, kembali ke halaman sebelumnya
-                session()->flash('error', 'Password salah');
+                session()->flash('error', 'Wrong Password');
                 return back();}
-    
-            if ($user->email_verified_at === null) {
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Email belum terverifikasi'
-                    ]);
-                }
-                
-                session()->flash('error', 'Email belum terverifikasi');
-                return back();
-            }
     
             Auth::login($user);
             $role_name = Role::where('id', $user->role_id)->value('role');
 
             session()->put([
+                'userID' => $user->id,
                 'roleID' => $user->role_id,
                 'role' => $role_name,
                 'username' => $user->username,
                 'name' => $user->name,
                 'email' => $user->email,
+                'avatar' => $user->avatar
             ]);
     
             if ($request->expectsJson()) {
@@ -81,11 +77,11 @@ class LoginController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Akun pengguna tidak ditemukan'
+                'message' => 'User account not found'
             ]);
         }
     
-        session()->flash('error', 'Akun pengguna tidak ditemukan');
+        session()->flash('error', 'User account not found');
         return back();
     }
 }

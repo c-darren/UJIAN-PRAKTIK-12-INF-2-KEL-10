@@ -37,13 +37,6 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->primary(['class_id', 'student_id']);
         });
-    
-        Schema::create('class_presences', function (Blueprint $table) {
-            $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa'])->default('Hadir');
-            $table->primary(['class_id', 'student_id']);            
-        });
     }
 
     /**

@@ -2,6 +2,12 @@ import './bootstrap';
 import 'flowbite';
 import 'flowbite-typography';
 import './default/app.bundle.js';
+// import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+// import Clipboard from '@ryangjchandler/alpine-clipboard'
+ 
+// Alpine.plugin(Clipboard)
+ 
+// Livewire.start()
 // import 'notiflix/build/notiflix-aio';
 // import Notiflix from 'notiflix';
 // // Notify
@@ -18,7 +24,7 @@ import './default/app.bundle.js';
 
 // // Block
 // Notiflix.Block.init({});
-import Alpine from 'alpinejs';
-window.Alpine = Alpine
+// import Alpine from 'alpinejs';
+// window.Alpine = Alpine
  
-Alpine.start();
+// Alpine.start();

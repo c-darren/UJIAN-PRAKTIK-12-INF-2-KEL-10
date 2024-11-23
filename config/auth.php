@@ -42,6 +42,11 @@ return [
         ],
     ],
 
+    //Expires generated url in minutes
+    'verification' => [
+        'expire' => 5,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -94,8 +99,9 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
+            'expire' => 15,
+            'throttle' => 60, // in seconds
+            'hash' => true,
         ],
     ],
 
