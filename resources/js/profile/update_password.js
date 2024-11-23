@@ -1,123 +1,109 @@
-(() => {
-    const form = $('#password-reset-form');
-    let isButtonCooldown = false;
+$(() => {
+    const form = $('#password-update-form');
+    const togglePasswordClass = '.toggle-password';
 
-    form.on('submit', async function (event) {
-        event.preventDefault();
+    // Regex untuk validasi password
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-        // Cek apakah sedang dalam cooldown
-        if (isButtonCooldown) return;
+    // Toggle Password Visibility
+    function togglePasswordVisibility() {
+        $(togglePasswordClass).on('click', function () {
+            const $button = $(this);
+            const $targetInput = $($button.data('target'));
 
-        if (!validateForm()) {
-            return;
-        }
-
-        const formData = form.serialize();
-        const submitButton = form.find('button[type="submit"]');
-
-        // Menonaktifkan tombol dan menampilkan indikator loading
-        submitButton.prop('disabled', true);
-        isButtonCooldown = true;
-        const originalButtonText = submitButton.html();
-
-        try {
-            const response = await axios.post(form.attr('action'), formData, {
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'Accept': 'application/json',
-                }
-            });
-
-            const data = response.data;
-
-            if (data.success) {
-                Notiflix.Notify.success(data.message || 'Password reset link sent successfully.');
-            } else {
-                Notiflix.Notify.failure(data.message || 'Failed to send password reset link.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-
-            let errorData = error.response?.data;
-            let secondsLeft = 60; // Default cooldown
-
-            // Ekstrak sisa waktu dari response error
-            if (errorData && typeof errorData.secondsLeft === 'number') {
-                secondsLeft = Math.ceil(errorData.secondsLeft);
-            }
-
-            // Tampilkan pesan error
-            if (errorData && errorData.errors) {
-                Object.values(errorData.errors).forEach(errors => {
-                    errors.forEach(errorMessage => {
-                        Notiflix.Notify.failure(errorMessage);
-                    });
-                });
-            } else {
-                const errorMessage = errorData && errorData.message 
-                    ? errorData.message 
-                    : 'An error occurred. Please try again.';
-                Notiflix.Notify.failure(errorMessage);
-            }
-
-            // Mulai countdown
-            startButtonCountdown(submitButton, secondsLeft, originalButtonText);
-            return;
-        }
-
-        // Reset button di akhir proses
-        submitButton.prop('disabled', false);
-        submitButton.html(originalButtonText);
-        isButtonCooldown = false;
-    });
-
-    function startButtonCountdown(button, seconds, originalText) {
-        let countdownValue = Math.ceil(seconds);
-        button.prop('disabled', true);
-        
-        const updateButtonText = () => {
-            button.html(`Please wait ${countdownValue}s`);
-        };
-
-        updateButtonText();
-
-        const countdownInterval = setInterval(() => {
-            countdownValue -= 1;
-            
-            if (countdownValue > 0) {
-                updateButtonText();
-            } else {
-                clearInterval(countdownInterval);
-                button.prop('disabled', false);
-                button.html(originalText);
-                isButtonCooldown = false;
-            }
-        }, 1000);
+            // Toggle tipe input
+            const isPassword = $targetInput.attr('type') === 'password';
+            $targetInput.attr('type', isPassword ? 'text' : 'password');
+        });
     }
 
+    // Validasi Form
     function validateForm() {
-        const emailInput = $('#email');
-        const email = emailInput.val().trim();
+        const currentPassword = $('#current_password').val();
+        const password = $('#password').val().trim();
+        const confirmPassword = $('#password_confirmation').val().trim();
         let isValid = true;
 
-        // Reset error
-        emailInput.removeClass('input-error');
-
-        // Validasi Email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (email === '') {
-            showError(emailInput, 'Email is required.');
+        if (!currentPassword) {
+            Notiflix.Notify.failure('Current password is required.');
             isValid = false;
-        } else if (!emailRegex.test(email)) {
-            showError(emailInput, 'Please enter a valid email address.');
+        }
+
+        if (!password) {
+            Notiflix.Notify.failure('Password is required.');
+            isValid = false;
+        } else if (!passwordRegex.test(password)) {
+            Notiflix.Notify.failure(
+                'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+            );
+            isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+            Notiflix.Notify.failure('Password confirmation does not match.');
             isValid = false;
         }
 
         return isValid;
     }
 
-    function showError(inputElement, message) {
-        inputElement.addClass('input-error');
-        Notiflix.Notify.failure(message);
-    }
-})();
+    // Submit Form
+    form.on('submit', async function (event) {
+        event.preventDefault();
+
+        if (!validateForm()) return;
+
+        const formData = form.serialize();
+        const submitButton = form.find('button[type="submit"]');
+        const originalButtonText = submitButton.html();
+
+        submitButton.prop('disabled', true).text('Submitting...');
+
+        try {
+            const response = await axios.post(form.attr('action'), formData, {
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+            });
+
+            if (response.data.success) {
+                Notiflix.Notify.success(response.data.message || 'Password changed successfully.');
+                Notiflix.Notify.info('You need to log in again.');
+        
+                setTimeout(() => {
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                    $.ajax({
+                        url: '/logout',
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                        },
+                        success: function() {
+                            window.location.href = '/login';
+                        },
+                        error: function(xhr, status, error) {
+                            if (xhr.status === 419) {
+                                Notiflix.Notify.failure(csrfErrorMessage);
+                                location.reload();
+                            } else {
+                                Notiflix.Notify.failure('An unexpected error occurred.');
+                            }
+                        }
+                    });
+                }, 4000);
+            } else {
+                Notiflix.Notify.failure(response.data.message || 'Failed to change password.');
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+            Notiflix.Notify.failure(errorMessage);
+        } finally {
+            submitButton.prop('disabled', false).html(originalButtonText);
+        }
+    });
+
+    // Inisialisasi Toggle Password Visibility
+    togglePasswordVisibility();
+});

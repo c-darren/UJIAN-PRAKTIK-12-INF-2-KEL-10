@@ -115,7 +115,13 @@ class ProfileController extends Controller
         // Validasi data input
         $request->validate([
             'current_password'      => 'required',
-            'password'              => 'required|string|min:6|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/',
+            ],
         ]);
 
         // Cek apakah current_password cocok dengan password pengguna

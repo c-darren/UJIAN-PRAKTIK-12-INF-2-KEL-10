@@ -39,10 +39,17 @@ class ResetPasswordController extends Controller
         $validator = Validator::make($request->all(), [
             'token'                 => 'required',
             'email'                 => 'required|email|exists:users,email',
-            'password'              => 'required|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/',
+            ],
         ], [
             'password.min' => 'Password must be at least 8 characters long.',
             'password.confirmed' => 'Password confirmation does not match.',
+            'password.regex' => 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.',
             'email.exists' => 'No account found with this email address.'
         ]);
 
