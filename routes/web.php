@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SignupController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\LogUserAccess;
@@ -38,8 +39,11 @@ Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify']
     ->name('verification.verify');
 
 Route::group(['middleware' => 'guest'], function () {
+    Route::get('/signup', [SignupController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/signup_process', [SignupController::class, 'register'])->name('register.submit');
+
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+    Route::post('/login_process', [LoginController::class, 'login'])->name('login.submit');
 
     Route::prefix('password')->group(function () {
         Route::get('/', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.index');

@@ -31,7 +31,6 @@ class VerifyEmailController extends Controller
         return redirect()->route('dashboard')->with('verified', true);
     }
 
-
     public function resend(Request $request)
     {
         $userID = session('userID');

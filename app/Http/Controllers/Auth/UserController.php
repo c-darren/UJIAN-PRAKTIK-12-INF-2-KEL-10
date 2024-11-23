@@ -50,7 +50,7 @@ class UserController extends Controller
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
         } else {
-            $avatarPath = null;
+            $avatarPath = 'avatars/no_image.png';
         }
 
         $user = User::create([

@@ -3,14 +3,15 @@
 namespace App\Models\Auth;
 
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\SendEmailCreateAccount;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use App\Notifications\CustomVerifyEmailNotification;
 use App\Notifications\SuccessVerifyEmailNotification;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -65,5 +66,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function successVerifyEmailNotification()
     {
         $this->notify(new SuccessVerifyEmailNotification($this->username));
+    }
+
+    public function sendEmailCreateAccount(){
+        $this->notify(new SendEmailCreateAccount($this->username));
     }
 }
