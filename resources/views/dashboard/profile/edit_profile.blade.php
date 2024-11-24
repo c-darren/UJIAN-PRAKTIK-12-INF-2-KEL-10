@@ -55,7 +55,8 @@
                         <div class="mt-5 text-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Current Avatar:</p>
                             @if ($user->avatar)
-                                <img src="{{ asset('storage/' . $user->avatar) }}" alt="Current Avatar" class="w-32 h-32 rounded-full mx-auto">
+                                {{-- <img src="{{ Storage::url(($user->avatar ?? 'no_image.png')) }}" alt="Current Avatar" class="w-32 h-32 rounded-full mx-auto"> --}}
+                                <img src="{{ Storage::url( ($user->avatar ?? 'avatars/no_image.png')) }}" alt="Current Avatar" class="w-32 h-32 rounded-full mx-auto">
                             @else
                                 <p class="text-center text-gray-500 dark:text-gray-400">No avatar uploaded.</p>
                             @endif

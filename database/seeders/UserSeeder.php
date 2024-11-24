@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Test User - Developer',
             'username' => 'user',
-            'avatar' => 'https://i.pravatar.cc/150?img=68',
+            'avatar' => '8g5qDqy40lDxs57OkLInlvEMtvaT5UuAS4c1D2hu.png',
             'role_id' => 2,
             'email' => 'darren@darren-project.kencang.id',
             'email_verified_at' => now(),

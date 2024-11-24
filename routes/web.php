@@ -69,7 +69,7 @@ Route::middleware(['web', 'auth', LogUserAccess::class])->group(function () {
     Route::get('/logout', [LogoutController::class, 'logout'])
     ->name('logout.get');
 
-    Route::prefix('profiles')->group(function () {
+    Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('profile.index');
         Route::get('/view', [ProfileController::class, 'show'])->name('profile.view');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');

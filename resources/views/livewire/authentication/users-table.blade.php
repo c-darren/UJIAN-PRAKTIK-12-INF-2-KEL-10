@@ -201,7 +201,7 @@
                                 data-role="{{ $user->role->role ?? 'N/A' }}"
                                 data-created-at="{{ $user->created_at }}"
                                 data-updated-at="{{ $user->updated_at }}"
-                                data-avatar="{{ env('APP_URL') . 'public/storage/' . ($user->avatar ?? 'no_image.png') }}">
+                                data-avatar="{{ env('APP_URL') . 'storage/' . ($user->avatar ?? 'no_image.png') }}">
                                 Read More
                             </button>
                             <button class="edit-user-btn text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
@@ -210,7 +210,7 @@
                                 data-username="{{ $user->username }}"
                                 data-email="{{ $user->email }}"
                                 data-role_id="{{ $user->role->id ?? 'N/A' }}"
-                                data-avatar="{{ env('APP_URL') . 'public/storage/' . ($user->avatar ?? 'no_image.png') }}">
+                                data-avatar="{{ env('APP_URL') . 'storage/' . ($user->avatar ?? 'no_image.png') }}">
                                 Edit
                             </button>
                             <button class="delete-user-btn text-white bg-red-600 hover:bg-red-650 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
@@ -219,7 +219,7 @@
                                 data-username="{{ $user->username }}"
                                 data-email="{{ $user->email }}"
                                 data-role_name="{{ $user->role->role ?? 'N/A' }}"
-                                data-avatar="{{ env('APP_URL') . 'public/storage/' . ($user->avatar ?? 'no_image.png') }}">
+                                data-avatar="{{ env('APP_URL') . 'storage/' . ($user->avatar ?? 'no_image.png') }}">
                                 Delete
                             </button>
                         </td>

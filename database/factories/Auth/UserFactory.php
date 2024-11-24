@@ -34,7 +34,7 @@ class UserFactory extends Factory
             'username' => fake()->userName(),
 
             // The user's avatar.
-            'avatar' => fake()->imageUrl(),
+            'avatar' => 'avatars/default.png',
 
             // The user's role.
             // The role should be one of the following: 1,2,3.
