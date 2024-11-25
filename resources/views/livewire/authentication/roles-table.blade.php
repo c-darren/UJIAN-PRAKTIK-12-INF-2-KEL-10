@@ -14,7 +14,7 @@
                 <option value="20">20</option>
                 <option value="50">50</option>
             </select>
-            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">entries</span>
+            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300 mr-2">entries</span>
         </div>
     
         <!-- Search and Clear -->
@@ -39,7 +39,7 @@
                     wire:click="$set('search', $refs.searchInput.value)" 
                     class="rounded-full text-white absolute right-16 mr-1.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                    <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                     </svg>                  
                 </button>
