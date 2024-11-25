@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class AcademicYear extends Model
 {
-    protected $dates = ['deleted_at'];
     use HasFactory;
+
+    protected $fillable = [
+        'academic_year',
+        'status'
+    ];
 }
