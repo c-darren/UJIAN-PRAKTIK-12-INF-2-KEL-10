@@ -15,6 +15,7 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Curriculum\AcademicYear;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -93,6 +94,14 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
             Route::post('/store', [UserController::class, 'store'])->name('admin.authentication.users.store');
             Route::put('/edit/{id}', [UserController::class, 'update'])->name('admin.authentication.users.update');
             Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('admin.authentication.users.destroy');
+        });
+    });
+    Route::prefix('curriculum')->group(function(){
+        Route::prefix('academic_year')->middleware(CheckUserRole::class . ':1,2')->group(function () {
+            Route::get('/view', [AcademicYear::class, 'show'])->name('curriculum.academicYear.view');
+            Route::post('/store', [AcademicYear::class, 'store'])->name(name: 'curriculum.academicYear.store');
+            Route::put('/edit/{id}', [AcademicYear::class, 'update'])->name('curriculum.academicYear.update');
+            Route::delete('/delete/{id}', [AcademicYear::class, 'destroy'])->name('curriculum.academicYear.destroy');
         });
     });
 });

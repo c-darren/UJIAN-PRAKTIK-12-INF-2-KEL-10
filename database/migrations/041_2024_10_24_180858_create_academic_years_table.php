@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('academic_years', function (Blueprint $table) {
             $table->id();
-            $table->string('academic_year');
-            $table->enum('status',['Active', 'Inactive']);
+            $table->string('academic_year')->unique()->index();
+            $table->enum('status',['Active', 'Inactive'])->index();
             $table->timestamps();
         });
     }
