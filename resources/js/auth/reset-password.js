@@ -101,7 +101,7 @@ $(function() {
                 response.data.message || 'Your password has been reset successfully!'
             );
             window.setTimeout(() => {
-                window.location.href = `/${response.data.redirect}`;
+                window.location.href = `/login`;
             }, 2000);
         })
         .catch(function (error) {
