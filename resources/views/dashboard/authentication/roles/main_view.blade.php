@@ -1,5 +1,7 @@
 @extends('dashboard.components.layout')
 
+@section('title', 'Roles')
+
 @section('content')
     @include('dashboard.authentication.roles.menu')
     @yield('tabs')

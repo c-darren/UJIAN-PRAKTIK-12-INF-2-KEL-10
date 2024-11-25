@@ -1,5 +1,7 @@
 @extends('dashboard.components.layout')
 
+@section('title', 'Dashboard')
+
 @section('content')
     <div class="mr-4 ml-4 mt-5">
         @if (isset($showVerificationAlert) && $showVerificationAlert)
