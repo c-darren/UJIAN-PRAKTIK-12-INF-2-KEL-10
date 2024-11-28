@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Auth\Role;
 use App\Models\Auth\User;
+use App\Notifications\AdminResetEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Notifications\AdminResetPassword;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\AdminSendEmailVerificationNotificationCustom;
@@ -132,8 +134,15 @@ class UserController extends Controller
     
         $user->name = $validatedData['fullName'];
         $user->username = $validatedData['username'];
+
+        $creatorInfo = session()->get('userID') . ' - ' . session()->get('username');
         if ($user->email !== $validatedData['email']) {
             $user->email_verified_at = null; // Set email_verified_at to null if email is changed
+            $user->notify(new AdminResetEmail(
+                $user->username, 
+                $user->email,
+                $creatorInfo
+            ));
         }
         $user->email = $validatedData['email'];
         $user->role_id = $validatedData['roleId'];
@@ -142,6 +151,12 @@ class UserController extends Controller
     
         if ($request->input('resetPassword')) {
             $user->password = Hash::make('password');
+
+            $user->notify(new AdminResetPassword(
+                $user->username, 
+                $user->email,
+                $creatorInfo
+            ));
         }
     
         if ($user->save()) {

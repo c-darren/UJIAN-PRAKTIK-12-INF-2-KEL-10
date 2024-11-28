@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Curriculum;
+namespace App\Livewire\School;
 
-use App\Models\Curriculum\AcademicYear as CurriculumAcademicYear;
+use App\Models\School\AcademicYear as SchoolAcademicYear;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -61,7 +61,7 @@ class AcademicYearsTable extends Component
 
     public function render()
     {
-        $dataAcademicYear = CurriculumAcademicYear::query()
+        $dataAcademicYear = SchoolAcademicYear::query()
             ->when(trim($this->search), function($query) {
                 $searchTerm = trim($this->search);
                 $query->where('academic_year', 'like', '%' . $searchTerm . '%')
@@ -70,7 +70,7 @@ class AcademicYearsTable extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
     
-        return view('livewire.curriculum.academic-years-table', [
+        return view('livewire.school.academic-years-table', [
             'dataAcademicYear' => $dataAcademicYear,
         ]);
     }

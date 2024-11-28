@@ -11,7 +11,7 @@ class RoleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    protected static $roles = ['staff', 'developer', 'admin', 'guest', 'student', 'teacher', 'parent', 'parent_guardian'];
+    protected static $roles = ['admin', 'teacher', 'student', 'parent'];
 
     public function run()
     {
