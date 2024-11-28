@@ -49,7 +49,7 @@
     <div class="flex flex-col py-1">
         <div class="overflow-x-auto">
             <div class="inline-block min-w-full align-middle">
-                @livewire('curriculum.academic-years-table')
+                @livewire('school.academic-years-table')
             </div>
         </div>
     </div>
@@ -279,8 +279,8 @@
 </div>
 
 @section('required_scripts')
-<script type="text/javascript" src="{{ asset('js/curriculum/academic_year/read_more.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/curriculum/academic_year/create.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/curriculum/academic_year/edit.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/curriculum/academic_year/delete.js') }}"></script> 
+<script type="text/javascript" src="{{ asset('js/school/academic_year/read_more.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/school/academic_year/create.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/school/academic_year/edit.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/school/academic_year/delete.js') }}"></script> 
 @endsection

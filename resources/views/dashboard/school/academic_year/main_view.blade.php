@@ -3,10 +3,10 @@
 @section('title', 'Academic Years')
 
 @section('content')
-    @include('dashboard.curriculum.academic_year.menu')
+    @include('dashboard.school.academic_year.menu')
     @yield('tabs')
 
-    @include('dashboard.curriculum.academic_year.' . $page_content)
+    @include('dashboard.school.academic_year.' . $page_content)
     @yield('page_content')
     @yield('scripts')
 @endsection

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RoleFactory extends Factory
 {
-    protected static $roles = ['staff', 'developer', 'admin', 'guest', 'student', 'teacher', 'parent', 'parent_guardian'];
+    protected static $roles = ['admin', 'student', 'teacher', 'parent'];
     /**
      * Define the model's default state.
      *

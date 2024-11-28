@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Curriculum;
+namespace App\Http\Controllers\School;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Models\Curriculum\AcademicYear as CurriculumAcademicYear;
+use App\Models\School\AcademicYear as SchoolAcademicYear;
 
 class AcademicYear extends Controller
 {
@@ -28,7 +28,7 @@ class AcademicYear extends Controller
         ]);
     
         try {
-            $academic_years = new CurriculumAcademicYear();
+            $academic_years = new SchoolAcademicYear();
             $academic_years->academic_year = $request->input('academic_year');
             $academic_years->status = $request->input('status');
             $academic_years->updated_at = null;
@@ -47,7 +47,7 @@ class AcademicYear extends Controller
 
     public function update(Request $request, $id)
     {
-        $academic_years = CurriculumAcademicYear::findOrFail($id);
+        $academic_years = SchoolAcademicYear::findOrFail($id);
     
         $request->validate([
             'academic_year' => [
@@ -80,7 +80,7 @@ class AcademicYear extends Controller
     public function destroy($id)
     {
         try {
-            $academic_years = CurriculumAcademicYear::findOrFail($id);
+            $academic_years = SchoolAcademicYear::findOrFail($id);
             $academic_years->delete();
     
             return response()->json([
@@ -96,7 +96,7 @@ class AcademicYear extends Controller
 
     protected function view($page_content = 'view_academic_years', $data = [])
     {
-        return view("dashboard.curriculum.academic_year.main_view", array_merge([
+        return view("dashboard.school.academic_year.main_view", array_merge([
             'page_content' => $page_content,
         ], $data));
     }

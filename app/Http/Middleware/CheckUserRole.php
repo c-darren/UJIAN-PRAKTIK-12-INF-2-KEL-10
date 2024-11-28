@@ -26,20 +26,17 @@ class CheckUserRole
                 return redirect()->route('login');
             }
         }
-        
-        // Jika pengguna sudah login dan mencoba akses login
-        if ($request->segment(2) === 'login') {
-            return redirect()->route('dashboard'); // Redirect ke dashboard jika sudah login
-        }
-        
+
         // Memeriksa apakah roleID valid
         if (!in_array($sessionRoleId, $allowedRoleID)) {
-            if($request->segment(1) === 'dashboard') {
+            if ($request->segment(1) === 'dashboard') {
                 return $next($request);
-            }else{
+            } else {
                 return redirect()->route('dashboard');
             }
         }
+
         return $next($request);
     }
+    
 }

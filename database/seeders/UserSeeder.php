@@ -18,8 +18,8 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Test User - Developer',
             'username' => 'user',
-            'avatar' => '8g5qDqy40lDxs57OkLInlvEMtvaT5UuAS4c1D2hu.png',
-            'role_id' => 2,
+            'avatar' => 'avatars/8g5qDqy40lDxs57OkLInlvEMtvaT5UuAS4c1D2hu.png',
+            'role_id' => 1,
             'email' => 'darren@darren-project.kencang.id',
             'email_verified_at' => now(),
             'password' => Hash::make('123'),
