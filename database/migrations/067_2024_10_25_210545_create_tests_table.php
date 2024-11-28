@@ -54,18 +54,18 @@ return new class extends Migration
             $table->id();
             $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
             $table->foreignId('question_id')->constrained('test_questions')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->string('student_answer')->nullable(); // Simpan jawaban siswa tanpa constraint foreign key
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('student_answer')->nullable(); // Simpan jawaban peserta didik tanpa constraint foreign key
         });
 
-        //Jika student_id berasal dari kelas yang sama dengan kolom class_id,
-        //Maka yang diperbolehkan mengikuti test hanya student_id tersebut
-        //Jika student_id kosong, maka semua student_id dari class_id diperbolehkan untuk ikut test
+        //Jika user_id berasal dari kelas yang sama dengan kolom class_id,
+        //Maka yang diperbolehkan mengikuti test hanya user_id tersebut
+        //Jika user_id kosong, maka semua user_id dari class_id diperbolehkan untuk ikut test
         Schema::create('test_participants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
             $table->foreignId('class_id')->nullable()->constrained('class_lists')->onDelete('cascade');
-            $table->foreignId('student_id')->nullable()->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
         });
 
         //Data yang sudah tersimpan tidak akan dihapus meskipun test_participants berbeda dari sebelumnya
@@ -73,7 +73,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
             $table->foreignId('class_id')->nullable()->constrained('class_lists')->onDelete('set null');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('question');
             $table->string('student_answer');
             $table->string('correct_answer');
@@ -84,7 +84,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
             $table->foreignId('class_id')->nullable()->constrained('class_lists')->onDelete('set null');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->smallInteger('score');
         });
     }

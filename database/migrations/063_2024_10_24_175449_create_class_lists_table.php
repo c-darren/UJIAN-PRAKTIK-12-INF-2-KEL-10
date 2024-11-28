@@ -27,15 +27,15 @@ return new class extends Migration
         
         Schema::create('class_teachers', function (Blueprint $table) {
             $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
-            $table->foreignId('teacher_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->primary(['class_id', 'teacher_id']);
         });
         
         Schema::create('class_students', function (Blueprint $table) {
             $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
-            $table->primary(['class_id', 'student_id']);
+            $table->primary(['class_id', 'user_id']);
         });
     }
 

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->id();
             $table->string('master_class_id', 255);
             $table->foreign('master_class_id')->references('id')->on('master_classes')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 
