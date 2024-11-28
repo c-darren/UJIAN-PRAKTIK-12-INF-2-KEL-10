@@ -28,7 +28,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('survey_id')->constrained('surveys')->onDelete('cascade');
             $table->foreignId('class_id')->nullable()->constrained('class_lists')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
         
         Schema::create('survey_questions', function (Blueprint $table) {
@@ -42,16 +42,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('survey_id')->constrained('surveys')->onDelete('cascade');
             $table->string('question');
-            $table->foreignId('student_id')->nullable()->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->string('answer');
         });
         
         Schema::create('survey_submissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('survey_id')->constrained('surveys')->onDelete('cascade');
-            $table->foreignId('student_id')->nullable()->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamp('submitted_at');
-            $table->unique(['survey_id', 'student_id']);
+            $table->unique(['survey_id', 'user_id']);
         });
         
     }

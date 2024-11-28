@@ -28,9 +28,9 @@ return new class extends Migration
     
         Schema::create('class_presences', function (Blueprint $table) {
             $table->foreignId('attendance_id')->constrained('class_attendances')->onDelete('cascade');
-            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa'])->default('Hadir');
-            $table->primary(['attendance_id', 'student_id']);            
+            $table->primary(['attendance_id', 'user_id']);            
         });
     }
 
