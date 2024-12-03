@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-// use App\Models\Auth\Users;
-// use App\Models\Auth\Role;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +21,9 @@ class DatabaseSeeder extends Seeder
             GroupListSeeder::class,
             GroupInvitationSeeder::class,
             GroupMemberSeeder::class,
+            AcademicYearSeeder::class,
+            SubjectSeeder::class,
+            MasterClassSeeder::class
         ]);
     }
 }

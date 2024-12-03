@@ -14,8 +14,7 @@ return new class extends Migration
     {   
         Schema::create('class_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('master_class_id', 255);
-            $table->foreign('master_class_id')->references('id')->on('master_classes')->onDelete('cascade');
+            $table->foreignId('master_class_id')->constrained('master_classes')->onDelete('cascade');
             $table->string('class_name');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->string('class_code')->unique();
@@ -36,6 +35,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->primary(['class_id', 'user_id']);
+            $table->timestamps();
         });
     }
 
