@@ -13,19 +13,20 @@ return new class extends Migration
     {
         //Kelas 10, 11, 12
         Schema::create('master_classes', function (Blueprint $table) {
-            $table->string('id', 255)->primary();
-            $table->string('master_class_name');
-            $table->string('master_class_code')->unique();
+            $table->id();
+            $table->string('master_class_name')->index();
+            $table->string('master_class_code')->unique()->index();
             $table->foreignId('academic_year_id')->constrained('academic_years')->onDelete('cascade');
-            $table->enum('status', ['Archived', 'Active']);
+            $table->enum('status', ['Archived', 'Active'])->index();
             $table->timestamps();
         });
 
         Schema::create('master_class_students', function (Blueprint $table) {
             $table->id();
-            $table->string('master_class_id', 255);
-            $table->foreign('master_class_id')->references('id')->on('master_classes')->onDelete('cascade');
+            $table->foreignId('master_class_id')->constrained('master_classes')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['Enrolled', 'Exited'])->default('Enrolled')->index();
+            $table->timestamps();
         });
     }
 
