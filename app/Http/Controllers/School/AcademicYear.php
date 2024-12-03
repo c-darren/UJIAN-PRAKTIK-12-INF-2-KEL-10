@@ -24,7 +24,20 @@ class AcademicYear extends Controller
                 'max:255',
                 'unique:academic_years,academic_year',
             ],
-            'status' => 'required|in:Active,Inactive',
+            'status' => [
+                'required',
+                'in:Active,Inactive',
+                // Custom Validation Rule untuk memastikan hanya satu tahun akademik aktif
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value === 'Active') {
+                        $activeCount = SchoolAcademicYear::where('status', 'Active')->count();
+                        
+                        if ($activeCount > 0) {
+                            $fail('Only one academic year can be active at a time.');
+                        }
+                    }
+                },
+            ],
         ]);
     
         try {
@@ -57,7 +70,20 @@ class AcademicYear extends Controller
                 'max:255',
                 Rule::unique('academic_years', 'academic_year')->ignore($id),
             ],
-            'status' => 'required|in:Active,Inactive',
+            'status' => [
+                'required',
+                'in:Active,Inactive',
+                // Custom Validation Rule untuk memastikan hanya satu tahun akademik aktif
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value === 'Active') {
+                        $activeCount = SchoolAcademicYear::where('status', 'Active')->count();
+                        
+                        if ($activeCount > 0) {
+                            $fail('Only one academic year can be active at a time.');
+                        }
+                    }
+                },
+            ],
         ]);
     
         try {
