@@ -17,11 +17,8 @@ return new class extends Migration
             $table->foreignId('master_class_id')->constrained('master_classes')->onDelete('cascade');
             $table->string('class_name');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
-            $table->string('class_code')->unique();
             $table->enum('enrollment_status', ['Open', 'Closed']);
-            $table->enum('status', ['Archived', 'Active']);
             $table->timestamps();
-            $table->softDeletes();
         });
         
         Schema::create('class_teachers', function (Blueprint $table) {
