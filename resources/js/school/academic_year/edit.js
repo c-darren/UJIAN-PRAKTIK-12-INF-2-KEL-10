@@ -107,8 +107,7 @@ function editModalData() {
                 }
             })
             .catch(error => {
-                Notiflix.Notify.failure('An error occurred while updating the academic year.');
-                console.error('Error:', error);
+                Notiflix.Notify.failure(error.message);
             })
             .finally(() => {
                 this.isSubmitting = false;
