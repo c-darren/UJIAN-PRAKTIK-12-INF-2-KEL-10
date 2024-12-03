@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\SignupController;
-use App\Http\Controllers\Classroom\SubjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\LogUserAccess;
@@ -9,14 +7,19 @@ use App\Http\Controllers\Auth\CSRFController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\School\AcademicYear;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\SignupController;
 use App\Http\Middleware\ClearCookiesOnCSRFError;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Classroom\SubjectController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\School\AcademicYear;
+use App\Http\Controllers\Classroom\ClassListController;
+use App\Http\Controllers\Classroom\MasterClassController;
+use App\Http\Controllers\Classroom\MasterClassStudentController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -82,6 +85,27 @@ Route::middleware(['web', 'auth', LogUserAccess::class])->group(function () {
 });
 
 Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(function () {
+    Route::prefix('master-classes')->group(function () {
+        Route::get('/', [MasterClassStudentController::class, 'showEnrolled'])
+        ->name( 'master-class.enrolled-class');
+        Route::get('/archived-class', [MasterClassStudentController::class, 'showArchivedMClass'])
+        ->name('master-class.archived-class');
+        Route::get('/exited-class', [MasterClassStudentController::class, 'showExitedMClass'])
+        ->name('master-class.exited-class');
+
+        Route::get('/detail', [MasterClassStudentController::class, 'detailClass'])
+        ->name( 'master-class.detail-class');
+
+        Route::post('/join-class', [MasterClassStudentController::class, 'joinClass'])
+        ->name('master-class.join-class');
+        Route::put('/exit-class', [MasterClassStudentController::class, 'exitClass'])
+        ->name('master-class.exit-class');
+        Route::put('/rejoin-class', [MasterClassStudentController::class, 'rejoinClass'])
+        ->name('master-class.rejoin-class');
+    });
+});
+
+Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(function () {
     Route::prefix('admin')->group(function(){
         Route::prefix('role')->middleware(CheckUserRole::class . ':1')->group(function () {
             Route::get('/view', [RoleController::class, 'show'])->name('admin.authentication.roles.view');
@@ -110,6 +134,20 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
             Route::put('/edit/{id}', [SubjectController::class, 'update'])->name('classroom.subject.update');
             Route::delete('/delete/{id}', [SubjectController::class, 'destroy'])->name('classroom.subject.destroy');
         });
+    });
+    Route::prefix('classroom')->group(function(){
+        Route::prefix('masterClass')->middleware(CheckUserRole::class . ':1,2')->group(function () {
+            Route::get('/view', [MasterClassController::class, 'show'])->name('classroom.masterClass.view');
+            Route::post('/store', [MasterClassController::class, 'store'])->name( 'classroom.masterClass.store');
+            Route::put('/edit/{id}', [MasterClassController::class, 'update'])->name('classroom.masterClass.update');
+            Route::delete('/delete/{id}', [MasterClassController::class, 'destroy'])->name('classroom.masterClass.destroy');
+        });
+        // Route::prefix('classlist')->middleware(CheckUserRole::class . ':1,2')->group(function () {
+        //     Route::get('/view', [SubjectController::class, 'show'])->name('classroom.subject.view');
+        //     Route::post('/store', [SubjectController::class, 'store'])->name( 'classroom.subject.store');
+        //     Route::put('/edit/{id}', [SubjectController::class, 'update'])->name('classroom.subject.update');
+        //     Route::delete('/delete/{id}', [SubjectController::class, 'destroy'])->name('classroom.subject.destroy');
+        // });
     });
     // Route::prefix('classroom')->middleware(CheckUserRole::class . ':1')->group(function () {
     //     Route::get('/view', [AcademicYear::class, 'show'])->name('school.academicYear.view');

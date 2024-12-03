@@ -144,7 +144,9 @@
                         <div>
                             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button-2" aria-expanded="false" data-dropdown-toggle="dropdown-2">
                                 <span class="sr-only">Open user menu</span>
-                                    <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->avatar ? env('STORAGE_URL') . 'app/public/' . Auth::user()->avatar : asset('storage/no_image.png') }}" alt="user photo">
+                                    <img class="w-8 h-8 rounded-full" src="
+                                    {{ Auth::user()->avatar ? env('STORAGE_URL') . 'app/public/' . Auth::user()->avatar :
+                                    env('STORAGE_URL') . 'app/public/avatars/no_image.png' }}" alt="user photo">
                                     {{-- <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->avatar ? env('APP_URL') . 'storage/' . Auth::user()->avatar : asset('storage/no_image.png') }}" alt="user photo"> --}}
                             </button>
                         </div>

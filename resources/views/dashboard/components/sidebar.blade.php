@@ -51,21 +51,6 @@
                             {{ request()->segment(2) === 'academic_year' ? 'bg-gray-100 dark:bg-gray-700' : '' }}
                             ">Academic Year</a>
                         </li>
-                    </ul>
-                    @endif
-
-                    @if (in_array(Auth::user()->role_id, [1,2]))
-                    <!-- classroom Dropdown -->
-                    <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" aria-controls="dropdown-subject" data-collapse-toggle="dropdown-subject" {{ (request()->segment(2) === 'subject') ? 'aria-expanded="true"' : 'aria-expanded="false"' }}>
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M6 2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 1 0 0-2h-2v-2h2a1 1 0 0 0 1-1V4a2 2 0 0 0-2-2h-8v16h5v2H7a1 1 0 1 1 0-2h1V2H6Z" clip-rule="evenodd"/>
-                        </svg>                              
-                        <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Classroom</span>
-                        <svg sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                    <ul id="dropdown-subject" class="{{ (request()->segment(2) === 'subject') ? '' : 'hidden' }} py-2 space-y-2">
                         <li>
                             <a href="{{ route('classroom.subject.view') }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
                             {{ request()->segment(2) === 'subject' ? 'bg-gray-100 dark:bg-gray-700' : '' }}
@@ -73,7 +58,26 @@
                         </li>
                     </ul>
                     @endif
-
+                    
+                    @if (in_array(Auth::user()->role_id, [1,2]))
+                    <!-- Master Class Dropdown -->
+                    <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" aria-controls="dropdown-masterClass" data-collapse-toggle="dropdown-masterClass" {{ (request()->segment(2) === 'masterClass') ? 'aria-expanded="true"' : 'aria-expanded="false"' }}>
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M3 6a2 2 0 0 1 2-2h5.532a2 2 0 0 1 1.536.72l1.9 2.28H3V6Zm0 3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9H3Z" clip-rule="evenodd"/>
+                        </svg>                                                       
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Classroom</span>
+                        <svg sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <ul id="dropdown-masterClass" class="{{ (request()->segment(2) === 'masterClass') ? '' : 'hidden' }} py-2 space-y-2">
+                        <li>
+                            <a href="{{ route('classroom.masterClass.view') }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+                            {{ request()->segment(2) === 'masterClass' ? 'bg-gray-100 dark:bg-gray-700' : '' }}
+                            ">Master Class</a>
+                        </li>
+                    </ul>
+                    @endif
                 </ul>
                 {{-- <div class="pt-2 space-y-2">
                     <a href="https://github.com/themesberg/flowbite-admin-dashboard" target="_blank" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
