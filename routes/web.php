@@ -10,8 +10,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\School\AcademicYear;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\SignupController;
-use App\Http\Middleware\ClearCookiesOnCSRFError;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Classroom\SubjectController;
@@ -22,7 +20,6 @@ use App\Http\Controllers\Classroom\ClassListStudentController;
 use App\Http\Controllers\Classroom\MasterClassController;
 use App\Http\Controllers\Classroom\ClassListTeacherController;
 use App\Http\Controllers\Classroom\MasterClassStudentController;
-use App\Http\Controllers\Classroom\Manage\ManageMasterClassController;
 
 // Route::get('/', function () {
 //     return view('welcome');

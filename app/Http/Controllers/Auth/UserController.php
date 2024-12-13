@@ -119,6 +119,19 @@ class UserController extends Controller
             'roleId'   => 'required|exists:roles,id',
             'avatar'    => 'nullable|image|mimes:jpeg,png,gif|max:5120', 
         ]);
+
+        $originalRoleId = $user->role_id;
+        $newRoleId = $validatedData['roleId'];
+    
+        if ($originalRoleId != $newRoleId) {
+            // Role berubah, cek keterkaitan dengan master_class_students atau class_teacher
+            if ($user->masterClassStudents()->exists() || $user->classTeachers()->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot change the user role because the user is still associated with Master Classes or Teacher assignments.',
+                ], 422);
+            }
+        }
     
         // Check if delete avatar is checked
         if ($request->input('deleteAvatar') && $user->avatar) {
