@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Http\Controllers\Classroom\ClassListTeacherController;
 use App\Models\Classroom\ClassList;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Classroom\MasterClassStudents;
@@ -68,6 +69,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function masterClassEnrollments(){
         return $this->hasMany(MasterClassStudents::class);
+    }
+
+    public function masterClassStudents()
+    {
+        return $this->hasMany(MasterClassStudents::class, 'user_id');
+    }
+
+    // Relasi dengan ClassTeacher
+    public function classTeachers()
+    {
+        return $this->hasMany(ClassListTeacherController::class, 'teacher_id');
     }
 
     public function hasRole($role)
