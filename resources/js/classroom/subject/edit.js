@@ -69,7 +69,7 @@ function editModalData() {
             }
 
             if(subject == originalsubject){
-                Notiflix.Notify.info('No changes made to the subject. /n The subject must be different.');
+                Notiflix.Notify.info('No changes made to the subject. The subject must be different.');
                 // Notiflix.Notify.failure(`The subject must be different.`);
                 this.isSubmitting = false;
                 return;

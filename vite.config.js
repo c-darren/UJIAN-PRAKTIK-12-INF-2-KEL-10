@@ -6,7 +6,7 @@ export default defineConfig({
         host: '0.0.0.0', // Set menjadi 0.0.0.0 agar terbuka di semua alamat IP
         port: 5173,       // Gunakan port yang sama
         hmr: {
-            host: '192.168.1.7', // Server IP
+            host: '192.168.0.3', // Server IP
             port: 5173,
         }
     },

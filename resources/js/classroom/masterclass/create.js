@@ -97,7 +97,7 @@ function createModalData() {
             })
             .then(data => {
                 if (data.success) {
-                    Notiflix.Notify.success('Subject has been successfully created.', {
+                    Notiflix.Notify.success('Master Class successfully created.', {
                         timeout: 2000,
                         clickToClose: true,
                     });

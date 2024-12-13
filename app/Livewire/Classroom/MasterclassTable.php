@@ -90,7 +90,7 @@ class MasterclassTable extends Component
                 $query->where('master_classes.status', $this->status);
             })
             ->orderBy($this->sortField === 'academic_year' ? 'academic_years.academic_year' : 'master_classes.' . $this->sortField, $this->sortDirection)
-            ->select('master_classes.*', 'academic_years.academic_year')
+            ->select('master_classes.*', 'academic_years.academic_year', 'academic_years.status as academic_year_status')
             ->paginate($this->perPage);
         
         return view('livewire.classroom.masterclass-table', [

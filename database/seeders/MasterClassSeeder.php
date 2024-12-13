@@ -54,5 +54,7 @@ class MasterClassSeeder extends Seeder
         foreach (self::$masterClasses as $MasterClass) {
             MasterClass::create($MasterClass);
         }
+
+        MasterClass::factory(100)->create();
     }
 }

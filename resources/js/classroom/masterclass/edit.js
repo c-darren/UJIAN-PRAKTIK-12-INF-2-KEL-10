@@ -113,6 +113,7 @@ function editModalData() {
                 window.setTimeout(() => {
                     this.isSubmitting = false;
                 }, 2000);
+                button.getElementById('search-button').click();
             });
         }
     };

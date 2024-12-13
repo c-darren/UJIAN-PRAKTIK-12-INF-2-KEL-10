@@ -13,4 +13,9 @@ class Subject extends Model
     protected $fillable = ['id', 'subject_name'];
 
     public $timestamps = false;
+
+    public function classLists()
+    {
+        return $this->hasMany(ClassList::class, 'subject_id');
+    }
 }
