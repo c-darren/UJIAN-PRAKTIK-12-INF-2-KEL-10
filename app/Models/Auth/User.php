@@ -2,7 +2,9 @@
 
 namespace App\Models\Auth;
 
+use App\Models\Classroom\ClassList;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Classroom\MasterClassStudents;
 use App\Notifications\SendEmailCreateAccount;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -57,6 +59,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         //1 User memiliki 1 Role
         return $this->belongsTo(Role::class);
+    }
+    
+    public function classes()
+    {
+        return $this->belongsToMany(ClassList::class, 'class_teachers', 'teacher_id', 'class_id');
+    }
+
+    public function masterClassEnrollments(){
+        return $this->hasMany(MasterClassStudents::class);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->role && $this->role->name === $role;
     }
 
     public function sendEmailVerificationNotificationCustom(){

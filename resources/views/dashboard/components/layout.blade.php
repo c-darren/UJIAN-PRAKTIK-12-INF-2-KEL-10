@@ -17,7 +17,7 @@
     <style>
         [x-cloak] { display: none !important; }
         </style>
-    <title>{{ config('app.name') }} - @yield('title')</title>
+    <title>@yield('title')</title>
     @livewireStyles
 </head>
     <body class="bg-gray-50 dark:bg-gray-800">
@@ -41,6 +41,7 @@
         </div>
         {{-- Default Scripts --}}
         <script src="{{ asset('js/route/dashboard/effects/fade.js') }}"></script>
+        <script src="{{ asset('js/default/notiflix_init.js') }}"></script>
         {{-- <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script> --}}
         {{-- <script type="text/javascript" src="{{ asset('js/websocket/websocket.js') }}"></script> --}}
         @yield('required_scripts')

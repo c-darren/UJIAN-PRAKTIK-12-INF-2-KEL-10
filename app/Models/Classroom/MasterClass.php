@@ -23,4 +23,23 @@ class MasterClass extends Model
     {
         return $this->belongsTo(AcademicYear::class, 'academic_year_id', 'id');
     }
+
+    // public function academicYear()
+    // {
+    //     return $this->belongsTo(AcademicYear::class);
+    // }
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id', 'id');
+    }
+
+    public function students()
+    {
+        return $this->hasMany(MasterClassStudents::class);
+    }
+
+    public function classLists()
+    {
+        return $this->hasMany(ClassList::class, 'master_class_id');
+    }
 }

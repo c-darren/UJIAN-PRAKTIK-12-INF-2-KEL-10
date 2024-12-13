@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('master_class_name')->index();
             $table->string('master_class_code')->unique()->index();
             $table->foreignId('academic_year_id')->constrained('academic_years')->onDelete('cascade');
-            $table->enum('status', ['Archived', 'Active'])->index();
+            $table->enum('status', ['Archived', 'Active'])->default('Active')->index();
             $table->timestamps();
         });
 

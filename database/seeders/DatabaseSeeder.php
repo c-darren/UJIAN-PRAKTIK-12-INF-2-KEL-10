@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             AcademicYearSeeder::class,
             SubjectSeeder::class,
             MasterClassSeeder::class,
-            ClassListSeeder::class,
+            MasterClassStudent::class,
+            // ClassListSeeder::class,
         ]);
     }
 }

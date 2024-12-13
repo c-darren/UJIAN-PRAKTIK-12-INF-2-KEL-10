@@ -101,16 +101,23 @@ function editModalData() {
                         timeout: 2000,
                         clickToClose: true,
                     });
+                    document.getElementById('search-button').click();
                     Alpine.store('editModal').close();
                 } else {
                     Notiflix.Report.failure('Failed', data.message, 'OK');
                 }
             })
             .catch(error => {
-                Notiflix.Notify.failure(error.message);
+                if(error.message == 'Status cannot be updated to the same value.'){
+                    Notiflix.Notify.info(error.message);
+                }else{
+                    Notiflix.Notify.failure(error.message)
+                };
             })
             .finally(() => {
-                this.isSubmitting = false;
+                setTimeout(() => {
+                    this.isSubmitting = false;
+                }, 3000);
             });
         }
         

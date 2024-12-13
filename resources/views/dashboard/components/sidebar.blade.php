@@ -70,13 +70,35 @@
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                         </svg>
                     </button>
-                    <ul id="dropdown-masterClass" class="{{ (request()->segment(2) === 'masterClass') ? '' : 'hidden' }} py-2 space-y-2">
+                    <ul id="dropdown-masterClass" class="{{ (request()->segment(2) === 'masterClass') ? '' : 'hidden' }} space-y-2">
                         <li>
                             <a href="{{ route('classroom.masterClass.view') }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
-                            {{ request()->segment(2) === 'masterClass' ? 'bg-gray-100 dark:bg-gray-700' : '' }}
-                            ">Master Class</a>
+                            {{ (request()->segment(2) === 'masterClass' && request()->segment(3) == 'view') ? 'bg-gray-100 dark:bg-gray-700' : '' }}
+                            ">
+                            Master Class</a>
                         </li>
                     </ul>
+                        @if(isset($masterClass_name) && $masterClass_name != null)
+                    <ul id="dropdown-masterClass" class="{{ (request()->segment(2) === 'masterClass' && request()->segment(3) === 'manage') ? '' : 'hidden'}}">
+                        <li>
+                            <a href="{{ route('classroom.masterClass.manage.index', [$masterClass_id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-yellow-200 dark:text-gray-200 dark:hover:bg-yellow-700
+                            {{ request()->segment(2) === 'masterClass' ? 'bg-yellow-100 dark:bg-yellow-600' : '' }}
+                            ">
+                            {{ $masterClass_name }}</a>
+                        </li>
+                    </ul>
+                            @if(isset($masterClass_name) && $masterClass_name != null && isset($classList->class_name) && $classList->class_name != null)
+                    <ul id="dropdown-masterClass" class="{{ (request()->segment(2) === 'masterClass' && request()->segment(3) === 'manage') ? '' : 'hidden'}}">
+                        <li>
+                            <a href="{{ route('class_lists.teacher.index', [$masterClass_id, $classList_id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-blue-200 dark:hover:bg-blue-700
+                            {{ request()->segment(2) === 'masterClass' ? 'bg-blue-100 dark:bg-blue-700' : '' }}
+                            ">
+                            {{ $classList->class_name }}</a>
+                        </li>
+                    </ul>
+                            @endif
+                        @endif
+                    
                     @endif
                 </ul>
                 {{-- <div class="pt-2 space-y-2">

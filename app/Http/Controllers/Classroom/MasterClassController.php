@@ -77,6 +77,15 @@ class MasterClassController extends Controller
     {
         $masterClass = MasterClass::findOrFail($id);
 
+        $academicYear = AcademicYear::findOrFail($masterClass->academic_year_id);
+        
+        if ($academicYear->status === 'Inactive') {
+            return response()->json([
+                'success' => false,
+                'message' => 'The academic year is inactive, status cannot be updated.',
+            ], 422);
+        }
+
         $request->validate([
             'master_class_name' => [
                 'required',

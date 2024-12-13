@@ -33,6 +33,7 @@
                     type="button" 
                     wire:click="$set('search', $refs.searchInput.value)" 
                     class="rounded-full text-white absolute right-16 mr-1.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    id="search-button"
                 >
                     <svg class="w-5 h-5 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
@@ -120,11 +121,14 @@
                         <td class="py-3 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->master_class_name }}</td>
                         <td class="py-3 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->master_class_code }}</td>
                         <td class="py-3 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->academic_year_relation->academic_year }}</td>
-                        <td class="py-3 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->status }}</td>
+                        <td class="py-3 text-sm font-normal text-center break-all
+                            {{ $record->status == 'Active' ? 'text-green-500' : 'text-red-500' }}"
+                            >{{ $record->status }}
+                        </td>
 
-                        <td class="p-3 space-x-2 whitespace-nowrap text-center">
+                        <td class="p-3 flex justify-between items-center whitespace-nowrap">
                             <button
-                                class="read-more-data-btn text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
+                                class="read-more-data-btn text-white sm:mr-2 bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
                                 data-id="{{ $record->id }}" data-col_01="{{ $record->master_class_name }}"
                                 data-col_02="{{ $record->master_class_code }}"
                                 data-col_03="{{ $record->academic_year }}"
@@ -133,16 +137,24 @@
                                 data-col_06="{{ $record->updated_at }}">
                                 Read More
                             </button>
+                            <a
+                                class="manage-data-btn text-white sm:mr-2 bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-3 py-2 dark:focus:ring-green-900"
+                                href="{{ route('classroom.masterClass.manage.index', $record->id) }}"
+                                data-id="{{ $record->id }}">
+                                Manage
+                            </a>
+                            @if($record->academic_year_status == 'Active')
                             <button
-                                class="edit-data-btn text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
+                                class="edit-data-btn text-white sm:mr-2 bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
                                 data-id="{{ $record->id }}" data-col_01="{{ $record->master_class_name }}"
                                 data-col_02="{{ $record->master_class_code }}"
                                 data-col_03="{{ $record->academic_year }}"
                                 data-col_04="{{ $record->status }}">
                                 Edit
                             </button>
+                            @endif
                             <button
-                                class="delete-data-btn text-white bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
+                                class="delete-data-btn text-white sm:mr-2 bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
                                 data-id="{{ $record->id }}" data-col_01="{{ $record->master_class_name }}">
                                 Delete
                             </button>

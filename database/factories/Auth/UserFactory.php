@@ -38,7 +38,7 @@ class UserFactory extends Factory
 
             // The user's role.
             // The role should be one of the following: 1,2,3.
-            'role_id' => fake()->randomElement([1,2,3,4]),
+            'role_id' => fake()->randomElement([3]),
 
             // The user's email address.
             'email' => fake()->unique()->safeEmail(),

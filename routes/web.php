@@ -18,8 +18,11 @@ use App\Http\Controllers\Classroom\SubjectController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Classroom\ClassListController;
+use App\Http\Controllers\Classroom\ClassListStudentController;
 use App\Http\Controllers\Classroom\MasterClassController;
+use App\Http\Controllers\Classroom\ClassListTeacherController;
 use App\Http\Controllers\Classroom\MasterClassStudentController;
+use App\Http\Controllers\Classroom\Manage\ManageMasterClassController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -139,16 +142,50 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
         Route::prefix('masterClass')->middleware(CheckUserRole::class . ':1,2')->group(function () {
             Route::get('/view', [MasterClassController::class, 'show'])->name('classroom.masterClass.view');
             Route::post('/store', [MasterClassController::class, 'store'])->name( 'classroom.masterClass.store');
-            Route::put('/edit/{id}', [MasterClassController::class, 'update'])->name('classroom.masterClass.update');
-            Route::delete('/delete/{id}', [MasterClassController::class, 'destroy'])->name('classroom.masterClass.destroy');
+            Route::put('/edit/{id}', [MasterClassController::class, 'update'])->where(['id' => '[0-9]+'])->name('classroom.masterClass.update');
+            Route::delete('/delete/{id}', [MasterClassController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('classroom.masterClass.destroy');
+                
+            Route::prefix('manage/{masterClass_id}')->where(['masterClass_id' => '[0-9]+'])->group(function () {
+    
+                // MasterClass Student Management
+                Route::prefix('students')->group(function () {
+                    Route::get('/', [MasterClassStudentController::class, 'view_students'])->name('master_class_students.view_students');
+                    Route::get('/create', [MasterClassStudentController::class, 'create_students'])->name('master_class_students.create_students');
+                    Route::post('/store', [MasterClassStudentController::class, 'store_student'])->name('master_class_students.store_student');
+                    Route::delete('/delete/{id}', [MasterClassStudentController::class, 'delete_student'])->where(['id' => '[0-9]+'])->name('master_class_students.delete');
+                });
+            
+                // Classlist Management
+                Route::prefix('class_lists')->group(function () {
+                    Route::get('/', [ClassListController::class, 'index'])->name('classroom.masterClass.manage.index');
+                    Route::get('/create', [ClassListController::class, 'create'])->name('class_lists.add');
+                    Route::post('/store', [ClassListController::class, 'store'])->name('class_lists.store');
+                    Route::put('update/{id}', [ClassListController::class, 'update'])->name('class_lists.update');
+                    Route::delete('delete/{id}', [ClassListController::class, 'destroy'])->name('class_lists.destroy');
+
+                    // Classlist Teacher Management
+                    Route::prefix('{class_id}/teacher')->group(function () {
+                        Route::get('/', [ClassListTeacherController::class, 'index'])->name('class_lists.teacher.index');
+                        Route::post('/store', [ClassListTeacherController::class, 'store'])->name('class_lists.teacher.store');
+                        Route::delete('delete/{teacher_id}', [ClassListTeacherController::class, 'destroy'])->name('class_lists.teacher.destroy');
+                    });
+                
+                    // Classlist Student Management
+                    Route::prefix('{class_id}/student')->group(function () {
+                        Route::get('/', [ClassListStudentController::class, 'index'])->name('class_lists.student.index');
+                        Route::post('/store', [ClassListStudentController::class, 'store'])->name('class_lists.student.store');
+                        Route::delete('/delete/{student_id}', [ClassListStudentController::class, 'destroy'])->name('class_lists.student.destroy');
+                    });
+                });
+            });
         });
-        // Route::prefix('classlist')->middleware(CheckUserRole::class . ':1,2')->group(function () {
-        //     Route::get('/view', [SubjectController::class, 'show'])->name('classroom.subject.view');
-        //     Route::post('/store', [SubjectController::class, 'store'])->name( 'classroom.subject.store');
-        //     Route::put('/edit/{id}', [SubjectController::class, 'update'])->name('classroom.subject.update');
-        //     Route::delete('/delete/{id}', [SubjectController::class, 'destroy'])->name('classroom.subject.destroy');
-        // });
     });
+    // Route::prefix('classlist')->middleware(CheckUserRole::class . ':1,2')->group(function () {
+    //     Route::get('/view', [SubjectController::class, 'show'])->name('classroom.subject.view');
+    //     Route::post('/store', [SubjectController::class, 'store'])->name( 'classroom.subject.store');
+    //     Route::put('/edit/{id}', [SubjectController::class, 'update'])->name('classroom.subject.update');
+    //     Route::delete('/delete/{id}', [SubjectController::class, 'destroy'])->name('classroom.subject.destroy');
+    // });
     // Route::prefix('classroom')->middleware(CheckUserRole::class . ':1')->group(function () {
     //     Route::get('/view', [AcademicYear::class, 'show'])->name('school.academicYear.view');
     //     Route::post('/store', [AcademicYear::class, 'store'])->name( 'school.academicYear.store');
