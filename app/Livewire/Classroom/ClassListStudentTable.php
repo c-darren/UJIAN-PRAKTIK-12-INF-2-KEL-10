@@ -158,7 +158,7 @@ class ClassListStudentTable extends Component
                 break;
     
             default:
-                // Default ke kategori 2
+                // Default to category 2
                 $records = ClassList::join('class_students', 'class_lists.id', '=', 'class_students.class_id')
                     ->join('users', 'class_students.user_id', '=', 'users.id')
                     ->where('class_students.class_id', $this->classList_id)
@@ -176,18 +176,28 @@ class ClassListStudentTable extends Component
                 break;
         }
     
-        // Setelah mendapatkan $records, transform untuk menambahkan is_assigned
-        $records->getCollection()->transform(function ($record) {
-            $isAssigned = DB::table('class_students')
+        if ($this->studentCategory !== '2') {
+            // Ambil semua user_id yang sudah ditugaskan di class_list_id tertentu
+            $assignedStudentIds = DB::table('class_students')
                 ->where('class_id', $this->classList_id)
-                ->where('user_id', $record->student_id)
-                ->exists();
-            $record->is_assigned = $isAssigned;
-            return $record;
-        });
+                ->pluck('user_id')
+                ->toArray();
+    
+            // Transformasi koleksi untuk menambahkan is_assigned
+            $records->getCollection()->transform(function ($record) use ($assignedStudentIds) {
+                $record->is_assigned = in_array($record->student_id, $assignedStudentIds);
+                return $record;
+            });
+        } else {
+            // Untuk kategori 2, semua peserta didik sudah ditugaskan
+            $records->getCollection()->transform(function ($record) {
+                $record->is_assigned = true;
+                return $record;
+            });
+        }
     
         return view('livewire.classroom.class-list-student-table', [
             'records' => $records,
         ]);
-    }    
+    }
 }
