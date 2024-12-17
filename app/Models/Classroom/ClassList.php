@@ -37,6 +37,11 @@ class ClassList extends Model
     {
         return $this->belongsToMany(User::class, 'class_students', 'class_id', 'user_id')->withTimestamps();
     }
+    
+    public function presences()
+    {
+        return $this->hasMany(ClassPresence::class, 'class_id');
+    }
 
     public function users()
     {

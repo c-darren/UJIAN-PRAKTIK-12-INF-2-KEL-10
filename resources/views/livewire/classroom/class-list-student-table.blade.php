@@ -102,14 +102,22 @@
                             @if ($record->is_assigned)
                                 <button
                                     class="delete-button text-white bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900 mr-1"
+                                    @if(Auth::user()->role_id == 1)
                                     data-actionUrl="{{ route('class_lists.student.destroy', [$masterClass_id, $classList_id, $record->student_id]) }}"
+                                    @elseif(Auth::user()->role_id == 2)
+                                    data-actionUrl="{{ route('classroom.student.destroy', [$masterClass_id, $classList_id, $record->student_id]) }}"
+                                    @endif
                                     data-name="{{ $record->student_name }}">
                                     Delete
                                 </button>
                             @else
                                 <button
                                     class="add-button text-white bg-green-600 hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-green-900 mr-1"
+                                    @if(Auth::user()->role_id == 1)
                                     data-actionUrl="{{ route('class_lists.student.store', [$masterClass_id, $classList_id]) }}"
+                                    @elseif(Auth::user()->role_id == 2)
+                                    data-actionUrl="{{ route('classroom.student.store', [$masterClass_id, $classList_id]) }}"
+                                    @endif
                                     data-studentId="{{ $record->student_id }}">
                                     Add
                                 </button>

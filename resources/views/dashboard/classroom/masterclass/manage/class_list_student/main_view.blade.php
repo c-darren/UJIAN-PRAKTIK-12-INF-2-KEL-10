@@ -4,6 +4,7 @@
     @php
         $segment = request()->segment(2);
     @endphp
+    
     @include('dashboard.classroom.masterclass.manage.class_list_student.menu')
     @yield('tabs')
 

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->foreignId('class_id')->constrained('class_lists')->onDelete('cascade');
             $table->foreignId('topic_id')->constrained('topics')->onDelete('cascade');
             $table->datetime('attendance_date');
+            $table->string('description')->nullable();
+            $table->timestamps();
         });
     
         Schema::create('class_presences', function (Blueprint $table) {
@@ -31,6 +33,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa'])->default('Hadir');
             $table->primary(['attendance_id', 'user_id']);            
+            $table->timestamps();
         });
     }
 

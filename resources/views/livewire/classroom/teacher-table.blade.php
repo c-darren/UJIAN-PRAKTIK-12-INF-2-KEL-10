@@ -56,52 +56,93 @@
         <table class="table-auto min-w-full divide-y divide-gray-200 dark:divide-gray-600 text-center" wire:poll.10s="autoUpdate">
             <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0 z-10">
                 <tr>
-                    @foreach (['Teacher Name' => 'Teacher Name', 'actions' => 'Actions'] as $field => $label)
-                        <th scope="col" class="p-4 text-sm font-medium text-gray-500 uppercase dark:text-gray-400 text-center align-middle">
-                            @if ($field !== 'actions')
-                                <button type="button" wire:click="sortBy('{{ $field }}')" class="flex items-center justify-center w-full focus:outline-none">
-                                    <span>{{ $label }}</span>
-                                    @if ($sortLabel === $field)
-                                        @if ($sortDirection === 'asc')
-                                            <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                                            </svg>
+                    @if (Auth::user()->role_id == 1) 
+                        @foreach (['Teacher Name' => 'Teacher Name', 'actions' => 'Actions'] as $field => $label)
+                            <th scope="col" class="p-4 text-sm font-medium text-gray-500 uppercase dark:text-gray-400 text-center align-middle">
+                                @if ($field !== 'actions')
+                                    <button type="button" wire:click="sortBy('{{ $field }}')" class="flex items-center justify-center w-full focus:outline-none">
+                                        <span>{{ $label }}</span>
+                                        @if ($sortLabel === $field)
+                                            @if ($sortDirection === 'asc')
+                                                <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                                </svg>
+                                            @else
+                                                <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            @endif
                                         @else
-                                            <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                            <svg class="w-4 h-4 ms-1 opacity-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
                                             </svg>
                                         @endif
-                                    @else
-                                        <svg class="w-4 h-4 ms-1 opacity-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
-                                        </svg>
-                                    @endif
-                                </button>
-                            @else
-                                <span>{{ $label }}</span>
-                            @endif
-                        </th>
-                    @endforeach
+                                    </button>
+                                @else
+                                    <span>{{ $label }}</span>
+                                @endif
+                            </th>
+                        @endforeach
+                    @elseif (Auth::user()->role_id == 2)
+                        @foreach (['Teacher Name' => 'Teacher Name'] as $field => $label)
+                            <th scope="col" class="p-4 text-sm font-medium text-gray-500 uppercase dark:text-gray-400 text-center align-middle">
+                                @if ($field !== 'actions')
+                                    <button type="button" wire:click="sortBy('{{ $field }}')" class="flex items-center justify-center w-full focus:outline-none">
+                                        <span>{{ $label }}</span>
+                                        @if ($sortLabel === $field)
+                                            @if ($sortDirection === 'asc')
+                                                <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                                </svg>
+                                            @else
+                                                <svg class="w-4 h-4 ms-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            @endif
+                                        @else
+                                            <svg class="w-4 h-4 ms-1 opacity-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                                            </svg>
+                                        @endif
+                                    </button>
+                                @else
+                                    <span>{{ $label }}</span>
+                                @endif
+                            </th>
+                        @endforeach
+                    @endif
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                @forelse ($records as $record)
-                    <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 odd:bg-white odd:dark:bg-gray-900 even:bg-gray-100 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                        <td class="p-1 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->teacher_name }}</td>
-                        <td class="p-3 space-x-2 whitespace-nowrap text-center">
-                            <button
-                                class="delete-button text-white bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
-                                data-actionUrl="{{ route('class_lists.teacher.destroy', [$masterClass_id, $classList_id, $record->teacher_id]) }}"
-                                data-name="{{ $record->teacher_name }}">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="2" class="py-1.5 px-4 text-center text-sm text-gray-500 dark:text-gray-400">No records found.</td>
-                    </tr>
-                @endforelse
+                @if (Auth::user()->role_id == 1) 
+                    @forelse ($records as $record)
+                        <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 odd:bg-white odd:dark:bg-gray-900 even:bg-gray-100 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->teacher_name }}</td>
+                            <td>
+                                <button
+                                    class="delete-button text-white bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2 dark:focus:ring-blue-900"
+                                    data-actionUrl="{{ route('class_lists.teacher.destroy', [$masterClass_id, $classList_id, $record->teacher_id]) }}"
+                                    data-name="{{ $record->teacher_name }}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="2" class="py-1.5 px-4 text-center text-sm text-gray-500 dark:text-gray-400">No records found.</td>
+                        </tr>
+                    @endforelse
+                @elseif (Auth::user()->role_id == 2)
+                    @forelse ($records as $record)
+                        <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 odd:bg-white odd:dark:bg-gray-900 even:bg-gray-100 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                            <td class="p-4 text-sm font-normal text-gray-500 dark:text-gray-400 text-center break-all">{{ $record->teacher_name }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="2" class="py-1.5 px-4 text-center text-sm text-gray-500 dark:text-gray-400">No records found.</td>
+                        </tr>
+                    @endforelse 
+                @endif
             </tbody>
         </table>
     </div>
