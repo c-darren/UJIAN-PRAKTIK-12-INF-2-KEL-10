@@ -2,8 +2,8 @@
 
 namespace App\Models\Auth;
 
-use App\Http\Controllers\Classroom\ClassListTeacherController;
 use App\Models\Classroom\ClassList;
+use App\Models\Classroom\ClassPresence;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Classroom\MasterClassStudents;
 use App\Notifications\SendEmailCreateAccount;
@@ -15,6 +15,7 @@ use App\Notifications\SuccessVerifyEmailNotification;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Http\Controllers\Classroom\ClassListTeacherController;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -80,6 +81,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function classTeachers()
     {
         return $this->hasMany(ClassListTeacherController::class, 'teacher_id');
+    }
+
+    public function presences()
+    {
+        return $this->hasMany(ClassPresence::class, 'user_id');
     }
 
     public function hasRole($role)

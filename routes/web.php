@@ -10,14 +10,18 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\School\AcademicYear;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Classroom\TopicController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Classroom\SubjectController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Classroom\ClassInfoController;
 use App\Http\Controllers\Classroom\ClassListController;
-use App\Http\Controllers\Classroom\ClassListStudentController;
 use App\Http\Controllers\Classroom\MasterClassController;
+use App\Http\Controllers\Classroom\ClassPresenceController;
+use App\Http\Controllers\Classroom\ClassAttendanceController;
+use App\Http\Controllers\Classroom\ClassListStudentController;
 use App\Http\Controllers\Classroom\ClassListTeacherController;
 use App\Http\Controllers\Classroom\MasterClassStudentController;
 
@@ -136,7 +140,7 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
         });
     });
     Route::prefix('classroom')->group(function(){
-        Route::prefix('masterClass')->middleware(CheckUserRole::class . ':1,2')->group(function () {
+        Route::prefix('masterClass')->middleware(CheckUserRole::class . ':1')->group(function () {
             Route::get('/view', [MasterClassController::class, 'show'])->name('classroom.masterClass.view');
             Route::post('/store', [MasterClassController::class, 'store'])->name( 'classroom.masterClass.store');
             Route::put('/edit/{id}', [MasterClassController::class, 'update'])->where(['id' => '[0-9]+'])->name('classroom.masterClass.update');
@@ -176,17 +180,37 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
                 });
             });
         });
+
+        //Teacher
+        Route::prefix('{masterClass_id}/{class_id}/')->middleware(CheckUserRole::class . ':2')->group(function () {
+            Route::get('/', [ClassInfoController::class, 'showClassInfo'])->name('classroom.index');
+            Route::get('/teacher', [ClassListTeacherController::class, 'index'])->name('classroom.teacher.index');
+            Route::prefix('/student')->group(function () {
+                Route::get('/', [ClassListStudentController::class, 'index'])->name('classroom.student.index');
+                Route::post('/store', [ClassListStudentController::class, 'store'])->name('classroom.student.store');
+                Route::delete('/delete/{student_id}', [ClassListStudentController::class, 'destroy'])->name('classroom.student.destroy');
+            });
+            // CRUD untuk Topics
+            Route::prefix('/topic')->group(function () {
+                Route::get('/', [TopicController::class, 'index'])->name('classroom.topic.index');
+                Route::post('/store', [TopicController::class, 'store'])->name('classroom.topic.store');
+                Route::put('/update/{topic_id}', [TopicController::class, 'update'])->name('classroom.topic.update');
+                Route::delete('/delete/{topic_id}', [TopicController::class, 'destroy'])->name('classroom.topic.destroy');
+            });
+
+            // CRUD untuk Attendances
+            Route::prefix('/attendance')->group(function () {
+                Route::get('/', [ClassAttendanceController::class, 'index'])->name('classroom.attendance.index');
+                Route::post('/store', [ClassAttendanceController::class, 'store'])->name('classroom.attendance.store');
+                Route::put('/update/{attendance_id}', [ClassAttendanceController::class, 'update'])->name('classroom.attendance.update');
+                Route::delete('/delete/{attendance_id}', [ClassAttendanceController::class, 'destroy'])->name('classroom.attendance.destroy');
+            });
+
+            // CRUD untuk Presences (Read dan Update saja)
+            Route::prefix('/presence/{attendance_id}')->group(function () {
+                Route::get('/', [ClassPresenceController::class, 'index'])->name('classroom.presence.index');
+                Route::put('/update', [ClassPresenceController::class, 'bulkUpdate'])->name('classroom.presence.bulkUpdate');
+            });
+        });
     });
-    // Route::prefix('classlist')->middleware(CheckUserRole::class . ':1,2')->group(function () {
-    //     Route::get('/view', [SubjectController::class, 'show'])->name('classroom.subject.view');
-    //     Route::post('/store', [SubjectController::class, 'store'])->name( 'classroom.subject.store');
-    //     Route::put('/edit/{id}', [SubjectController::class, 'update'])->name('classroom.subject.update');
-    //     Route::delete('/delete/{id}', [SubjectController::class, 'destroy'])->name('classroom.subject.destroy');
-    // });
-    // Route::prefix('classroom')->middleware(CheckUserRole::class . ':1')->group(function () {
-    //     Route::get('/view', [AcademicYear::class, 'show'])->name('school.academicYear.view');
-    //     Route::post('/store', [AcademicYear::class, 'store'])->name( 'school.academicYear.store');
-    //     Route::put('/edit/{id}', [AcademicYear::class, 'update'])->name('school.academicYear.update');
-    //     Route::delete('/delete/{id}', [AcademicYear::class, 'destroy'])->name('school.academicYear.destroy');
-    // });
 });

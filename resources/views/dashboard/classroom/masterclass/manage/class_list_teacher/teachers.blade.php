@@ -22,12 +22,16 @@
         </div>
     </div>
 </div>
-<div x-data="{
+<div
+    @if (Auth::user()->role_id == 1) 
+    x-data="{
     $store: { 
         createModal: { open: false },
         deleteModal: { open: false }
     }
-}" class="relative">
+    }" 
+    @endif
+    class="relative">
     <div class="flex flex-col py-1">
         <div class="overflow-x-auto">
             <div class="inline-block min-w-full align-middle">
@@ -36,18 +40,19 @@
         </div>
     </div>
 
+    @if (Auth::user()->role_id == 1)
     {{-- Create Modal Button --}}
     <button @click="$store.createModal.show()" id="showCreateModal" class="hidden"></button>
 
     {{-- Create Modal --}}
     @include('dashboard.classroom.masterclass.manage.class_list_teacher.create')
 
-    {{-- Delete Modal --}}
-    {{-- @include('dashboard.classroom.masterclass.manage.class_list_teacher.delete') --}}
-
+    @endif
 </div>
 
+@if (Auth::user()->role_id == 1) 
 @section('required_scripts')
 <script type="text/javascript" src="{{ asset('js/classroom/manage_class_list/class_list_teacher/create.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/classroom/manage_class_list/class_list_teacher/delete.js') }}"></script> 
 @endsection
+@endif
