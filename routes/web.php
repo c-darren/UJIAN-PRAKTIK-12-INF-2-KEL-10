@@ -15,9 +15,12 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Classroom\SubjectController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Classroom\MaterialController;
+use App\Http\Controllers\Classroom\ResourceController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Classroom\ClassInfoController;
 use App\Http\Controllers\Classroom\ClassListController;
+use App\Http\Controllers\Classroom\AssignmentController;
 use App\Http\Controllers\Classroom\MasterClassController;
 use App\Http\Controllers\Classroom\ClassPresenceController;
 use App\Http\Controllers\Classroom\ClassAttendanceController;
@@ -211,6 +214,34 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
                 Route::get('/', [ClassPresenceController::class, 'index'])->name('classroom.presence.index');
                 Route::put('/update', [ClassPresenceController::class, 'bulkUpdate'])->name('classroom.presence.bulkUpdate');
             });
+
+            Route::prefix('/resources')->group(function () {
+                //Route '/' akan menampilkan assignment dan material untuk memudahkan pengguna
+                Route::get('/', [ResourceController::class, 'index'])->name('classroom.resources.index');
+                Route::post('/store/{type}', [ResourceController::class, 'store'])->name('classroom.resources.store');
+                Route::get('/show/{type}/{resource_id}', [ResourceController::class, 'show'])->name('classroom.resources.show');
+                Route::put('/update/{type}/{resource_id}', [ResourceController::class, 'update'])->name('classroom.resources.update');
+                Route::delete('/delete/{type}/{resource_id}', [ResourceController::class, 'destroy'])->name('classroom.resources.destroy');
+                
+                //Tugas Peserta Didik
+                Route::get('/show/{type}/{resource_id}/submissions', [ResourceController::class, 'submissions'])->name('classroom.resources.submissions');
+                Route::get('/submissions/{submission_id}/preview', [ResourceController::class, 'previewSubmission'])
+                    ->name('classroom.resources.preview-submission');
+                Route::post('/submissions/{submission_id}/grade', [ResourceController::class, 'gradeSubmission'])
+                    ->name('classroom.resources.grade');
+                Route::post('/submissions/bulk-grade', [ResourceController::class, 'bulkGradeSubmissions'])
+                    ->name('classroom.resources.bulk-grade');
+                Route::post('/submissions/{submission_id}/update-score', [ResourceController::class, 'updateScore'])
+                    ->name('classroom.resources.update-score');
+                
+                //Orang
+                Route::get('/all', [ResourceController::class, 'all'])->name('classroom.person.all');
+            });
         });
+
+    //Umum
+    // Route untuk menampilkan attachment (agar bisa diakses oleh role teacher dan student)
+    Route::get('/classroom/{masterClass_id}/{class_id}/resources/view-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'viewAttachment'])->name('classroom.resources.view-attachment');
+    Route::get('/classroom/{masterClass_id}/{class_id}/resources/download-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'downloadAttachment'])->name('classroom.resources.download-attachment');
     });
 });
