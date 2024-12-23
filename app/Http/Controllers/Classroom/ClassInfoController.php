@@ -35,6 +35,7 @@ class ClassInfoController extends Controller
             'masterClass_id' => $masterClass->id,
             'masterClass_name' => $masterClass->master_class_name ?? $masterClass->class_name, // Sesuaikan dengan kolom database
             'master_class_status' => $masterClass->status,
+            'master_class_code' => $masterClass->master_class_code,
             'classList' => $classList,
             'page_title' => $classList->class_name,
             'subject_name' => $subject_name,

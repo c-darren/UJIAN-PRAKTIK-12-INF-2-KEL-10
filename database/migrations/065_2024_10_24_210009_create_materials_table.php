@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('material_name');
             $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
             $table->text('description')->nullable();
-            $table->date('start_date');
-            $table->string('attachment')->nullable();
+            $table->timestamp('start_date');
+            $table->text('attachment_file_name')->nullable();
+            $table->text('attachment')->nullable();
             $table->foreignId('editor_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             //Validasi kelas asal terlebih dahulu sebelum akses url (jangan diakses secara langsung) ini. Tidak perlu pakai token

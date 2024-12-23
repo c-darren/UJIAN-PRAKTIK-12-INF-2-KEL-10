@@ -114,34 +114,40 @@
                             </button>
                             <ul id="dropdown-classroom" class="{{ request()->segment(1) === 'classroom' ? '' : 'hidden'}}">
                                 <li>
-                                    <a href="{{ route('classroom.index', [$masterClass_id, $classList->id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
+                                    <a href="{{ route('classroom.index', [$masterClass_id, $classList->id]) }}" class="flex items-center p-1 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
                                     {{ (request()->segment(1) === 'classroom' && request()->segment(4) == '') ? 'bg-blue-100 dark:bg-blue-700' : '' }}
                                     ">
                                     Class Info</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('classroom.teacher.index', [$masterClass_id, $classList->id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
+                                    <a href="{{ route('classroom.teacher.index', [$masterClass_id, $classList->id]) }}" class="flex items-center mt-2 p-1 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
                                     {{ (request()->segment(1) === 'classroom' && request()->segment(4) === 'teacher') ? 'bg-blue-100 dark:bg-blue-700' : '' }}
                                     ">
                                     Teachers</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('classroom.student.index', [$masterClass_id, $classList->id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
+                                    <a href="{{ route('classroom.student.index', [$masterClass_id, $classList->id]) }}" class="flex items-center mt-2 p-1 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
                                     {{ (request()->segment(1) === 'classroom' && request()->segment(4) === 'student') ? 'bg-blue-100 dark:bg-blue-700' : '' }}
                                     ">
                                     Students</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('classroom.topic.index', [$masterClass_id, $classList->id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
+                                    <a href="{{ route('classroom.topic.index', [$masterClass_id, $classList->id]) }}" class="flex items-center mt-2 p-1 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
                                     {{ (request()->segment(1) === 'classroom' && request()->segment(4) === 'topic') ? 'bg-blue-100 dark:bg-blue-700' : '' }}
                                     ">
                                     Topic</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('classroom.attendance.index', [$masterClass_id, $classList->id]) }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
+                                    <a href="{{ route('classroom.attendance.index', [$masterClass_id, $classList->id]) }}" class="flex items-center mt-2 p-1 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
                                     {{ (request()->segment(1) === 'classroom' && request()->segment(4) === 'attendance') ? 'bg-blue-100 dark:bg-blue-700' : '' }}
                                     ">
-                                    Attendance</a>
+                                    Daftar Hadir</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('classroom.resources.index', [$masterClass_id, $classList->id]) }}" class="flex items-center mt-2 p-1 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-blue-200 dark:text-white dark:hover:bg-blue-700
+                                    {{ (request()->segment(1) === 'classroom' && request()->segment(4) == 'resources') ? 'bg-blue-100 dark:bg-blue-700' : '' }}
+                                    ">
+                                    Tugas & Materi</a>
                                 </li>
                             </ul>
                         @endif
