@@ -21,3 +21,12 @@ yarn-error.log
 /.zed
 storage/debugbar/*
 Catatan.docx
+
+# Docker related
+.docker/*
+!.docker/supervisord.conf
+docker-compose.override.yml
+mysql_data/
+
+# Generated Docker files
+docker-compose.override.yml
