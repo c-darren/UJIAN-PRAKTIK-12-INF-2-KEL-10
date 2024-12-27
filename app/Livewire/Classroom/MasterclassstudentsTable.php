@@ -106,7 +106,7 @@ class MasterclassstudentsTable extends Component
             ->orderBy($sortField, $this->sortDirection)
             ->paginate($this->perPage);
 
-        return view('livewire.classroom.masterclass_students-table', [
+        return view('livewire.classroom.masterclassstudents-table', [
             'records' => $records,
         ]);
     }
