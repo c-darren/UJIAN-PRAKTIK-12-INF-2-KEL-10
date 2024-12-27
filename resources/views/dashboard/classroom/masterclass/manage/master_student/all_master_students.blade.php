@@ -14,7 +14,7 @@
     <div class="flex flex-col py-1 mt-2">
         <div class="overflow-x-auto">
             <div class="inline-block min-w-full align-middle">
-                @livewire('classroom.masterclass_students-table', ['masterClass_id' => $masterClass_id])
+                @livewire('classroom.masterclassstudents-table', ['masterClass_id' => $masterClass_id])
             </div>
         </div>
     </div>

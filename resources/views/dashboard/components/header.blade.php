@@ -145,11 +145,18 @@
                             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button-2" aria-expanded="false" data-dropdown-toggle="dropdown-2">
                                 <span class="sr-only">Open user menu</span>
                                     <img class="w-8 h-8 rounded-full" src="
-                                    {{ Auth::user()->avatar ? env('STORAGE_URL') . 'app/public/' . Auth::user()->avatar :
-                                    env('STORAGE_URL') . 'app/public/avatars/no_image.png' }}" alt="user photo">
+                                    {{ Auth::user()->avatar ? Storage::url(Auth::user()->avatar) :
+                                    Storage::url('avatars/no_image.png') }}" alt="user photo">
                                     {{-- <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->avatar ? env('APP_URL') . 'storage/' . Auth::user()->avatar : asset('storage/no_image.png') }}" alt="user photo"> --}}
                             </button>
-                        </div>
+                            {{-- <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button-2" aria-expanded="false" data-dropdown-toggle="dropdown-2">
+                                <span class="sr-only">Open user menu</span>
+                                    <img class="w-8 h-8 rounded-full" src="
+                                    {{ Auth::user()->avatar ? env('STORAGE_URL') . 'app/public/' . Auth::user()->avatar :
+                                    env('STORAGE_URL') . 'app/public/avatars/no_image.png' }}" alt="user photo">
+                                </button> --}}
+                            </div>
+                            {{-- <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->avatar ? env('APP_URL') . 'storage/' . Auth::user()->avatar : asset('storage/no_image.png') }}" alt="user photo"> --}}
                         
                         <div class="z-50 opacity-0 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 transition-opacity duration-500 ease-in-out" id="dropdown-2">
                             <div class="px-4 py-3" role="none">
