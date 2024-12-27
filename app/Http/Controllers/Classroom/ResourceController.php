@@ -9,15 +9,51 @@ use App\Models\Classroom\Topic;
 use App\Models\Classroom\Material;
 use Illuminate\Support\Facades\DB;
 use App\Models\Classroom\ClassList;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom\Assignment;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Classroom\AssignmentSubmission;
+use Illuminate\Validation\ValidationException;
 use App\Classroom\Traits\AuthorizesClassAccess;
 
 class ResourceController extends Controller
 {
     use AuthorizesClassAccess;
+    private static $lastCheck = null;
+
+    public function __construct()
+    {
+        $masterClassId = request()->route('masterClass_id');
+        $classId = request()->route('class_id');
+
+        if ($masterClassId && $classId) {
+            $this->checkScheduledSubmissions($masterClassId, $classId);
+        }
+    }
+
+    private function checkScheduledSubmissions($masterClass_id, $class_id)
+    {
+        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
+        
+        $now = Carbon::now();
+        if (!self::$lastCheck || $now->diffInSeconds(self::$lastCheck) >= 60) {
+            try {
+                DB::beginTransaction();
+                AssignmentSubmission::where('return_status', 'scheduled')
+                    ->where('scheduled_return_at', '<=', $now)
+                    ->update([
+                        'return_status' => 'returned',
+                        'returned_at' => DB::raw('scheduled_return_at')
+                    ]);
+                DB::commit();
+                self::$lastCheck = $now;
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to process scheduled submissions: ' . $e->getMessage());
+            }
+        }
+    }
 
     public function index($masterClass_id, $class_id)
     {
@@ -518,6 +554,17 @@ class ResourceController extends Controller
             $originalName = $originalNames[$attachment_index] ?? basename($attachment);
             // $attachmentFileName = basename($attachment);
     
+        } elseif ($type === 'submission') {
+            $resource = AssignmentSubmission::findOrFail($resource_id);
+            $attachments = json_decode($resource->attachment, true);
+            if (!isset($attachments[$attachment_index])) {
+                abort(404, 'Attachment not found.');
+            }
+            $attachment = $attachments[$attachment_index];
+            $originalNames = $resource->attachment_file_name ? json_decode($resource->attachment_file_name, true) : [];
+            $originalName = $originalNames[$attachment_index] ?? basename($attachment);
+            // $attachmentFileName = basename($attachment);
+    
         } else {
             return response()->json(['error' => 'Invalid resource type'], 400);
         }
@@ -533,42 +580,36 @@ class ResourceController extends Controller
     }
     public function viewAttachment($masterClass_id, $class_id, $type, $resource_id, $attachment_index)
     {
-        // Otorisasi akses
         $this->authorizeAccess(2, $masterClass_id, $class_id, false);
     
-        if ($type === 'material') {
-            $resource = Material::where('class_id', $class_id)
-                                ->findOrFail($resource_id);
-            $attachments = $resource->attachment ? json_decode($resource->attachment, true) : [];
-            if (!isset($attachments[$attachment_index])) {
-                abort(404, 'Attachment not found.');
-            }
-            $path = $attachments[$attachment_index];
-            $originalNames = $resource->attachment_file_name ? json_decode($resource->attachment_file_name, true) : [];
-            $originalName = $originalNames[$attachment_index] ?? basename($path);
-        } elseif ($type === 'assignment') {
-            $resource = Assignment::where('class_id', $class_id)
-                                  ->findOrFail($resource_id);
-            $attachments = $resource->attachment ? json_decode($resource->attachment, true) : [];
-            if (!isset($attachments[$attachment_index])) {
-                abort(404, 'Attachment not found.');
-            }
-            $path = $attachments[$attachment_index];
-            $originalNames = $resource->attachment_file_name ? json_decode($resource->attachment_file_name, true) : [];
-            // $originalName = isset($originalNames[$attachment_index]) ? $originalNames[$attachment_index] : basename($path);
-            $originalName = $originalNames[$attachment_index] ?? basename($path);
-        } else {
-            abort(400, 'Invalid resource type.');
+        switch ($type) {
+            case 'material':
+                $resource = Material::findOrFail($resource_id);
+                break;
+            case 'assignment':
+                $resource = Assignment::findOrFail($resource_id);
+                break;
+            case 'submission':
+                $resource = AssignmentSubmission::findOrFail($resource_id);
+                break;
+            default:
+                abort(400, 'Invalid resource type.');
         }
     
-        // Check if file exists
+        $attachments = $resource->attachment ? json_decode($resource->attachment, true) : [];
+        if (!isset($attachments[$attachment_index])) {
+            abort(404, 'Attachment not found.');
+        }
+    
+        $path = $attachments[$attachment_index];
+        $originalNames = $resource->attachment_file_name ? json_decode($resource->attachment_file_name, true) : [];
+        $originalName = $originalNames[$attachment_index] ?? basename($path);
+    
         if (!Storage::disk('private')->exists($path)) {
             abort(404, 'File not found.');
         }
     
-        // Get file MIME type
         $mimeType = Storage::disk('private')->mimeType($path);
-        // Serve file with headers to display inline
         return response()->file(Storage::disk('private')->path($path), [
             'Content-Type' => $mimeType,
             'Content-Disposition' => 'inline; filename="' . str_replace('"', '\\"', $originalName) . '"'
@@ -588,10 +629,24 @@ class ResourceController extends Controller
             ->where('class_id', $class_id)
             ->findOrFail($resource_id);
 
+        // Get all submissions with student names
         $submissions = DB::table('assignment_submissions as s')
             ->join('users as u', 'u.id', '=', 's.user_id')
             ->select('s.*', 'u.name as student_name')
             ->where('s.assignment_id', $resource_id)
+            ->get();
+
+        // Get all enrolled students who haven't submitted
+        $nonSubmittingStudents = DB::table('class_students as cs')
+            ->join('users as u', 'u.id', '=', 'cs.user_id')
+            ->whereNotExists(function($query) use ($resource_id) {
+                $query->select(DB::raw(1))
+                      ->from('assignment_submissions as s')
+                      ->whereRaw('s.user_id = cs.user_id')
+                      ->where('s.assignment_id', $resource_id);
+            })
+            ->where('cs.class_id', $class_id)
+            ->select('u.id', 'u.name')
             ->get();
 
         return $this->teacher_view('submissions', [
@@ -599,88 +654,288 @@ class ResourceController extends Controller
             'page_title' => 'Grade Submissions - ' . $assignment->assignment_name,
             'masterClass_id' => $masterClass_id,
             'classList_id' => $class_id,
+            'resource_id' => $resource_id,
             'assignment' => $assignment,
-            'submissions' => $submissions
+            'submissions' => $submissions,
+            'nonSubmittingStudents' => $nonSubmittingStudents
         ]);
     }
 
     public function gradeSubmission(Request $request, $masterClass_id, $class_id, $submission_id) 
     {
         $this->authorizeAccess(2, $masterClass_id, $class_id, true);
-
-        $validated = $request->validate([
-            'score' => 'required|numeric|min:0|max:100',
-            'feedback' => 'nullable|string',
-            'return_status' => 'required|in:draft,scheduled,returned',
-            'scheduled_return_at' => 'required_if:return_status,scheduled|nullable|date|after:now'
-        ]);
-
-        $submission = AssignmentSubmission::findOrFail($submission_id);
-
-        DB::transaction(function() use ($submission, $validated, $request) {
-            $submission->score = $validated['score'];
-            $submission->feedback = $validated['feedback'];
-            $submission->assessed_by = auth()->id();
-            $submission->return_status = $validated['return_status'];
+        try {
+            $validated = $request->validate([
+                'score' => 'required|numeric|min:0|max:100',
+            ]);
+    
+            $submission = AssignmentSubmission::findOrFail($submission_id);
             
-            if ($validated['return_status'] === 'scheduled') {
-                $submission->scheduled_return_at = $validated['scheduled_return_at'];
-                $submission->returned_at = null;
-            } elseif ($validated['return_status'] === 'returned') {
-                $submission->returned_at = now();
-                $submission->scheduled_return_at = null;
-            } else {
-                $submission->returned_at = null;
-                $submission->scheduled_return_at = null;
+            // Check existing status
+            if ($submission->return_status === 'returned') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat mengubah nilai tugas yang sudah dikembalikan'
+                ], 422);
             }
-
-            $submission->save();
-        });
-
-        return response()->json([
-            'message' => 'Submission graded successfully',
-            'submission' => $submission
-        ]);
+    
+            // Update logic: maintain scheduled status
+            $updateData = [
+                'score' => $validated['score'],
+                // Only set to draft if current status is not scheduled
+                'return_status' => $submission->return_status === 'scheduled' ? 
+                    'scheduled' : 'draft'
+            ];
+    
+            $submission->update($updateData);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Nilai berhasil disimpan' . 
+                    ($updateData['return_status'] === 'scheduled' ? 
+                    ' dan tetap dijadwalkan' : ' sebagai draft')
+            ]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan nilai: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function bulkGradeSubmissions(Request $request, $masterClass_id, $class_id)
     {
         $this->authorizeAccess(2, $masterClass_id, $class_id, true);
-
-        $validated = $request->validate([
-            'submissions' => 'required|array',
-            'submissions.*.id' => 'required|exists:assignment_submissions,id',
-            'submissions.*.score' => 'required|numeric|min:0|max:100',
-            'submissions.*.feedback' => 'nullable|string',
-            'return_status' => 'required|in:draft,scheduled,returned',
-            'scheduled_return_at' => 'required_if:return_status,scheduled|nullable|date|after:now'
-        ]);
-
-        DB::transaction(function() use ($validated) {
+        try {
+            // Validate request
+            $validated = $request->validate([
+                'submissions' => 'required|array',
+                'submissions.*.id' => 'required|exists:assignment_submissions,id',
+                'submissions.*.score' => 'required|numeric|min:0|max:100',
+                'return_status' => 'required|in:now,scheduled',
+                'scheduled_return_at' => 'nullable|required_if:return_status,scheduled|date|after:now'
+            ]);
+    
+            DB::beginTransaction();
+    
             foreach ($validated['submissions'] as $submission) {
-                $submissionModel = AssignmentSubmission::findOrFail($submission['id']);
-                $submissionModel->score = $submission['score'];
-                $submissionModel->feedback = $submission['feedback'] ?? null;
-                $submissionModel->assessed_by = auth()->id();
-                $submissionModel->return_status = $validated['return_status'];
-                
-                if ($validated['return_status'] === 'scheduled') {
-                    $submissionModel->scheduled_return_at = $validated['scheduled_return_at'];
-                    $submissionModel->returned_at = null;
-                } elseif ($validated['return_status'] === 'returned') {
-                    $submissionModel->returned_at = now();
-                    $submissionModel->scheduled_return_at = null;
-                } else {
-                    $submissionModel->returned_at = null;
-                    $submissionModel->scheduled_return_at = null;
-                }
-
-                $submissionModel->save();
+                AssignmentSubmission::where('id', $submission['id'])
+                    ->update([
+                        'score' => $submission['score'],
+                        'feedback' => $submission['feedback'] ?? null,
+                        'return_status' => $request->return_status,
+                        'scheduled_return_at' => $request->scheduled_return_at,
+                        'returned_at' => $request->return_status === 'now' ? now() : null
+                    ]);
             }
-        });
+    
+            DB::commit();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Nilai berhasil disimpan untuk semua submission'
+            ]);
+    
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan server',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
-        return response()->json([
-            'message' => 'Submissions graded successfully'
-        ]);
+    public function previewSubmission($masterClass_id, $class_id, $submission_id) 
+    {
+        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
+        try {
+            $submission = AssignmentSubmission::with(['student', 'assignment.classList'])
+                ->findOrFail($submission_id);
+    
+            $html = view('dashboard.classroom.class_list.resource.partials.submission-preview', [
+                'submission' => $submission,
+                'masterClass_id' => $masterClass_id,
+                'class_id' => $class_id
+            ])->render();
+    
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat preview submission',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function storeFeedback(Request $request, $masterClass_id, $class_id, $submission_id)
+    {
+        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
+        try {
+            $submission = AssignmentSubmission::findOrFail($submission_id);
+            $user = auth()->user();
+            
+            $feedback = json_decode($submission->feedback, true) ?? [];
+            $feedback[] = [
+                'content' => $request->content,
+                'timestamp' => now()->format('Y-m-d H:i:s'),
+                'user_id' => $user->id,
+            ];
+            
+            $submission->update(['feedback' => json_encode($feedback)]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Feedback berhasil disimpan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan feedback',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteFeedback($masterClass_id, $class_id, $submission_id, $index)
+    {
+        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
+        try {
+            $submission = AssignmentSubmission::findOrFail($submission_id);
+            
+            // Ambil feedback yang ada
+            $feedbacks = json_decode($submission->feedback, true) ?? [];
+            
+            // Validasi index dan kepemilikan feedback
+            if (!isset($feedbacks[$index]) || $feedbacks[$index]['user_id'] !== auth()->id()) {
+                throw new \Exception('Anda tidak memiliki akses untuk menghapus komentar ini');
+            }
+            
+            // Hapus feedback pada index tersebut
+            array_splice($feedbacks, $index, 1);
+            
+            // Update submission dengan feedback yang baru
+            $submission->update([
+                'feedback' => json_encode($feedbacks)
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Feedback berhasil dihapus'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus feedback: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function bulkReturnSubmissions(Request $request, $masterClass_id, $class_id)
+    {
+        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
+        try {
+            $validated = $request->validate([
+                'submissions' => 'required|array',
+                'submissions.*.id' => 'required|exists:assignment_submissions,id',
+                'submissions.*.score' => 'required|numeric|min:0|max:100',
+                'return_status' => 'required|in:now,scheduled',
+                'scheduled_return_at' => 'nullable|required_if:return_status,scheduled|date|after:now'
+            ]);
+
+            // Check if any submission is already returned
+            $alreadyReturned = AssignmentSubmission::whereIn('id', array_column($validated['submissions'], 'id'))
+                ->where('return_status', 'returned')
+                ->exists();
+
+            if ($alreadyReturned) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Beberapa tugas sudah dikembalikan dan tidak dapat diubah'
+                ], 422);
+            }
+
+            if ($request->return_status === 'scheduled' && Carbon::parse($request->scheduled_return_at)->isPast()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Waktu pengembalian harus lebih dari waktu sekarang'
+                ], 422);
+            }
+        
+            DB::beginTransaction();
+        
+            foreach ($validated['submissions'] as $submission) {
+                $submissionModel = AssignmentSubmission::find($submission['id']);
+                
+                if ($submissionModel->return_status !== 'returned') {
+                    $submissionModel->update([
+                        'score' => $submission['score'],
+                        'return_status' => $request->return_status === 'now' ? 'returned' : 'scheduled',
+                        'scheduled_return_at' => $request->scheduled_return_at,
+                        'returned_at' => $request->return_status === 'now' ? now() : null
+                    ]);
+                }
+            }
+        
+            DB::commit();
+        
+            return response()->json([
+                'success' => true,
+                'message' => 'Tugas berhasil dikembalikan'
+            ]);
+        
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal: ' . implode(', ', $e->errors())
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function setReturnConfirmation(Request $request, $masterClass_id, $class_id)
+    {
+        // Authorize with modify permission
+        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
+
+        try {
+            $validated = $request->validate([
+                'submission_id' => 'required|exists:assignment_submissions,id'
+            ]);
+
+            // Check if submission exists and belongs to class
+            $submission = AssignmentSubmission::whereHas('assignment', function($query) use ($class_id) {
+                $query->where('class_id', $class_id);
+            })->findOrFail($validated['submission_id']);
+
+            // No need to store in session, just return success
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengonfirmasi pengembalian: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

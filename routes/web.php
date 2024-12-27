@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\LogUserAccess;
@@ -229,11 +230,20 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
                     ->name('classroom.resources.preview-submission');
                 Route::post('/submissions/{submission_id}/grade', [ResourceController::class, 'gradeSubmission'])
                     ->name('classroom.resources.grade');
+                Route::post('submissions/{submission_id}/feedback', [ResourceController::class, 'storeFeedback'])
+                    ->name('classroom.resources.store-feedback');
+                Route::delete('submissions/{submission_id}/feedback/{index}', [ResourceController::class, 'deleteFeedback'])
+                    ->name('classroom.resources.delete-feedback');
                 Route::post('/submissions/bulk-grade', [ResourceController::class, 'bulkGradeSubmissions'])
                     ->name('classroom.resources.bulk-grade');
                 Route::post('/submissions/{submission_id}/update-score', [ResourceController::class, 'updateScore'])
                     ->name('classroom.resources.update-score');
-                
+                Route::post('/submissions/bulk-return', [ResourceController::class, 'bulkReturnSubmissions'])
+                    ->name('classroom.resources.bulk-return-submissions');
+                Route::post('/classroom/{masterClass_id}/{class_id}/resources/submissions/set-return-confirmation', 
+                [ResourceController::class, 'setReturnConfirmation'])
+                ->name('classroom.resources.set-return-confirmation');
+
                 //Orang
                 Route::get('/all', [ResourceController::class, 'all'])->name('classroom.person.all');
             });

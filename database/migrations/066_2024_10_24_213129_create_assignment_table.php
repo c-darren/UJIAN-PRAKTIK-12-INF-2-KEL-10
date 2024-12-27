@@ -37,7 +37,7 @@ return new class extends Migration
             $table->enum('return_status', ['draft', 'scheduled', 'returned'])->default('draft');
             $table->timestamp('scheduled_return_at')->nullable();
             $table->timestamp('returned_at')->nullable();
-            $table->text('feedback')->nullable();
+            $table->json('feedback')->nullable(); // Change feedback to JSON type
             $table->timestamps();
         });
         Schema::create('assignment_comments', function (Blueprint $table) {
