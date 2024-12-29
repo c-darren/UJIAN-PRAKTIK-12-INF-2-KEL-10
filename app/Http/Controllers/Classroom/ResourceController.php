@@ -209,7 +209,10 @@ class ResourceController extends Controller
         // Otorisasi akses
         $this->authorizeAccess(2, $masterClass_id, $class_id, false);
         $classList = ClassList::findOrFail($class_id);
-        $topics = Topic::select('id', 'topic_name')->get();
+        $topics = Topic::select('id', 'topic_name')
+        ->where('class_id', $class_id)
+        ->orderBy('topic_name')
+        ->get();
         if ($type === 'material') {
             $resource = Material::with(['topic', 'author', 'editor'])
                                 ->where('class_id', $class_id)
