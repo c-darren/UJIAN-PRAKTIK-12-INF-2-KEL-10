@@ -91,6 +91,7 @@ class TeacherResourceTable extends Component
 
     public function render()
     {
+        // Get base data
         $materials = Material::with(['topic','author','editor'])
             ->where('class_id', $this->classList_id)
             ->get()
@@ -99,8 +100,6 @@ class TeacherResourceTable extends Component
                 $item->resource_name = $item->material_name;
                 $item->author_name = $item->author ? $item->author->name : '';
                 $item->desc = strtolower($item->description ?? '');
-                // Gunakan langsung $item->topic_id yang berasal dari tabel materials
-                // Tidak perlu mengubah $item->id
                 return $item;
             });
         
@@ -112,31 +111,34 @@ class TeacherResourceTable extends Component
                 $item->resource_name = $item->assignment_name;
                 $item->author_name = $item->author ? $item->author->name : '';
                 $item->desc = strtolower($item->description ?? '');
-                // Gunakan langsung $item->topic_id yang berasal dari tabel assignments
                 return $item;
             });
-    
-        // Filter berdasarkan status
-        if ($this->status === 'materi') {
-            $resources = $materials;
-        } elseif ($this->status === 'tugas') {
-            $resources = $assignments;
-        } elseif ($this->status === 'deadline') {
-            $resources = $assignments->filter(function($res) {
-                return $res->end_date < now();
-            });
-        } else {
-            $resources = $materials->merge($assignments);
-        }
-    
-        // Filter berdasarkan pencarian
+
+        // Merge collections
+        $resources = $materials->merge($assignments);
+
+        // Filter pencarian
         if (trim($this->search) !== '') {
             $searchTerm = strtolower(trim($this->search));
             $resources = $resources->filter(function($res) use ($searchTerm) {
-                return strpos($res->resource_name, $searchTerm) !== false
-                    || strpos($res->author_name, $searchTerm) !== false
-                    || strpos($res->desc, $searchTerm) !== false;
+                return strpos(strtolower($res->resource_name), $searchTerm) !== false
+                    || strpos(strtolower($res->author_name), $searchTerm) !== false
+                    || strpos($res->desc, $searchTerm) !== false
+                    || strpos(strtolower($res->type), $searchTerm) !== false; // Tambah pencarian berdasarkan type
             });
+        }
+
+        // Filter status setelah pencarian
+        if ($this->status !== '') {
+            if ($this->status === 'materi') {
+                $resources = $resources->filter(fn($res) => $res->type === 'material');
+            } elseif ($this->status === 'tugas') {
+                $resources = $resources->filter(fn($res) => $res->type === 'assignment');
+            } elseif ($this->status === 'deadline') {
+                $resources = $resources->filter(fn($res) => 
+                    $res->type === 'assignment' && $res->end_date < now()
+                );
+            }
         }
     
         // Filter berdasarkan topik jika bukan 'all'
