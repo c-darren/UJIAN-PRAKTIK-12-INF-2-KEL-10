@@ -43,6 +43,16 @@ class ClassList extends Model
         return $this->hasMany(ClassPresence::class, 'class_id');
     }
 
+    public function attendance()
+    {
+        return $this->hasMany(ClassAttendance::class, 'class_id');
+    }
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class, 'class_id');
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'class_students', 'class_id', 'user_id');

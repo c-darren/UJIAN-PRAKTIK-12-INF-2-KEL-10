@@ -12,6 +12,7 @@ class MasterClassStudents extends Model
 
     protected $table = 'master_class_students';
     protected $fillable = ['master_class_id', 'user_id'];
+    protected $with = ['user', 'masterClass'];
 
     public function masterClass()
     {
@@ -21,5 +22,19 @@ class MasterClassStudents extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function activeMasterClass()
+    {
+        return $this->belongsTo(MasterClass::class, 'master_class_id')
+            ->where('status', 'Active');
+    }
+
+    public function activeAcademicYear()
+    {
+        return $this->belongsTo(MasterClass::class, 'master_class_id')
+            ->whereHas('academicYear', function($query) {
+                $query->where('status', 'Active');
+            });
     }
 }

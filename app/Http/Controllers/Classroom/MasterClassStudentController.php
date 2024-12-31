@@ -4,67 +4,23 @@ namespace App\Http\Controllers\Classroom;
 
 use App\Models\Auth\User;
 use Illuminate\Http\Request;
+use App\Models\Classroom\Subject;
 use Illuminate\Support\Facades\DB;
 use App\Models\Classroom\ClassList;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Classroom\MasterClass;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Classroom\MasterClassStudents;
 
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Validator;
+use App\MasterClass\Traits\CheckValidClass;
+use App\Models\Classroom\MasterClassStudents;
 
 class MasterClassStudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use CheckValidClass;
+
     public function index()
     {
-    }
-
-    public function CheckValidClass($masterClass_id, $enrollment_id = null, $userId = null)
-    {
-        if(is_null($enrollment_id) && is_null($userId)) {
-            $classesValid = DB::table('master_class_students')
-                ->join('master_classes', 'master_class_students.master_class_id', '=', 'master_classes.id')
-                // ->join('academic_years', 'master_classes.academic_year_id', '=', 'academic_years.id')
-                ->select(
-                    'master_classes_students.user_id as master_classes_students_user_id',
-                )
-                ->where('master_classes.id', $masterClass_id)
-                ->where('master_classes.status', 'Active') // Kelas harus aktif
-                // ->where('academic_years.status', 'Active') // Tahun ajaran harus aktif
-                ->count();
-            if ($classesValid != 1) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Invalid Master Class, Academic Year, or Student. Ensure they are valid.",
-                ], 422);
-            }
-        }else{
-            $classesValid = DB::table('master_class_students')
-                ->join('master_classes', 'master_class_students.master_class_id', '=', 'master_classes.id')
-                // ->join('academic_years', 'master_classes.academic_year_id', '=', 'academic_years.id')
-                ->select(
-                    'master_classes.id as master_class_id',
-                    // 'academic_years.status as academic_year_status',
-                    'master_classes.status as master_class_status',
-                    'master_class_students.status as student_status'
-                )
-                ->where('master_classes.id', $masterClass_id)
-                ->where('master_classes.status', 'Active') // Kelas harus aktif
-                // ->where('academic_years.status', 'Active') // Tahun ajaran harus aktif
-                ->where('master_class_students.' . ($userId !== null ? 'user_id' : 'id'), $userId !== null ? $userId : $enrollment_id)
-                ->count();
-            if ($classesValid != 1) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Invalid Master Class, Academic Year, or Student. Ensure they are valid.",
-                ], 422);
-            }
-        }
-        return true;
     }
 
     public function view_students($masterClass_id)
