@@ -7,7 +7,7 @@
             {{-- Class Details --}}
             <div class="flex-1">
                 {{-- Class Detail Link --}}
-                <a href="{{ route('master-class.detail-class', $record->master_class_id) }}">
+                <a href="{{ route('master-class.classroom', $record->master_class_id) }}">
                     <h5 class="mb-1 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                         {{ $record->master_class_name }}
                     </h5>
@@ -49,7 +49,7 @@
                         @break
 
                     @case('archived-class')
-                        <a href="{{ route('master-class.detail-class', $record->master_class_id) }}" 
+                        <a href="{{ route('master-class.classroom', $record->master_class_id) }}" 
                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Go to {{ $record->master_class_name }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -60,7 +60,7 @@
 
                     @default
                         <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                            <a href="{{ route('master-class.detail-class', $record->master_class_id) }}" 
+                            <a href="{{ route('master-class.classroom', $record->master_class_id) }}" 
                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Go to {{ $record->master_class_name }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

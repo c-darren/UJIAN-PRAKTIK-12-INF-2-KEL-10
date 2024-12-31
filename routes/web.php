@@ -25,8 +25,10 @@ use App\Http\Controllers\Classroom\AssignmentController;
 use App\Http\Controllers\Classroom\MasterClassController;
 use App\Http\Controllers\Classroom\ClassPresenceController;
 use App\Http\Controllers\Classroom\ClassAttendanceController;
+use App\Http\Controllers\Classroom\StudentResourceController;
 use App\Http\Controllers\Classroom\ClassListStudentController;
 use App\Http\Controllers\Classroom\ClassListTeacherController;
+use App\Http\Controllers\Classroom\StudentClassListController;
 use App\Http\Controllers\Classroom\MasterClassStudentController;
 
 // Route::get('/', function () {
@@ -89,27 +91,6 @@ Route::middleware(['web', 'auth', LogUserAccess::class])->group(function () {
         Route::patch('/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/change_password', [ProfileController::class, 'editPassword'])->name('profile.changepassword.edit');
         Route::patch('/change_password', [ProfileController::class, 'updatePassword'])->name('profile.changepassword.update');
-    });
-});
-
-Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(function () {
-    Route::prefix('master-classes')->group(function () {
-        Route::get('/', [MasterClassStudentController::class, 'showEnrolled'])
-        ->name( 'master-class.enrolled-class');
-        Route::get('/archived-class', [MasterClassStudentController::class, 'showArchivedMClass'])
-        ->name('master-class.archived-class');
-        Route::get('/exited-class', [MasterClassStudentController::class, 'showExitedMClass'])
-        ->name('master-class.exited-class');
-
-        Route::get('/detail', [MasterClassStudentController::class, 'detailClass'])
-        ->name( 'master-class.detail-class');
-
-        Route::post('/join-class', [MasterClassStudentController::class, 'joinClass'])
-        ->name('master-class.join-class');
-        Route::put('/exit-class', [MasterClassStudentController::class, 'exitClass'])
-        ->name('master-class.exit-class');
-        Route::put('/rejoin-class', [MasterClassStudentController::class, 'rejoinClass'])
-        ->name('master-class.rejoin-class');
     });
 });
 
@@ -230,7 +211,7 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
                     ->name('classroom.resources.preview-submission');
                 Route::post('/submissions/{submission_id}/grade', [ResourceController::class, 'gradeSubmission'])
                     ->name('classroom.resources.grade');
-                Route::post('submissions/{submission_id}/feedback', [ResourceController::class, 'storeFeedback'])
+                Route::post('/submissions/{submission_id}/feedback', [ResourceController::class, 'storeFeedback'])
                     ->name('classroom.resources.store-feedback');
                 Route::delete('submissions/{submission_id}/feedback/{index}', [ResourceController::class, 'deleteFeedback'])
                     ->name('classroom.resources.delete-feedback');
@@ -240,18 +221,77 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
                     ->name('classroom.resources.update-score');
                 Route::post('/submissions/bulk-return', [ResourceController::class, 'bulkReturnSubmissions'])
                     ->name('classroom.resources.bulk-return-submissions');
-                Route::post('/classroom/{masterClass_id}/{class_id}/resources/submissions/set-return-confirmation', 
-                [ResourceController::class, 'setReturnConfirmation'])
-                ->name('classroom.resources.set-return-confirmation');
+                Route::post('/submissions/set-return-confirmation', 
+                    [ResourceController::class, 'setReturnConfirmation'])
+                    ->name('classroom.resources.set-return-confirmation');
 
+                //Download & View
+                // Route untuk menampilkan attachment (agar bisa diakses oleh role teacher)
+                Route::get('/view-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'viewAttachment'])
+                    ->name('classroom.resources.view-attachment');
+                Route::get('/download-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'downloadAttachment'])
+                    ->name('classroom.resources.download-attachment');
+    
                 //Orang
                 Route::get('/all', [ResourceController::class, 'all'])->name('classroom.person.all');
             });
         });
+    });
+});
 
-    //Umum
-    // Route untuk menampilkan attachment (agar bisa diakses oleh role teacher dan student)
-    Route::get('/classroom/{masterClass_id}/{class_id}/resources/view-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'viewAttachment'])->name('classroom.resources.view-attachment');
-    Route::get('/classroom/{masterClass_id}/{class_id}/resources/download-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'downloadAttachment'])->name('classroom.resources.download-attachment');
+// Student
+Route::middleware(['web', 'auth', 'verified', LogUserAccess::class, CheckUserRole::class . ':3'])->group(function () {
+    Route::prefix('master-classes')->group(function () {
+        Route::get('/', [MasterClassStudentController::class, 'showEnrolled'])
+            ->name( 'master-class.enrolled-class');
+        Route::get('/archived-class', [MasterClassStudentController::class, 'showArchivedMClass'])
+            ->name('master-class.archived-class');
+        Route::get('/exited-class', [MasterClassStudentController::class, 'showExitedMClass'])
+            ->name('master-class.exited-class');
+
+        Route::post('/join-class', [MasterClassStudentController::class, 'joinClass'])
+            ->name('master-class.join-class');
+        Route::put('/exit-class', [MasterClassStudentController::class, 'exitClass'])
+            ->name('master-class.exit-class');
+        Route::put('/rejoin-class', [MasterClassStudentController::class, 'rejoinClass'])
+            ->name('master-class.rejoin-class');
+
+        Route::prefix('{masterClass_id}/classroom')->group(function () {
+            Route::get('/', [StudentClassListController::class, 'showClassList'])
+                ->name('master-class.classroom');
+            Route::post('/student_join/{class_id}', [StudentClassListController::class, 'store'])
+                ->name('master-class.classroom.join-class');
+        });
+        Route::prefix('{masterClass_id}/{class_id}/')->middleware(CheckUserRole::class . ':3')->group(function () {
+            Route::prefix('/resources')->group(function () {
+                Route::get('/', [StudentResourceController::class, 'index'])->name('student.classroom.resources.index');
+                Route::get('/show/{type}/{resource_id}', [StudentResourceController::class, 'show'])->name('student.classroom.resources.show');
+                
+                //Tugas Peserta Didik
+                Route::prefix('/submissions')->group(function () {
+                    Route::post('/{assignment_id}/store', [StudentResourceController::class, 'storeSubmission'])
+                        ->name('student.classroom.resources.submissions.store');
+                    Route::post('/{submission_id}/mark-as-complete', [StudentResourceController::class, 'markAsComplete'])
+                        ->name('student.classroom.resources.submissions.complete');
+                    Route::post('/{submission_id}/cancel', [StudentResourceController::class, 'cancelSubmission'])
+                        ->name('student.classroom.resources.submissions.cancel');
+                        
+                    Route::post('/{submission_id}/store-feedback', [StudentResourceController::class, 'storeFeedback'])
+                        ->name('student.classroom.resources.store-feedback');
+                });
+
+                //Download & View
+                // Route untuk menampilkan attachment (agar bisa diakses oleh role teacher)
+                Route::get('/view-attachment/{type}/{resource_id}/{attachment_index}', [StudentResourceController::class, 'viewAttachment'])
+                    ->name('student.classroom.resources.view-attachment');
+                Route::get('/download-attachment/{type}/{resource_id}/{attachment_index}', [StudentResourceController::class, 'downloadAttachment'])
+                    ->name('student.classroom.resources.download-attachment');
+
+                //Orang
+                Route::get('/all', [StudentResourceController::class, 'all'])->name('student.classroom.person.all');
+                //Kehadiran
+                Route::get('/kehadiran', [StudentResourceController::class, 'presence'])->name('student.classroom.presence.index');
+            });
+        });
     });
 });

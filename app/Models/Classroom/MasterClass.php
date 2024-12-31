@@ -24,13 +24,10 @@ class MasterClass extends Model
         return $this->belongsTo(AcademicYear::class, 'academic_year_id', 'id');
     }
 
-    // public function academicYear()
-    // {
-    //     return $this->belongsTo(AcademicYear::class);
-    // }
     public function academicYear()
     {
-        return $this->belongsTo(AcademicYear::class, 'academic_year_id', 'id');
+        return $this->belongsTo(AcademicYear::class)
+            ->select(['id', 'academic_year', 'status']);
     }
 
     public function students()
@@ -41,5 +38,17 @@ class MasterClass extends Model
     public function classLists()
     {
         return $this->hasMany(ClassList::class, 'master_class_id');
+    }
+
+    public function activeStudents()
+    {
+        return $this->hasMany(MasterClassStudents::class)
+            ->where('status', 'Enrolled');
+    }
+
+    public function exitedStudents()
+    {
+        return $this->hasMany(MasterClassStudents::class)
+            ->where('status', 'Exited');
     }
 }
