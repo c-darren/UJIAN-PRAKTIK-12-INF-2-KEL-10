@@ -1,5 +1,5 @@
-<img src="https://wakatime.com/badge/user/5c66773b-dfb5-42e9-a4fd-7ff03125d965/project/c6b49b61-fa55-428b-8c8f-64baf904e19a.svg" alt="wakatime" />
-<p>[https://wakatime.com/badge/user/5c66773b-dfb5-42e9-a4fd-7ff03125d965/project/c6b49b61-fa55-428b-8c8f-64baf904e19a]</p>
+<img src="https://wakatime.com/badge/github/c-darren/UJIAN-PRAKTIK-12-INF-2-KEL-10.svg" alt="wakatime" />
+<p>https://wakatime.com/badge/github/c-darren/UJIAN-PRAKTIK-12-INF-2-KEL-10]</p>
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
