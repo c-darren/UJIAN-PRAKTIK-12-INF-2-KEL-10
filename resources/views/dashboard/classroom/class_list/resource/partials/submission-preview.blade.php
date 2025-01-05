@@ -5,15 +5,16 @@
             {{ $submission->student->name }}
         </h3>
         <div class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
-            <span class="mr-4">Dikumpulkan: {{ \Carbon\Carbon::parse($submission->created_at)->format('D, j M Y H:i:s') }}</span>
-            @if($submission->assignment->end_date < $submission->created_at)
-                <span class="text-yellow-500 dark:text-yellow-400 flex items-center">
+            <span class="">Dikumpulkan: {{ \Carbon\Carbon::parse($submission->created_at)->format('D, j M Y H:i:s') }}</span>
+            @if($submission->assignment->end_date < $submission->submitted_at)
+                <span class="text-yellow-500 dark:text-yellow-400 flex items-center ml-2">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
                     </svg>
                     Terlambat
                 </span>
             @endif
+            <span class="ml-1 font-semibold text-gray-900 dark:text-white">{{ $submission->getFormattedStatus() === 'Terlambat' ? '' : $submission->getFormattedStatus()  }}</span>
         </div>
     </div>
 
@@ -91,10 +92,10 @@
     <!-- Feedback Section -->
     <div class="mt-4 px-4 py-2 border-t border-gray-200 dark:border-gray-700 scrollbar-style-1">
         <div class="flex justify-between items-center">
-            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Feedback</h4>
+            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Komentar Pribadi</h4>
             <button @click="addFeedback({{ $submission->id }})" 
                     class="text-sm text-primary-600 hover:underline">
-                + Tambah Feedback
+                + Tambah Komentar Pribadi
             </button>
         </div>
         
@@ -104,33 +105,35 @@
             @if($submission->feedback)
                 @foreach(json_decode($submission->feedback, true) ?? [] as $index => $feedback)
                     @php
-                        $feedbackUser = \App\Models\Auth\User::find($feedback['user_id']);
+                        $feedbackUser = $feedbackUsers[$feedback['user_id']] ?? null;
                     @endphp
-                    <div class="feedback-item bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                        <div class="flex justify-between items-start">
-                            <div class="text-sm text-gray-900 dark:text-white">
-                                @if($feedbackUser->name == Auth::user()->name)
-                                    <span class="font-semibold">Anda</span>
-                                @else
-                                    <span class="font-semibold">{{ $feedbackUser->name }}</span>
-                                @endif
-                                <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $feedback['timestamp'] ?? '-' }}
+                    @if($feedbackUser)
+                        <div class="feedback-item bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div class="text-sm text-gray-900 dark:text-white">
+                                    @if($feedbackUser->name == Auth::user()->name)
+                                        <span class="font-semibold">Anda</span>
+                                    @else
+                                        <span class="font-semibold">{{ $feedbackUser->name }}</span>
+                                    @endif
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $feedback['timestamp'] ?? '-' }}
+                                    </div>
                                 </div>
+                                @if(auth()->id() == $feedback['user_id'])
+                                    <button @click="deleteFeedback({{ $submission->id }}, {{ $index }})"
+                                            class="text-red-500 hover:text-red-700">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                @endif
                             </div>
-                            @if(auth()->id() == $feedback['user_id'])
-                                <button @click="deleteFeedback({{ $submission->id }}, {{ $index }})"
-                                        class="text-red-500 hover:text-red-700">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                    </svg>
-                                </button>
-                            @endif
+                            <div class="text-sm text-gray-900 dark:text-white mt-2">
+                                {{ $feedback['content'] }}
+                            </div>
                         </div>
-                        <div class="text-sm text-gray-900 dark:text-white mt-2">
-                            {{ $feedback['content'] }}
-                        </div>
-                    </div>
+                    @endif
                 @endforeach
             @endif
         </div>

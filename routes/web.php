@@ -207,24 +207,28 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(func
                 
                 //Tugas Peserta Didik
                 Route::get('/show/{type}/{resource_id}/submissions', [ResourceController::class, 'submissions'])->name('classroom.resources.submissions');
-                Route::get('/submissions/{submission_id}/preview', [ResourceController::class, 'previewSubmission'])
-                    ->name('classroom.resources.preview-submission');
-                Route::post('/submissions/{submission_id}/grade', [ResourceController::class, 'gradeSubmission'])
-                    ->name('classroom.resources.grade');
-                Route::post('/submissions/{submission_id}/feedback', [ResourceController::class, 'storeFeedback'])
-                    ->name('classroom.resources.store-feedback');
-                Route::delete('submissions/{submission_id}/feedback/{index}', [ResourceController::class, 'deleteFeedback'])
-                    ->name('classroom.resources.delete-feedback');
-                Route::post('/submissions/bulk-grade', [ResourceController::class, 'bulkGradeSubmissions'])
-                    ->name('classroom.resources.bulk-grade');
-                Route::post('/submissions/{submission_id}/update-score', [ResourceController::class, 'updateScore'])
-                    ->name('classroom.resources.update-score');
-                Route::post('/submissions/bulk-return', [ResourceController::class, 'bulkReturnSubmissions'])
-                    ->name('classroom.resources.bulk-return-submissions');
-                Route::post('/submissions/set-return-confirmation', 
-                    [ResourceController::class, 'setReturnConfirmation'])
-                    ->name('classroom.resources.set-return-confirmation');
+                Route::prefix('/submissions')->group(function () {
+                    Route::get('/{submission_id}/preview', [ResourceController::class, 'previewSubmission'])
+                        ->name('classroom.resources.preview-submission');
 
+                    Route::post('/{submission_id}/grade', [ResourceController::class, 'gradeSubmission'])
+                        ->name('classroom.resources.grade');
+
+                    Route::post('/{submission_id}/feedback', [ResourceController::class, 'storeFeedback'])
+                        ->name('classroom.resources.store-feedback');
+
+                    Route::delete('/{submission_id}/feedback/{index}', [ResourceController::class, 'deleteFeedback'])
+                        ->name('classroom.resources.delete-feedback');
+
+                    Route::post('/bulk-grade', [ResourceController::class, 'bulkGradeSubmissions'])
+                        ->name('classroom.resources.bulk-grade');
+
+                    Route::post('/{submission_id}/update-score', [ResourceController::class, 'updateScore'])
+                        ->name('classroom.resources.update-score');
+
+                    Route::post('/bulk-return', [ResourceController::class, 'bulkReturnSubmissions'])
+                        ->name('classroom.resources.bulk-return-submissions');
+                });
                 //Download & View
                 // Route untuk menampilkan attachment (agar bisa diakses oleh role teacher)
                 Route::get('/view-attachment/{type}/{resource_id}/{attachment_index}', [ResourceController::class, 'viewAttachment'])

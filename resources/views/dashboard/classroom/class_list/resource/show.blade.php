@@ -216,7 +216,7 @@
             <!-- Menampilkan Attachments Lama -->
             <div class="mt-2">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Attachments Lama
+                    Lampiran
                 </label>
                 <div class="flex flex-wrap gap-2">
                     @foreach($existingAttachments as $attachment)
@@ -405,22 +405,8 @@
             <span class="mt-1 text-gray-500 dark:text-white text-sm">
                 Terakhir Diperbarui: {{ $updated_at }}
             </span>
-            <hr class="mt-2 mb-0.5">
-            <span class="font-semibold title-font dark:text-white text-gray-700">Komentar</span>
-            @if($resource_type == 'material')
-                @livewire('classroom.teacher-comment-material-table', [
-                    'masterClass_id' => $masterClass_id, 
-                    'classList_id' => $classList->id, 
-                    'resource_id' => $resource_id
-                ])
-            @elseif($resource_type == 'assignment')
-                @livewire('classroom.teacher-comment-assignment-table', [
-                    'masterClass_id' => $masterClass_id, 
-                    'classList_id' => $classList->id, 
-                    'resource_id' => $resource_id
-                ])
-            @endif
         </div>
+        
     </div>
 
     {{-- Preview Attachment Modal --}}
@@ -460,6 +446,23 @@
                 <!-- Document -->
             </div>
         </div>
+    </div>
+    <div class="">
+        <hr class="mt-2 mb-1">
+        <span class="font-semibold title-font dark:text-white text-gray-700">Komentar Kelas</span>
+        @if($resource_type == 'material')
+            @livewire('classroom.teacher-comment-material-table', [
+                'masterClass_id' => $masterClass_id, 
+                'classList_id' => $classList->id, 
+                'resource_id' => $resource_id
+            ])
+        @elseif($resource_type == 'assignment')
+            @livewire('classroom.teacher-comment-assignment-table', [
+                'masterClass_id' => $masterClass_id, 
+                'classList_id' => $classList->id, 
+                'resource_id' => $resource_id
+            ])
+        @endif
     </div>
 @endsection
 

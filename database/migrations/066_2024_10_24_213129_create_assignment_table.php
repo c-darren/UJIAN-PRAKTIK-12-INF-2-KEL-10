@@ -28,15 +28,16 @@ return new class extends Migration
         });
         Schema::create('assignment_submissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assignment_id')->constrained('assignments')->onDelete('cascade')->index();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->index();
+            $table->foreignId('assignment_id')->constrained('assignments')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('attachment_file_name')->nullable();
             $table->text('attachment')->nullable();
             $table->double('score')->nullable();
             $table->foreignId('assessed_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->enum('return_status', ['draft', 'scheduled', 'returned', 'submitted', 'progress', 'mark as done', 'late', 'assigned'])->default('draft');
+            $table->enum('return_status', ['draft', 'scheduled', 'returned', 'submitted', 'progress', 'mark as done', 'late', 'assigned'])->default('assigned');
             $table->timestamp('scheduled_return_at')->nullable();
             $table->timestamp('returned_at')->nullable();
+            $table->timestamp('submitted_at')->nullable();
             $table->json('feedback')->nullable(); // Change feedback to JSON type
             $table->timestamps();
         });

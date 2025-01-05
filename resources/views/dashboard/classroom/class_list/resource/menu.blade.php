@@ -3,29 +3,33 @@
     @if(!isset($classList_id))
         @php $classList_id = $classList->id; @endphp
     @endif
-<div class="border-gray-200 dark:border-gray-700 dark:bg-gray-800">
-    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-        <li class="me-2">
-            <a href="{{ route('classroom.resources.show', [$masterClass_id, $classList_id, 'assignment', $resource_id]) }}" class="inline-flex items-center justify-center p-4 group
-                {{ request()->segment(6) === 'assignment' && request()->segment(8) == '' ? 
-                'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' :
-                'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}}"
-                {{ request()->segment(6) === 'assignment' && request()->segment(8) == '' ? 'aria-current="page"' : '' }}>
-                
-                Petunjuk
-            </a>
-        </li>
-        <li class="me-2">
-            <a href="{{ route('classroom.resources.submissions', [$masterClass_id, $classList_id, 'assignment', $resource_id]) }}" class="inline-flex items-center justify-center p-4 group
-                {{ request()->segment(8) === 'submissions' ? 
-                'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' :
-                'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}}"
-                {{ request()->segment(8) === 'submissions' ? 'aria-current="page"' : '' }}>
-                
-                Tugas Peserta Didik
-            </a>
-        </li>
-    </ul>
+<div class="relative">
+    <div class="w-[25.3%] fixed dark:bg-gray-900 bg-gray-100 z-50">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+            <li class="me-2">
+                <a href="{{ route('classroom.resources.show', [$masterClass_id, $classList_id, 'assignment', $resource_id]) }}" class="inline-flex items-center justify-center p-4 group
+                    {{ request()->segment(6) === 'assignment' && request()->segment(8) == '' ? 
+                    'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' :
+                    'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}}"
+                    {{ request()->segment(6) === 'assignment' && request()->segment(8) == '' ? 'aria-current="page"' : '' }}>
+                    
+                    Petunjuk
+                </a>
+            </li>
+            <li class="me-2">
+                <a href="{{ route('classroom.resources.submissions', [$masterClass_id, $classList_id, 'assignment', $resource_id]) }}" class="inline-flex items-center justify-center p-4 group
+                    {{ request()->segment(8) === 'submissions' ? 
+                    'text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' :
+                    'border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'}}"
+                    {{ request()->segment(8) === 'submissions' ? 'aria-current="page"' : '' }}>
+                    
+                    Tugas Peserta Didik
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="pb-12"></div>
+    <div class="pb-1"></div>
 </div>
 @else
 <div class="border-gray-200 dark:border-gray-700 dark:bg-gray-800">
