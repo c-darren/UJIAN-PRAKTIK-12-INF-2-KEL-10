@@ -8,7 +8,7 @@ services:
     ports:
       - "8000:8000"      # Laravel
       - "5173:5173"      # Vite HMR
-      - "5050:5050"      # Asset serving
+      # - "5050:5050"      # Asset serving
     volumes:
       - .:/var/www:cached           # mount direktori proyek
       #- /var/www/vendor            # exclude vendor
