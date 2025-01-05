@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Classroom;
 
 use Carbon\Carbon;
+use App\Models\Auth\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Classroom\Topic;
@@ -32,9 +33,29 @@ class ResourceController extends Controller
         }
     }
 
+    private function needsWriteAccess(): bool
+    {
+        $routeName = request()->route()->getName();
+        
+        // Define routes that need write access
+        $writeAccessRoutes = [
+            'classroom.resources.store',
+            'classroom.resources.update',
+            'classroom.resources.destroy',
+            'classroom.resources.grade',
+            'classroom.resources.bulk-grade',
+            'classroom.resources.store-feedback',
+            'classroom.resources.delete-feedback',
+            'classroom.resources.bulk-return-submissions',
+            'classroom.resources.set-return-confirmation',
+        ];
+
+        return in_array($routeName, $writeAccessRoutes);
+    }
+
     private function checkScheduledSubmissions($masterClass_id, $class_id)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
+        $this->authorizeAccess(2, $masterClass_id, $class_id, $this->needsWriteAccess());
         
         $now = Carbon::now();
         if (!self::$lastCheck || $now->diffInSeconds(self::$lastCheck) >= 60) {
@@ -57,9 +78,6 @@ class ResourceController extends Controller
 
     public function index($masterClass_id, $class_id)
     {
-        // Otorisasi akses
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
-        
         // Mendapatkan ClassList
         $classList = ClassList::findOrFail($class_id);
         
@@ -76,9 +94,6 @@ class ResourceController extends Controller
 
     public function all($masterClass_id, $class_id)
     {
-        // Otorisasi akses
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
-        
         // Mendapatkan ClassList
         $classList = ClassList::findOrFail($class_id);
         
@@ -107,9 +122,6 @@ class ResourceController extends Controller
 
     public function store(Request $request, $masterClass_id, $class_id, $type)
     {
-        // Otorisasi akses (sesuaikan method authorizeAccess Anda)
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
-    
         if ($type === 'material') {
             $validated = $request->validate([
                 'topic_id' => 'required|exists:topics,id',
@@ -206,8 +218,6 @@ class ResourceController extends Controller
 
     public function show($masterClass_id, $class_id, $type, $resource_id)
     {        
-        // Otorisasi akses
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
         $classList = ClassList::findOrFail($class_id);
         $topics = Topic::select('id', 'topic_name')
         ->where('class_id', $class_id)
@@ -330,8 +340,6 @@ class ResourceController extends Controller
 
     public function update(Request $request, $masterClass_id, $class_id, $type, $resource_id)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
-
         if ($type === 'material') {
             $resource = Material::where('class_id', $class_id)
                                 ->where('id', $resource_id)
@@ -489,9 +497,6 @@ class ResourceController extends Controller
     
     public function destroy($masterClass_id, $class_id, $type, $resource_id)
     {
-        // Otorisasi akses
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
-    
         if ($type === 'material') {
             // Temukan material berdasarkan $resource_id saja
             $resource = Material::findOrFail($resource_id);
@@ -532,9 +537,6 @@ class ResourceController extends Controller
 
     public function downloadAttachment($masterClass_id, $class_id, $type, $resource_id, $attachment_index)
     {
-        // Otorisasi akses
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
-    
         if ($type === 'material') {
             $resource = Material::findOrFail($resource_id);
             $attachments = json_decode($resource->attachment, true);
@@ -583,8 +585,6 @@ class ResourceController extends Controller
     }
     public function viewAttachment($masterClass_id, $class_id, $type, $resource_id, $attachment_index)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
-    
         switch ($type) {
             case 'material':
                 $resource = Material::findOrFail($resource_id);
@@ -621,46 +621,16 @@ class ResourceController extends Controller
 
     public function submissions($masterClass_id, $class_id, $type, $resource_id)
     {
-        // Authorize access
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
-
         if ($type !== 'assignment') {
             abort(400, 'Invalid resource type');
         }
 
-        $assignment = Assignment::with(['topic'])
-            ->where('class_id', $class_id)
-            ->findOrFail($resource_id);
-
-        // Get all submissions with student names
-        $submissions = DB::table('assignment_submissions as s')
-            ->join('users as u', 'u.id', '=', 's.user_id')
-            ->select('s.*', 'u.name as student_name')
-            ->where('s.assignment_id', $resource_id)
-            ->get();
-
-        // Get all enrolled students who haven't submitted
-        $nonSubmittingStudents = DB::table('class_students as cs')
-            ->join('users as u', 'u.id', '=', 'cs.user_id')
-            ->whereNotExists(function($query) use ($resource_id) {
-                $query->select(DB::raw(1))
-                      ->from('assignment_submissions as s')
-                      ->whereRaw('s.user_id = cs.user_id')
-                      ->where('s.assignment_id', $resource_id);
-            })
-            ->where('cs.class_id', $class_id)
-            ->select('u.id', 'u.name')
-            ->get();
-
         return $this->teacher_view('submissions', [
             'type' => 'assignment',
-            'page_title' => 'Grade Submissions - ' . $assignment->assignment_name,
+            'page_title' => 'Periksa Tugas',
             'masterClass_id' => $masterClass_id,
             'classList_id' => $class_id,
             'resource_id' => $resource_id,
-            'assignment' => $assignment,
-            'submissions' => $submissions,
-            'nonSubmittingStudents' => $nonSubmittingStudents
         ]);
     }
 
@@ -709,7 +679,6 @@ class ResourceController extends Controller
 
     public function bulkGradeSubmissions(Request $request, $masterClass_id, $class_id)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
         try {
             // Validate request
             $validated = $request->validate([
@@ -759,21 +728,29 @@ class ResourceController extends Controller
 
     public function previewSubmission($masterClass_id, $class_id, $submission_id) 
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, false);
         try {
             $submission = AssignmentSubmission::with(['student', 'assignment.classList'])
                 ->findOrFail($submission_id);
     
+            $feedbackUsers = [];
+            if ($submission->feedback) {
+                $feedbacks = json_decode($submission->feedback, true) ?? [];
+                $userIds = array_unique(array_column($feedbacks, 'user_id'));
+                
+                $feedbackUsers = User::whereIn('id', $userIds)
+                    ->whereNull('deleted_at')
+                    ->get()
+                    ->keyBy('id');
+            }
+    
             $html = view('dashboard.classroom.class_list.resource.partials.submission-preview', [
                 'submission' => $submission,
                 'masterClass_id' => $masterClass_id,
-                'class_id' => $class_id
+                'class_id' => $class_id,
+                'feedbackUsers' => $feedbackUsers
             ])->render();
     
-            return response()->json([
-                'success' => true,
-                'html' => $html
-            ]);
+            return response()->json(['success' => true, 'html' => $html]);
     
         } catch (\Exception $e) {
             return response()->json([
@@ -786,7 +763,6 @@ class ResourceController extends Controller
 
     public function storeFeedback(Request $request, $masterClass_id, $class_id, $submission_id)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
         try {
             $submission = AssignmentSubmission::findOrFail($submission_id);
             $user = auth()->user();
@@ -815,7 +791,6 @@ class ResourceController extends Controller
 
     public function deleteFeedback($masterClass_id, $class_id, $submission_id, $index)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
         try {
             $submission = AssignmentSubmission::findOrFail($submission_id);
             
@@ -850,7 +825,6 @@ class ResourceController extends Controller
 
     public function bulkReturnSubmissions(Request $request, $masterClass_id, $class_id)
     {
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
         try {
             $validated = $request->validate([
                 'submissions' => 'required|array',
@@ -912,32 +886,6 @@ class ResourceController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    public function setReturnConfirmation(Request $request, $masterClass_id, $class_id)
-    {
-        // Authorize with modify permission
-        $this->authorizeAccess(2, $masterClass_id, $class_id, true);
-
-        try {
-            $validated = $request->validate([
-                'submission_id' => 'required|exists:assignment_submissions,id'
-            ]);
-
-            // Check if submission exists and belongs to class
-            $submission = AssignmentSubmission::whereHas('assignment', function($query) use ($class_id) {
-                $query->where('class_id', $class_id);
-            })->findOrFail($validated['submission_id']);
-
-            // No need to store in session, just return success
-            return response()->json(['success' => true]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengonfirmasi pengembalian: ' . $e->getMessage()
             ], 500);
         }
     }

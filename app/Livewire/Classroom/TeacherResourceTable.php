@@ -91,28 +91,38 @@ class TeacherResourceTable extends Component
 
     public function render()
     {
-        // Get base data
-        $materials = Material::with(['topic','author','editor'])
-            ->where('class_id', $this->classList_id)
-            ->get()
-            ->map(function($item) {
-                $item->type = 'material';
-                $item->resource_name = $item->material_name;
-                $item->author_name = $item->author ? $item->author->name : '';
-                $item->desc = strtolower($item->description ?? '');
-                return $item;
-            });
-        
-        $assignments = Assignment::with(['topic','author','editor'])
-            ->where('class_id', $this->classList_id)
-            ->get()
-            ->map(function($item) {
-                $item->type = 'assignment';
-                $item->resource_name = $item->assignment_name;
-                $item->author_name = $item->author ? $item->author->name : '';
-                $item->desc = strtolower($item->description ?? '');
-                return $item;
-            });
+        // Get base data with optimized eager loading
+        $materials = Material::with([
+            'topic:id,topic_name',
+            'author:id,name',
+            'editor:id,name'
+        ])
+        ->select('id', 'material_name', 'description', 'topic_id', 'author_id', 'editor_id', 'class_id', 'created_at')
+        ->where('class_id', $this->classList_id)
+        ->get()
+        ->map(function($item) {
+            $item->type = 'material';
+            $item->resource_name = $item->material_name;
+            $item->author_name = $item->author ? $item->author->name : '';
+            $item->desc = strtolower($item->description ?? '');
+            return $item;
+        });
+
+        $assignments = Assignment::with([
+            'topic:id,topic_name',
+            'author:id,name',
+            'editor:id,name'
+        ])
+        ->select('id', 'assignment_name', 'description', 'topic_id', 'author_id', 'editor_id', 'class_id', 'end_date', 'created_at')
+        ->where('class_id', $this->classList_id)
+        ->get()
+        ->map(function($item) {
+            $item->type = 'assignment';
+            $item->resource_name = $item->assignment_name;
+            $item->author_name = $item->author ? $item->author->name : '';
+            $item->desc = strtolower($item->description ?? '');
+            return $item;
+        });
 
         // Merge collections
         $resources = $materials->merge($assignments);

@@ -457,6 +457,7 @@ class StudentResourceController extends Controller
             $submission->attachment = json_encode($existingPaths);
             $submission->attachment_file_name = json_encode($existingNames);
             $submission->return_status = $status;
+            $submission->returned_at = now();
             $submission->save();
     
             return response()->json([
