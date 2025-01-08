@@ -18,6 +18,12 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UserLogCategorySeeder::class,
             UserLogListSeeder::class,
+<<<<<<< HEAD
+=======
+            GroupListSeeder::class,
+            GroupInvitationSeeder::class,
+            GroupMemberSeeder::class,
+>>>>>>> refs/remotes/origin/main
             AcademicYearSeeder::class,
             SubjectSeeder::class,
             MasterClassSeeder::class,
