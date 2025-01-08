@@ -11,6 +11,7 @@ services:
       # - "5050:5050"      # Asset serving
     volumes:
       - .:/var/www:cached           # mount direktori proyek
+      - ./resources/js:/var/www/public/js:cached    # Add symlink volume
       #- /var/www/vendor            # exclude vendor
       #- /var/www/node_modules      # exclude node_modules
     networks:
