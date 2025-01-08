@@ -50,7 +50,10 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $file = $request->file('avatar');
+            $extension = $file->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $extension;
+            $avatarPath = $file->storeAs('avatars', $filename, 'public');
         } else {
             $avatarPath = 'avatars/no_image.png';
         }
@@ -141,7 +144,11 @@ class UserController extends Controller
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $file = $request->file('avatar');
+            $extension = $file->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $extension;
+            
+            $avatarPath = $request->file('avatar')->storeAs('avatars', $filename, 'public');
             $user->avatar = $avatarPath;
         }
     
