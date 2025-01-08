@@ -25,8 +25,6 @@ return new class extends Migration
             $table->dateTime('start_date');
             $table->dateTime('valid_until')->nullable();
 
-            //Group List: Blacklist/Whitelist
-            $table->string('type_group_list');
             $table->string('description')->nullable();
             $table->timestamps();
         });
@@ -36,13 +34,6 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->primary(['set_access_route_prefix_id', 'role_id']);
         });
-        
-        Schema::create('route_prefixes_access_group', function (Blueprint $table) {
-            $table->foreignId('set_access_route_prefix_id')->constrained('access_routes_prefixes')->onDelete('cascade');
-            $table->foreignId('group_list_id')->constrained('group_lists')->onDelete('cascade');
-            $table->primary(['set_access_route_prefix_id', 'group_list_id']);
-        });
-        
     }
 
     /**
@@ -52,6 +43,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('access_routes_prefixes');
         Schema::dropIfExists('route_prefixes_access_role');
-        Schema::dropIfExists('route_prefixes_access_group');
     }
 };
