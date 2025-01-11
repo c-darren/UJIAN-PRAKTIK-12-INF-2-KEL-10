@@ -115,10 +115,38 @@ document.addEventListener('alpine:init', () => {
 
         async showSubmission(submissionId) {
             try {
-                const response = await axios.get(`/classroom/{{ $masterClass_id }}/{{ $classList_id }}/resources/submissions/${submissionId}/preview`);
+                // Initial load
+                let response = await axios.get(`/classroom/{{ $masterClass_id }}/{{ $classList_id }}/resources/submissions/${submissionId}/preview`);
                 document.getElementById('submissionPreview').innerHTML = response.data.html;
+                
+                // Auto refresh every 5 seconds
+                setInterval(async () => {
+                    try {
+                        // Save scroll positions
+                        const previewElement = document.getElementById('submissionPreview');
+                        const previewScrollPosition = previewElement.scrollTop;
+                        
+                        const feedbackContainer = document.getElementById(`feedback-container-${submissionId}`);
+                        const feedbackScrollPosition = feedbackContainer?.scrollTop;
+        
+                        // Update content
+                        let response = await axios.get(`/classroom/{{ $masterClass_id }}/{{ $classList_id }}/resources/submissions/${submissionId}/preview`);
+                        previewElement.innerHTML = response.data.html;
+                        
+                        // Restore scroll positions
+                        previewElement.scrollTop = previewScrollPosition;
+                        
+                        const newFeedbackContainer = document.getElementById(`feedback-container-${submissionId}`);
+                        if (newFeedbackContainer && feedbackScrollPosition) {
+                            newFeedbackContainer.scrollTop = feedbackScrollPosition;
+                        }
+                    } catch (error) {
+                        console.error('Auto-refresh error:', error);
+                    }
+                }, 5000);
+        
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Initial load error:', error);
                 Notiflix.Notify.failure('Gagal memuat tugas');
             }
         },
@@ -176,7 +204,7 @@ document.addEventListener('alpine:init', () => {
         async addFeedback(submissionId) {
             this.showFeedbackInput = true;
         },
-        
+
         async saveFeedback(submissionId) {
             try {
                 const content = document.getElementById(`new-feedback-${submissionId}`).value;
@@ -188,7 +216,7 @@ document.addEventListener('alpine:init', () => {
                 
                 if (response.data.success) {
                     await this.showSubmission(submissionId);
-                    this.showFeedbackInput = false;
+                    this.showFeedbackInput = true;
                     Notiflix.Notify.success('Feedback berhasil disimpan');
                 }
             } catch (error) {

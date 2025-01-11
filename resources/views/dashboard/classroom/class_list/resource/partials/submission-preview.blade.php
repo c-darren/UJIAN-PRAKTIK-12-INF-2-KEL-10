@@ -143,7 +143,7 @@
             id="new-feedback-{{ $submission->id }}"
             class="w-full p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             rows="4"
-            placeholder="Tulis feedback baru..."
+            placeholder="Tulis komentar pribadi..."
         ></textarea>
         <div class="flex justify-end mt-2 space-x-2">
             <button @click="saveFeedback({{ $submission->id }})"

@@ -34,7 +34,7 @@ use App\Http\Controllers\Classroom\MasterClassStudentController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
 
 // Rute untuk verifikasi email
 Route::middleware(['auth'])->group(function () {
@@ -282,6 +282,8 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class, CheckUserRol
                         
                     Route::post('/{submission_id}/store-feedback', [StudentResourceController::class, 'storeFeedback'])
                         ->name('student.classroom.resources.store-feedback');
+                        Route::delete('/{submission_id}/feedback/{index}', [StudentResourceController::class, 'deleteFeedback'])
+                        ->name('student.classroom.resources.delete-feedback');
                 });
 
                 //Download & View

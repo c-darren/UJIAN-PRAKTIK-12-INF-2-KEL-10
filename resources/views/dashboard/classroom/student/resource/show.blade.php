@@ -314,33 +314,15 @@
                         + Tambah Komentar Pribadi                     
                     </button>
                 </div>
-                
             </div>
             <div class="p-4 border-t border-gray-200 dark:border-gray-700 max-h-[30vh] overflow-y-auto scrollbar-style-1">
                 <div id="feedback-container-{{ $submission->id }}" class="space-y-2">
                     @if($submission->feedback)
-                        @foreach(json_decode($submission->feedback, true) ?? [] as $index => $feedback)
-                            @php
-                                $feedbackUser = \App\Models\Auth\User::find($feedback['user_id']);
-                            @endphp
-                            <div class="feedback-item bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <div class="flex justify-between items-start">
-                                    <div class="text-sm text-gray-900 dark:text-white">
-                                        @if($feedbackUser->name == Auth::user()->name)
-                                            <span class="font-semibold">Anda</span>
-                                        @else
-                                            <span class="font-semibold">{{ $feedbackUser->name }}</span>
-                                        @endif
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ $feedback['timestamp'] ?? '-' }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-900 dark:text-white mt-2">
-                                    {{ $feedback['content'] }}
-                                </div>
-                            </div>
-                        @endforeach
+                        @livewire('classroom.private-comment-assignment-table', [
+                            'masterClass_id' => $masterClass_id, 
+                            'classList_id' => $classList->id, 
+                            'resource_id' => $resource_id
+                        ])
                     @endif
                 </div>
             </div>
@@ -377,7 +359,7 @@
     const masterClass_id = '{{ $masterClass_id }}';
     const classList_id = '{{ $classList->id }}';
     const assignment_id = '{{ $resource_id }}';
-    const submission_id = '{{ $submission_id ?? "" }}';
+    const submission_id = '{{ $submission->id ?? "" }}';
 </script>
 <script type="text/javascript" src="{{ asset('js/classroom/student/resource/modal_file.js') }}"></script>
 @if($resource_type == 'assignment')
@@ -412,7 +394,6 @@
                     });
                     
                     if (response.data.success) {
-                        window.location.reload();
                         this.showFeedbackInput = false;
                         Notiflix.Notify.success('Feedback berhasil disimpan');
                     }
@@ -424,6 +405,19 @@
             
             cancelFeedback() {
                 this.showFeedbackInput = false;
+            },
+
+            async deleteFeedback(submissionId, index) {
+                try {
+                    const response = await axios.delete(`/master-classes/{{ $masterClass_id }}/{{ $classList->id }}/resources/submissions/{{ $submission->id }}/feedback/${index}`);
+                    
+                    if (response.data.success) {
+                        Notiflix.Notify.success('Feedback berhasil dihapus');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Notiflix.Notify.failure('Gagal menghapus feedback');
+                }
             },
         }));
     });

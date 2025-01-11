@@ -4,7 +4,7 @@
         @php $classList_id = $classList->id; @endphp
     @endif
 <div class="relative">
-    <div class="w-[25.3%] fixed dark:bg-gray-900 bg-gray-100 z-50">
+    <div class="w-full fixed dark:bg-gray-900 bg-gray-100 z-50">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
             <li class="me-2">
                 <a href="{{ route('classroom.resources.show', [$masterClass_id, $classList_id, 'assignment', $resource_id]) }}" class="inline-flex items-center justify-center p-4 group

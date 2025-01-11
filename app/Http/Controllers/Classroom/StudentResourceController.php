@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Classroom;
 
 use Carbon\Carbon;
+use App\Models\Auth\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Classroom\Topic;
@@ -43,7 +44,8 @@ class StudentResourceController extends Controller
             'student.classroom.resources.submissions.store',
             'student.classroom.resources.submissions.complete',
             'student.classroom.resources.submissions.cancel',
-            'student.classroom.resources.store-feedback'
+            'student.classroom.resources.store-feedback',
+            'student.classroom.resources.delete-feedback',
         ];
 
         return in_array($routeName, $writeAccessRoutes);
@@ -236,6 +238,19 @@ class StudentResourceController extends Controller
                     ];
                 }
             }
+            
+            $feedbackUsers = [];
+            if($submission) {
+                if ($submission->feedback) {
+                    $feedbacks = json_decode($submission->feedback, true) ?? [];
+                    $userIds = array_unique(array_column($feedbacks, 'user_id'));
+                    
+                    $feedbackUsers = User::whereIn('id', $userIds)
+                        ->whereNull('deleted_at')
+                        ->get()
+                        ->keyBy('id');
+                }
+            }
 
             return $this->student_view('show', [
                 'type' => 'assignment',
@@ -264,7 +279,8 @@ class StudentResourceController extends Controller
                 'updated_at' => $updated_at,
 
                 'submission' => $submission,
-                'studentAttachments' => $studentAttachments
+                'studentAttachments' => $studentAttachments,
+                'feedbackUsers' => $feedbackUsers
             ]);
     
         } else {
@@ -380,6 +396,40 @@ class StudentResourceController extends Controller
                 'success' => false,
                 'message' => 'Gagal menyimpan feedback',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteFeedback($masterClass_id, $class_id, $submission_id, $index)
+    {
+        try {
+            $submission = AssignmentSubmission::findOrFail($submission_id);
+            
+            // Ambil feedback yang ada
+            $feedbacks = json_decode($submission->feedback, true) ?? [];
+            
+            // Validasi index dan kepemilikan feedback
+            if (!isset($feedbacks[$index]) || $feedbacks[$index]['user_id'] !== auth()->id()) {
+                throw new \Exception('Anda tidak memiliki akses untuk menghapus komentar ini');
+            }
+            
+            // Hapus feedback pada index tersebut
+            array_splice($feedbacks, $index, 1);
+            
+            // Update submission dengan feedback yang baru
+            $submission->update([
+                'feedback' => json_encode($feedbacks)
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Feedback berhasil dihapus'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus feedback: ' . $e->getMessage()
             ], 500);
         }
     }
