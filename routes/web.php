@@ -282,8 +282,8 @@ Route::middleware(['web', 'auth', 'verified', LogUserAccess::class, CheckUserRol
                         
                     Route::post('/{submission_id}/store-feedback', [StudentResourceController::class, 'storeFeedback'])
                         ->name('student.classroom.resources.store-feedback');
-                        Route::delete('/{submission_id}/feedback/{index}', [StudentResourceController::class, 'deleteFeedback'])
-                        ->name('student.classroom.resources.delete-feedback');
+                    Route::delete('/{submission_id}/feedback/{index}', [StudentResourceController::class, 'deleteFeedback'])
+                    ->name('student.classroom.resources.delete-feedback');
                 });
 
                 //Download & View
