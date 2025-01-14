@@ -52,19 +52,5 @@ class UserSeeder extends Seeder
                 'remember_token' => Str::random(10),
             ],
         );
-
-        User::create(
-            [
-                'name' => 'Parent 01',
-                'username' => 'parent',
-                'avatar' => 'avatars/default.png',
-                'role_id' => 2,
-                'email' => 'parent1@darren-project.kencang.id',
-                'email_verified_at' => now(),
-                'password' => Hash::make('123'),
-                'remember_token' => Str::random(10),
-            ],
-        );
-        User::factory(50)->create();
     }
 }
