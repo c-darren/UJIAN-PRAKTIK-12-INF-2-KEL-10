@@ -7,7 +7,7 @@
 <section class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto overflow-y-auto">
         <a href="{{ route('login') }}" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-            <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
+            <img class="w-8 h-8 mr-2" src={{ Storage::url('website/logo.png') }} alt="ECOCASS logo">
             ECOCASS
         </a>
         <div class="w-full max-w-6xl bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700" id="signupFormView">
