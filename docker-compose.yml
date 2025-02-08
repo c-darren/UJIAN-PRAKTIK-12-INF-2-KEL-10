@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: ecocass:1.0.0
     container_name: laravel_app
     ports:
       - "8000:8000"      # Laravel

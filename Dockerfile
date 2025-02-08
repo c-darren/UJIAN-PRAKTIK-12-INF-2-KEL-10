@@ -1,4 +1,9 @@
-FROM php:8.3-fpm
+ARG PHP_VERSION=8.3
+FROM php:${PHP_VERSION}-fpm
+
+LABEL org.opencontainers.image.source=private
+LABEL org.opencontainers.image.description="Ujian Praktik Informatika 12 INF 2 2024/2025"
+LABEL org.opencontainers.image.licenses=UNLICENSED
 
 WORKDIR /var/www
 
@@ -19,7 +24,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     unzip \
     nodejs \
     supervisor
-    
+
+# Add version label
+LABEL version="1.1.0"
+LABEL previous_version="1.0.0"
+
 # Install Xdebug
 RUN pecl install xdebug && \
     docker-php-ext-enable xdebug
