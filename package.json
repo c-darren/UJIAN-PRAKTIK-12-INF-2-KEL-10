@@ -19,7 +19,7 @@
     "dependencies": {
         "@ryangjchandler/alpine-clipboard": "^2.3.0",
         "alpinejs": "^3.14.1",
-        "apexcharts": "^3.54.0",
+        "apexcharts": "^3.54.1",
         "flowbite": "^2.5.2",
         "jqeury": "^0.0.1-security",
         "jquery": "^3.7.1",

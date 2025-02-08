@@ -53,6 +53,12 @@ class UserLogListSeeder extends Seeder
             ],
             [
                 'category_id' => '1',
+                'route_name' => 'dashboard.traffic',
+                'method' => 'GET',
+                'description' => 'Traffic Dashboard',
+            ],
+            [
+                'category_id' => '1',
                 'route_name' => 'csrf.refresh',
                 'method' => 'POST',
                 'description' => 'Refresh CSRF Token',

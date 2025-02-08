@@ -9,6 +9,8 @@ use App\Models\User_log\UserLogList;
 use App\Models\User_log\UnknownUserLog;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class LogUserAccess
 {
@@ -23,9 +25,15 @@ class LogUserAccess
         $routeName = $request->route()->getName();
         $method = $request->method();
         
-        $userLogList = UserLogList::where('route_name', $routeName)
-            ->where('method', $method)
-            ->first();
+        // Create cache key
+        $cacheKey = "user_log_{$routeName}_{$method}";
+        
+        // Get from cache or query DB
+        $userLogList = Cache::remember($cacheKey, Carbon::now()->addHours(24), function() use ($routeName, $method) {
+            return UserLogList::where('route_name', $routeName)
+                ->where('method', $method)
+                ->first();
+        });
 
         // // 1. Tampilkan semua data dari request
         // dump($request->all());

@@ -2,6 +2,8 @@ import './bootstrap';
 import 'flowbite';
 import 'flowbite-typography';
 import './default/app.bundle.js';
+import ApexCharts from 'apexcharts';
+window.ApexCharts = ApexCharts;
 // import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 // import Clipboard from '@ryangjchandler/alpine-clipboard'
  

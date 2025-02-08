@@ -34,6 +34,11 @@ class UserLog extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(UserLogCategory::class, 'user_log_category_id');
+        return $this->belongsTo(UserLogCategory::class, 'category_id');
+    }
+
+    public function list(): BelongsTo
+    {
+        return $this->belongsTo(UserLogList::class, 'list_id');
     }
 }

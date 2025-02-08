@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Middleware\LogUserAccess;
@@ -16,12 +15,10 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Classroom\SubjectController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Classroom\MaterialController;
 use App\Http\Controllers\Classroom\ResourceController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Classroom\ClassInfoController;
 use App\Http\Controllers\Classroom\ClassListController;
-use App\Http\Controllers\Classroom\AssignmentController;
 use App\Http\Controllers\Classroom\MasterClassController;
 use App\Http\Controllers\Classroom\ClassPresenceController;
 use App\Http\Controllers\Classroom\ClassAttendanceController;
@@ -30,6 +27,7 @@ use App\Http\Controllers\Classroom\ClassListStudentController;
 use App\Http\Controllers\Classroom\ClassListTeacherController;
 use App\Http\Controllers\Classroom\StudentClassListController;
 use App\Http\Controllers\Classroom\MasterClassStudentController;
+use App\Http\Controllers\User_log\UserLogController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -95,6 +93,7 @@ Route::middleware(['web', 'auth', LogUserAccess::class])->group(function () {
 });
 
 Route::middleware(['web', 'auth', 'verified', LogUserAccess::class])->group(function () {
+    Route::get('/dashboard/traffic', [UserLogController::class, 'index'])->name( 'dashboard.traffic');
     Route::prefix('admin')->group(function(){
         Route::prefix('role')->middleware(CheckUserRole::class . ':1')->group(function () {
             Route::get('/view', [RoleController::class, 'show'])->name('admin.authentication.roles.view');

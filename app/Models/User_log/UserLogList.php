@@ -19,5 +19,9 @@ class UserLogList extends Model
     {
         return $this->hasMany(UserLog::class);
     }
-    
+
+    public function category()
+    {
+        return $this->belongsTo(UserLogCategory::class, 'category_id');
+    }
 }

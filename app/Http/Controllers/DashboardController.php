@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Classroom\MasterClass;
@@ -19,11 +20,38 @@ class DashboardController extends Controller
             'page_title' => 'Dashboard',
         ];
 
-        // Menggabungkan semua data
-        // $emailData dan $classesData adalah array, sehingga bisa digabung dengan array_merge
-        $mergedData = array_merge($data, $emailData, $classesData);
-
-        return $this->view($mergedData);
+        if(auth()->user()->role_id == 1) {
+            // Get users with role and verification data
+            $users = User::with(['role' => function ($query) {
+                $query->whereNull('deleted_at');
+            }])
+            ->whereHas('role', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->select('id', 'name', 'username', 'email', 'email_verified_at', 'role_id', 'created_at')
+            ->get();
+        
+            // Process data for charts
+            $roleStats = $users->groupBy('role_id')
+                ->map(function($group) {
+                    return $group->count();
+                });
+        
+            $verificationStats = [
+                'verified' => $users->whereNotNull('email_verified_at')->count(),
+                'unverified' => $users->whereNull('email_verified_at')->count()
+            ];
+        
+            $mergedData = array_merge($data, $emailData, $classesData, [
+                'roleStats' => $roleStats,
+                'verificationStats' => $verificationStats
+            ]);
+        
+            return $this->view($mergedData);
+        } else {
+            $mergedData = array_merge($data, $emailData, $classesData);
+            return $this->view($mergedData);
+        }
     }
     
     public function emailVerifyNotification()
