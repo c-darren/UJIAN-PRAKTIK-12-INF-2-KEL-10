@@ -26,6 +26,7 @@
         "notiflix": "^3.2.7",
         "simple-datatables": "^9.2.1",
         "sweetalert2": "^11.6.13",
+        "vercel-php": "^0.7.3",
         "ziggy-js": "^2.3.1"
     }
 }
