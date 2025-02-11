@@ -151,7 +151,7 @@
 
                 <div class="p-4 dark:bg-gray-700 bg-gray-50 rounded-2xl">
                     @if($resource_type === 'assignment')
-                        @if(!$submission || $submission->attachment === [])
+                        @if(!$submission || $submission->attachment === [] || $submission->return_status === 'assigned')
                             <!-- Show both buttons if no submission or no attachments -->
                             <div class="space-y-2">
                                 @if($canSubmit)

@@ -210,6 +210,14 @@ class StudentResourceController extends Controller
                 'assignment_id' => $resource_id,
                 'user_id' => auth()->id()
             ])->first();
+
+            if($resource && !$submission) {
+                $submission = new AssignmentSubmission();
+                $submission->assignment_id = $resource_id;
+                $submission->user_id = auth()->id();
+                $submission->return_status = 'assigned';
+                $submission->save();
+            }
             
             $studentAttachments = [];
             if ($submission && $submission->attachment) {
@@ -465,10 +473,10 @@ class StudentResourceController extends Controller
             $status = $this->validateAndGetStatus($assignment, $submission ?? new AssignmentSubmission());
 
             // Get or create submission
-            $submission = AssignmentSubmission::firstOrNew([
+            $submission = AssignmentSubmission::where([
                 'assignment_id' => $assignment_id,
                 'user_id' => auth()->id(),
-            ]);
+            ])->first();
     
             // Get existing files
             $existingPaths = json_decode($submission->attachment ?? '[]', true);
