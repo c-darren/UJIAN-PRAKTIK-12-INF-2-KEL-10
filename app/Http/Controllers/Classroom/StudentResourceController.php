@@ -582,7 +582,7 @@ class StudentResourceController extends Controller
                 ->where('id', $submission_id)
                 ->where('user_id', auth()->id())
                 ->firstOrFail();
-            $assignment = Assignment::findOrFail($submission_id);
+            $assignment = Assignment::findOrFail($submission->assignment_id);
 
             $this->validateAndGetStatus($assignment, $submission ?? new AssignmentSubmission());
             $submission->return_status = 'progress';
@@ -601,7 +601,8 @@ class StudentResourceController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal membatalkan pengumpulan: ' . $e->getMessage()
+                'message' => $submission
+                // 'message' => 'Gagal membatalkan pengumpulan: ' . $e->getMessage()
             ], 500);
         }
     }
