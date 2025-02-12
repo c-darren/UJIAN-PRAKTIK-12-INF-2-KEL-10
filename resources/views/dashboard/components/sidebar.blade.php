@@ -37,7 +37,7 @@
                     @if (in_array(Auth::user()->role_id, [1,2]))
                         <!-- school Dropdown -->
                         <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" aria-controls="dropdown-academic_year" data-collapse-toggle="dropdown-academic_year" {{ (request()->segment(2) === 'academic_year') ? 'aria-expanded="true"' : 'aria-expanded="false"' }}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z" clip-rule="evenodd"/>
                             </svg>
                             <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>School</span>
@@ -46,11 +46,13 @@
                             </svg>
                         </button>
                         <ul id="dropdown-academic_year" class="{{ (request()->segment(2) === 'academic_year') ? '' : 'hidden' }} py-2 space-y-2">
+                            @if (in_array(Auth::user()->role_id, [1]))
                             <li>
                                 <a href="{{ route('school.academicYear.view') }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
                                 {{ request()->segment(2) === 'academic_year' ? 'bg-gray-100 dark:bg-gray-700' : '' }}
                                 ">Academic Year</a>
                             </li>
+                            @endif
                             <li>
                                 <a href="{{ route('classroom.subject.view') }}" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
                                 {{ request()->segment(2) === 'subject' ? 'bg-gray-100 dark:bg-gray-700' : '' }}
@@ -62,7 +64,7 @@
                     @if (in_array(Auth::user()->role_id, [1]))
                         <!-- Master Class Dropdown -->
                         <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700" aria-controls="dropdown-masterClass" data-collapse-toggle="dropdown-masterClass" {{ (request()->segment(2) === 'masterClass') ? 'aria-expanded="true"' : 'aria-expanded="false"' }}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M3 6a2 2 0 0 1 2-2h5.532a2 2 0 0 1 1.536.72l1.9 2.28H3V6Zm0 3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9H3Z" clip-rule="evenodd"/>
                             </svg>                                                       
                             <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Classroom</span>
