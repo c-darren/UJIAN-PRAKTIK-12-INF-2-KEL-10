@@ -164,6 +164,12 @@
                                             class="w-full dark:text-white text-yellow-700 hover:text-white border border-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">
                                         Tandai sebagai selesai
                                     </button>
+                                @else
+                                    <div class="text-center p-4 bg-red-100 dark:bg-red-800 rounded-lg">
+                                        <p class="text-red-600 dark:text-red-200">
+                                            Tidak menerima pengumpulan tugas, karena sudah melewati deadline
+                                        </p>
+                                    </div>
                                 @endif
                             </div>
 
@@ -183,6 +189,7 @@
                                     </p>
                                 </div>
                             @endif
+
 
                         @elseif(in_array($submission->return_status, ['scheduled', 'draft']))
                             <div class="text-center p-4 bg-yellow-100 dark:bg-yellow-800 rounded-lg">
