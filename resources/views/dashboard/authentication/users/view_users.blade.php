@@ -233,7 +233,7 @@ class="relative">
                     </div>
                     <div>
                         <p class="text-sm text-gray-400 dark:text-white">New Avatar Preview</p>
-                        <img :src="newAvatarPreview || $store.editModal.user.avatar" alt="New Avatar Preview" class="w-32 h-32 rounded-full mx-auto mb-2 transition-all duration-200 ease-in-out">
+                        <img :src="newAvatarPreview || $store.editModal.user.avatar" alt="New Avatar Preview" class="w-32 h-32 rounded-full mx-auto mb-2 transition-all duration-200 ease-in-out" id="avatarPreview">
                     </div>
                 </div>
             </div>
