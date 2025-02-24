@@ -44,9 +44,9 @@ class AdminResetEmail extends Notification implements ShouldQueue
         $creatorInfo = $this->creatorInfo; // UserID dan username pembuat
 
         return (new MailMessage)
-                    ->subject('Your Password Has Been Reset')
+                    ->subject('Your Email Has Been Changed')
                     ->greeting('Hello, ' . $this->username)
-                    ->line('Your account email has been successfully reset by an administrator.')
+                    ->line('Your account email has been successfully chaned by an administrator.')
                     ->line('Here are your account details:')
                     ->line('Username: ' . $this->username)
                     ->line('Email: ' . $this->email . ' (Unverified Email)')

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notifications\VerifyNewEmailNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\CancelEmailChangeNotification;
+use Illuminate\Support\Facades\Redis;
 
 class ProfileController extends Controller
 {
@@ -95,7 +96,7 @@ class ProfileController extends Controller
         if ($emailChanged) {
             $user->email = $validatedData['email'];
             $user->email_verified_at = null;
-            $this->sendVerifyNewEmailNotification($user, $newEmail);
+            $this->sendVerifyNewEmailNotification($request, $user, $newEmail);
         }
         $user->save();
 
@@ -164,7 +165,7 @@ class ProfileController extends Controller
         $user->notify(new CancelEmailChangeNotification($user->username, $newEmail, $cancelUrl));
     }
 
-    private function sendVerifyNewEmailNotification($user, $newEmail)
+    private function sendVerifyNewEmailNotification(Request $request, $user, $newEmail)
     {
         $user = User::findOrFail(Auth::user()->id);
 
@@ -225,7 +226,10 @@ class ProfileController extends Controller
             $user->email = $validatedData['email'];
             $user->email_verified_at = null;
             $user->save();
-            $this->sendVerifyNewEmailNotification($user, $newEmail);
+            $user->notify(new VerifyNewEmailNotification(
+                $user->username, 
+                $user->email,
+            ));
         }
         $user->save();
 

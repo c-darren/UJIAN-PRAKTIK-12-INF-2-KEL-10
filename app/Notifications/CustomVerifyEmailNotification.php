@@ -40,7 +40,7 @@ class CustomVerifyEmailNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Verify Your Email Address')
             ->greeting("Hello, {$this->username}!")
-            ->line('Please log in first, then click the button below to verify your email address.')
+            ->line('Click the button below to verify your email address.')
             ->action('Verify Email', $verificationUrl)
             ->line('This link will expire in 5 minutes.')
             ->line('If you did not create an account, no further action is required.');
