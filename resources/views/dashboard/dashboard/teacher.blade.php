@@ -25,14 +25,22 @@
                             '{{ strtolower($list['enrollment_status']) }}'.includes(search.toLowerCase())
                         )"
                     >
-                        <a href="{{ route('classroom.index', ['masterClass_id' => $class['master_class_id'], 'class_id' => $list['class_list_id']]) }}">
+                        <a href="{{ route('classroom.index', ['masterClass_id' => $class['master_class_id'], 'class_id' => $list['class_list_id']]) }}" 
+                           class="flex flex-col h-full">
                             <div class="p-6 flex flex-col flex-grow">
                                 <div class="flex flex-wrap justify-between items-start mb-4">
-                                    <h5 class="text-xl font-bold text-gray-900 dark:text-white flex-1">{{ $list['class_name'] }}</h5>
+                                    <h5 class="text-xl font-bold text-gray-900 dark:text-white flex-1">
+                                        {{ $list['class_name'] }}
+                                    </h5>
                                 </div>
                                 <span class="inline-block bg-blue-500 text-white text-sm font-semibold py-1.5 px-4 rounded-full dark:bg-blue-700 mt-2 mb-2.5">
                                     {{ $list['subject'] }}
                                 </span>
+                            </div>
+                            <div class="mt-auto p-3 text-sm font-medium border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                                <p class="truncate text-gray-700 dark:text-gray-300">
+                                    {{ $list['master_class_name'] }}
+                                </p>
                             </div>
                         </a>
                     </div>
@@ -70,10 +78,12 @@
                             '{{ strtolower($list['enrollment_status']) }}'.includes(search.toLowerCase())
                         )"
                     >
-                        <a href="{{ route('classroom.index', ['masterClass_id' => $class['master_class_id'], 'class_id' => $list['class_list_id']]) }}">
+                        <a href="{{ route('classroom.index', ['masterClass_id' => $class['master_class_id'], 'class_id' => $list['class_list_id']]) }}" 
+                           class="flex flex-col h-full">
                             <div class="p-6 flex flex-col flex-grow">
                                 <div class="flex flex-wrap justify-between items-start mb-4">
-                                    <h5 class="text-xl font-bold text-gray-900 dark:text-white flex-1">{{ $list['class_name'] }}</h5>
+                                    <h5 class="text-xl font-bold text-gray-900 dark:text-white flex-1">
+                                        {{ $list['class_name'] }}</h5>
                                 </div>
                                 <span class="inline-block bg-blue-500 text-white text-sm font-semibold py-1.5 px-4 rounded-full dark:bg-blue-700 mt-2 mb-2.5">
                                     {{ $list['subject'] }}
@@ -82,6 +92,11 @@
                                     {{ $list['enrollment_status'] === 'Open' ? 'bg-green-500 dark:bg-green-600' : 'bg-red-500 dark:bg-red-600' }}">
                                     {{ $list['enrollment_status'] }}
                                 </span>
+                            </div>
+                            <div class="mt-auto p-3 text-sm font-medium border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                                <p class="truncate text-gray-700 dark:text-gray-300">
+                                    {{ $list['master_class_name'] }}
+                                </p>
                             </div>
                         </a>
                     </div>

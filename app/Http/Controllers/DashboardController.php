@@ -84,6 +84,7 @@ class DashboardController extends Controller
                     if ($teacherIds->contains($requestedTeacherId)) {
                         return [
                             'master_class_id' => $classList->master_class_id,
+                            'master_class_name' => $classList->masterClass->master_class_name,
                             'class_list_id' => $classList->id,
                             'class_name' => $classList->class_name,
                             'enrollment_status' => $classList->enrollment_status,
@@ -126,6 +127,7 @@ class DashboardController extends Controller
                     if ($teacherIds->contains($requestedTeacherId)) {
                         return [
                             'master_class_id' => $classList->master_class_id,
+                            'master_class_name' => $classList->masterClass->master_class_name,
                             'class_list_id' => $classList->id,
                             'class_name' => $classList->class_name,
                             'enrollment_status' => $classList->enrollment_status,
